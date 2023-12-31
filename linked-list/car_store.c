@@ -39,7 +39,7 @@ cars_book	*ft_init_cars_book(void)
 	return (list_book);
 }
 
-cars_book	*ft_add_car_front_book(cars_book **my_collection, type_car *new_car)
+cars_book	*ft_add_car_front_book(cars_book **my_collection, type_car new_car)
 {
 	cars_book	*new_data;
 	
@@ -48,30 +48,38 @@ cars_book	*ft_add_car_front_book(cars_book **my_collection, type_car *new_car)
 		return (NULL);
 	else
 	{
-		new_data -> car = new_car;
+		new_data -> car = malloc(sizeof(type_car));
+		if (!new_data -> car)
+		{
+			free(new_data);
+			return (NULL);
+		}
+		*(new_data -> car) = new_car;
 		new_data -> next = *my_collection;
 		*my_collection = new_data;
 	}
-	return (*my_collection);
+	return (new_data);
 }
 
 void	ft_print_cars(cars_book *collection)
 {
-	cars_book	*current;
+	cars_book	current;
 	int			i;
 
 	i = 1;
-	current = collection;
-	while (current -> next)
+	current = *collection;
+	while (current.next)
 	{
-		printf("Car %d\ntype:\t%s\nbrand:\t%s\nmodel:\t%s\nrelease\t%d\n\n", i, current -> car -> type, current -> car -> brand, current -> car -> model, current -> car -> release);
-		current = current -> next;
+		printf("Car %d\ntype:\t%s\nbrand:\t%s\nmodel:\t%s\nrelease:\t%d\n\n", i, current.car ->type, current.car -> brand, current.car -> model, current.car -> release);
+		current = *current.next;
 		i++;
 	}
 }
 
 int main(void)
 {
+	type_car	model_sport_1;
+	type_car	model_sport_2 = {"sportive", "Porshe", "911 GT3 RS", 2020};
 	type_car	model_city_1 = 
 	{
 		"citadine",
@@ -79,17 +87,17 @@ int main(void)
 		"panda",
 		2023
 	};
-	type_car	model_sport_1;
+
 	
 	model_sport_1.type = "spotive";
 	model_sport_1.brand = "Ferrari";
 	model_sport_1.model = "Enzo";
 	model_sport_1.release = 1986;
-
-	cars_book *my_collection = ft_init_cars_book();	
 	
-	ft_add_car_front_book(&my_collection, &model_sport_1);
-	ft_add_car_front_book(&my_collection, &model_city_1);
+	cars_book *my_collection = ft_init_cars_book();	
+	ft_add_car_front_book(&my_collection, model_sport_1);
+	ft_add_car_front_book(&my_collection, model_city_1);
+	ft_add_car_front_book(&my_collection, model_sport_2);
 	ft_print_cars(my_collection);
 	return (0);
 }
