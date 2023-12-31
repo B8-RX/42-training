@@ -10,77 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef struct car 
-{
-	char	*type;
-	char	*brand;
-	char	*model;
-	int		release;
-} type_car ;
-
-typedef struct collection 
-{
-	type_car	*car;
-	struct collection	*next;
-} cars_book ;
-
-cars_book	*ft_init_cars_book(void)
-{
-	cars_book	*list_book;
-	
-	list_book = malloc(sizeof(cars_book));
-	if (!list_book)
-		return (NULL);
-	else
-		list_book -> next = NULL;
-	return (list_book);
-}
-
-cars_book	*ft_add_car_front_book(cars_book **my_collection, type_car new_car)
-{
-	cars_book	*new_data;
-	
-	new_data = malloc(sizeof(cars_book));
-	if (!new_data)
-		return (NULL);
-	else
-	{
-		new_data -> car = malloc(sizeof(type_car));
-		if (!new_data -> car)
-		{
-			free(new_data);
-			return (NULL);
-		}
-		*(new_data -> car) = new_car;
-		new_data -> next = *my_collection;
-		*my_collection = new_data;
-	}
-	return (new_data);
-}
-
-void	ft_print_cars(cars_book *collection)
-{
-	cars_book	current;
-	int			i;
-
-	i = 1;
-	current = *collection;
-	while (current.next)
-	{
-		printf("Car %d\ntype:\t%s\nbrand:\t%s\nmodel:\t%s\nrelease:\t%d\n\n", i, current.car ->type, current.car -> brand, current.car -> model, current.car -> release);
-		current = *current.next;
-		i++;
-	}
-}
+#include "car_store.h"
 
 int main(void)
 {
-	type_car	model_sport_1;
-	type_car	model_sport_2 = {"sportive", "Porshe", "911 GT3 RS", 2020};
-	type_car	model_city_1 = 
+	Car_model	model_sport_1;
+	Car_model	model_sport_2 = {"sportive", "Porshe", "911 GT3 RS", 2020};
+	Car_model	model_city_1 = 
 	{
 		"citadine",
 		"fiat",
@@ -94,10 +30,10 @@ int main(void)
 	model_sport_1.model = "Enzo";
 	model_sport_1.release = 1986;
 	
-	cars_book *my_collection = ft_init_cars_book();	
-	ft_add_car_front_book(&my_collection, model_sport_1);
-	ft_add_car_front_book(&my_collection, model_city_1);
-	ft_add_car_front_book(&my_collection, model_sport_2);
-	ft_print_cars(my_collection);
+	Cars_list *register_cars = ft_init_cars_register();	
+	ft_add_car_front(&register_cars, model_sport_1);
+	ft_add_car_front(&register_cars, model_city_1);
+	ft_add_car_front(&register_cars, model_sport_2);
+	ft_print_cars(register_cars);
 	return (0);
 }
