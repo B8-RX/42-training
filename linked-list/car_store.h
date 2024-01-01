@@ -1,5 +1,5 @@
 
-
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -24,8 +24,10 @@ typedef struct Collection
 
 
 
-Cars_list	*ft_add_car_front(Cars_list **register_cars, Car_model new_car);
+Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car);
+Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car);
 Cars_list	*ft_init_cars_register(void);
-void	ft_print_cars(Cars_list *collection);
+void		ft_print_cars(Cars_list *collection);
+void		ft_free_cars_list(Cars_list *cars_register);
 
 #endif // !CAR_STORE_H

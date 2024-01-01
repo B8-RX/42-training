@@ -14,26 +14,17 @@
 
 int main(void)
 {
-	Car_model	model_sport_1;
 	Car_model	model_sport_2 = {"sportive", "Porshe", "911 GT3 RS", 2020};
-	Car_model	model_city_1 = 
-	{
-		"citadine",
-		"fiat",
-		"panda",
-		2023
-	};
-
+	Car_model	model_sport_3 = {"sportive", "Lamborgini", "Avantadore", 2022};
+	Car_model	model_city_1 =	{"citadine","fiat", "panda", 2023};
+	Car_model	model_sport_1 = {"spotive", "Ferrari", "Enzo", 1986};
 	
-	model_sport_1.type = "spotive";
-	model_sport_1.brand = "Ferrari";
-	model_sport_1.model = "Enzo";
-	model_sport_1.release = 1986;
-	
-	Cars_list *register_cars = ft_init_cars_register();	
-	ft_add_car_front(&register_cars, model_sport_1);
-	ft_add_car_front(&register_cars, model_city_1);
-	ft_add_car_front(&register_cars, model_sport_2);
-	ft_print_cars(register_cars);
+	Cars_list *cars_register = ft_init_cars_register();	
+	ft_add_car_front(&cars_register, &model_sport_1);
+	ft_add_car_front(&cars_register, &model_sport_2);
+	ft_add_car_front(&cars_register, &model_city_1);
+	ft_add_car_back(&cars_register, &model_sport_3);
+	ft_print_cars(cars_register);
+	ft_free_cars_list(cars_register);
 	return (0);
 }
