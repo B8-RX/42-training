@@ -16,7 +16,8 @@ Cars_list	*ft_init_cars_register(void)
 Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car)
 {
 	Cars_list	*new_data;
-	
+
+	new_car -> id = ft_get_id();
 	new_data = malloc(sizeof(Cars_list));
 	if (!new_data)
 		return (NULL);
@@ -38,7 +39,7 @@ void	ft_print_cars(Cars_list *cars_register)
 	i = 1;
 	do 
 	{
-		printf("car %d\ntype: %s\nbrand: %s\nmodel: %s\nrelease: %d\n\n", i, cars_register -> car -> type, cars_register->car->brand, cars_register -> car -> model, cars_register -> car -> release);
+		printf("car %d\ntype: %s\nbrand: %s\nmodel: %s\nrelease: %d\nid: %s\n\n", i, cars_register -> car -> type, cars_register->car->brand, cars_register -> car -> model, cars_register -> car -> release, cars_register -> car -> id);
 		cars_register = cars_register->next;
 		i++;
     }
@@ -49,6 +50,7 @@ Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car)
 {
 	Cars_list	*current_list;
 
+	new_car -> id = ft_get_id();
 	if ((*cars_register) -> car == NULL)
 	{
 		(*cars_register) -> car = new_car;
@@ -79,4 +81,25 @@ void	ft_free_cars_list(Cars_list *cars_register)
 		free(temp);
 		temp = NULL;
 	}
+}
+
+char	*ft_get_id(void)
+{
+	int		i;
+	char	*id;
+	char hexa[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','\0'};
+	
+	id = malloc(37 + 1);
+	i = 0;
+	while (i < 37)
+	{
+		id[i] = hexa[rand() % 16];
+		i++;
+	}
+	id[8] = '-';
+	id[13] = '-';
+	id[18] = '-';
+	id[23] = '-';
+	id[i] = '\0';
+	return (id);
 }
