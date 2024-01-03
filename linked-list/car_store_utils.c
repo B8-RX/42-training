@@ -17,7 +17,6 @@ Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car)
 {
 	Cars_list	*new_data;
 	char		*id;
-	srand(time(NULL));
 
 	id = ft_get_id();
 	while (ft_check_id_exist(*cars_register, id))
@@ -62,7 +61,6 @@ Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car)
 {
 	Cars_list	*current_list;
 	char		*id;
-	srand(time(NULL));
 
 	id = ft_get_id();
 	while (ft_check_id_exist(*cars_register, id))
@@ -90,8 +88,8 @@ Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car)
         }
 		current_list -> car = new_car;
         current_list -> next = NULL;
+		printf("\n\nID %s REMOVED\n\n",ft_remove_car_model(&*cars_register, current_list->car->id));
     }
-
     return (*cars_register);
 }
 
@@ -172,4 +170,43 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	if (*s1 != *s2)
 		return ((unsigned char)*s1 - (unsigned char)*s2);
 	return (0);
+}
+
+char	*ft_remove_car_model(Cars_list **cars_register, char *car_id)
+{
+	char	*target_id;
+
+	target_id = ft_strdup(car_id);
+	printf("target_id: %s\n", target_id);
+	while ((*cars_register) -> next != NULL)
+	{
+		printf("cars_register_id: %s\n", (*cars_register) -> car -> id);
+		if (ft_strncmp(car_id, (*cars_register) -> car -> id, ft_strlen(car_id)) == 0)
+		{
+			printf("TARGET TO REMOVED FOUND\n");
+			free((*cars_register) -> car);
+			*cars_register = (*cars_register) -> next;
+			return (target_id);
+		}
+		*cars_register = (*cars_register) -> next;
+	}
+	return (NULL);
+}
+
+char	*ft_strdup(char *src)
+{
+	char	*new;
+	int		i;
+
+	new = (char *)malloc((ft_strlen(src) / sizeof(char)) + 1);
+	if (new == NULL)
+		return (new);
+	i = 0;
+	while (src[i])
+	{
+		new[i] = src[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
 }

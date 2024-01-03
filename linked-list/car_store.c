@@ -25,9 +25,10 @@ int main(void)
 	ft_add_car_front(&cars_register, &model_sport_1);
 	ft_add_car_front(&cars_register, &model_sport_2);
 	ft_add_car_front(&cars_register, &model_city_1);
-	ft_add_car_back(&cars_register, &model_sport_3);
 	ft_add_car_front(&cars_register, &model_city_2);
+	ft_add_car_back(&cars_register, &model_sport_3);
 	ft_print_cars(cars_register);
+	
 	ft_free_cars_list(cars_register);
 	return (0);
 }
