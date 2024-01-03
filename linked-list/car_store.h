@@ -30,5 +30,7 @@ Cars_list	*ft_init_cars_register(void);
 void		ft_print_cars(Cars_list *collection);
 void		ft_free_cars_list(Cars_list *cars_register);
 char		*ft_get_id(void);
+int			ft_check_id_exist(Cars_list *cars_register, char *id);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
 
 #endif // !CAR_STORE_H

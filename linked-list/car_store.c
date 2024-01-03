@@ -21,7 +21,6 @@ int main(void)
 	Car_model	model_sport_1 = {"Spotive", "Ferrari", "Enzo", 2002, NULL};
 	Car_model	model_city_2 =  {"Citadine", "Tesla", "Cybertruck", 2023, NULL};
 	
-	srand(time(NULL));
 	Cars_list *cars_register = ft_init_cars_register();	
 	ft_add_car_front(&cars_register, &model_sport_1);
 	ft_add_car_front(&cars_register, &model_sport_2);
