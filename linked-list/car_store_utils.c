@@ -20,6 +20,7 @@ Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car)
 	Cars_list	*new_data;
 	char		*id;
 
+	// srand(time(NULL));
 	id = ft_get_id();
 	while (ft_check_id_exist(*cars_register, id))
 	{
@@ -224,4 +225,22 @@ char	*ft_strdup(char *src)
 	}
 	new[i] = '\0';
 	return (new);
+}
+
+char	*ft_update_car_by_id(Cars_list **cars_register,Car_model *new_car, char *car_id)
+{
+	Cars_list	*current;
+
+	current = *cars_register;
+	while (current != NULL)
+	{
+		if (ft_strncmp(current -> car -> id, car_id, ft_strlen(car_id)) == 0)
+		{
+			new_car -> id = current -> car -> id;
+			current -> car = new_car;
+			return (car_id);
+		}
+		current = current -> next;
+	}
+	return (NULL);
 }

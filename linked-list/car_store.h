@@ -34,6 +34,7 @@ int			ft_check_id_exist(Cars_list *cars_register, char *id);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 size_t		ft_strlen(char *s);
 char		*ft_remove_car_by_id(Cars_list **cars_register, char *car_id);
+char		*ft_update_car_by_id(Cars_list **cars_register, Car_model *new_car, char *car_id); 
 char		*ft_strdup(char *src);
 
 #endif // !CAR_STORE_H
