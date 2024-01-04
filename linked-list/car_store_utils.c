@@ -106,6 +106,7 @@ void	ft_free_cars_list(Cars_list *cars_register)
 	{
 		temp = cars_register;
 		cars_register = cars_register -> next;
+		free(temp -> car -> id);
 		free(temp);
 		temp = NULL;
 	}
