@@ -27,8 +27,12 @@ int main(void)
 	ft_add_car_front(&cars_register, &model_city_1);
 	ft_add_car_front(&cars_register, &model_city_2);
 	ft_add_car_back(&cars_register, &model_sport_3);
+	// ft_remove_car_by_id(&cars_register, "cb4543a5-b93b-441e-ca4c-b0fb3d30875cb");
+	// ft_remove_car_by_id(&cars_register, "83a5d578-e4b2-6b44-e241-dc709e111c7e1");
+	// ft_remove_car_by_id(&cars_register, "458e199c-89f5-b135-7091-5abb0874df3e8");
+	// ft_remove_car_by_id(&cars_register, "76931fac-dab2-36c2-8b87-6ae33f9a62d71");
+	// ft_remove_car_by_id(&cars_register, "e7acb6f8-ac0b-2fc4-8bc2-e3baaab9165cc");
 	ft_print_cars(cars_register);
-	
 	ft_free_cars_list(cars_register);
 	return (0);
 }

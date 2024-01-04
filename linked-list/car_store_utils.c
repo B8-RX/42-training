@@ -15,19 +15,20 @@ Cars_list	*ft_init_cars_register(void)
 
 Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car)
 {
+	printf("\n\t-----ADD_CAR_FRONT FUNCTION-----\n");
+	
 	Cars_list	*new_data;
 	char		*id;
 
 	id = ft_get_id();
 	while (ft_check_id_exist(*cars_register, id))
 	{
-		printf("ERROR ID: %s ALREADY EXIST\n", id);
+		printf("ID: %s ALREADY EXIST\n", id);
 		printf("GENERATE NEW ID\n");
 		id = ft_get_id();
 		printf("NEW ID: %s\n", id);
 	}
-	printf("ID IS UNIQUE\n");
-	printf("UNIQUE ID GENERATED\n\n");
+	printf("UNIQUE ID GENERATED\n");
 	new_car -> id = id;
 	new_data = malloc(sizeof(Cars_list));
 	if (!new_data)
@@ -35,11 +36,14 @@ Cars_list	*ft_add_car_front(Cars_list **cars_register, Car_model *new_car)
 	new_data -> car = new_car;
 	new_data -> next = *cars_register;
 	*cars_register = new_data;
+	printf("car: %s %s id:%s\tADDED\n\n", new_data -> car -> brand, new_data -> car -> model, new_data -> car -> id);
 	return (new_data);
 }
 
 void	ft_print_cars(Cars_list *cars_register)
 {
+	printf("\n\t-----PRINT_CARS FUNCTION-----\n");
+
 	int	i;
 
 	if (cars_register == NULL)
@@ -48,10 +52,10 @@ void	ft_print_cars(Cars_list *cars_register)
 		return ;
 	}
 	i = 1;
-	do 
+	do
 	{
-		printf("car %d\ntype: %s\nbrand: %s\nmodel: %s\nrelease: %d\nid: %s\n\n", i, cars_register -> car -> type, cars_register->car->brand, cars_register -> car -> model, cars_register -> car -> release, cars_register -> car -> id);
-		cars_register = cars_register->next;
+		printf("\ncar %d\ntype: %s\nbrand: %s\nmodel: %s\nrelease: %d\nid: %s\n\n", i, cars_register -> car -> type, cars_register->car->brand, cars_register -> car -> model, cars_register -> car -> release, cars_register -> car -> id);
+		cars_register = cars_register -> next;
 		i++;
     }
 	while (cars_register != NULL);
@@ -59,20 +63,21 @@ void	ft_print_cars(Cars_list *cars_register)
 
 Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car)
 {
-	Cars_list	*current_list;
-	char		*id;
+	printf("\n\t-----ADD_CAR_BACK FUNCTION-----\n");
+
+	Cars_list	*current;
+ 	char		*id;
 
 	id = ft_get_id();
 	while (ft_check_id_exist(*cars_register, id))
 	{
-		printf("ERROR ID: %s ALREADY EXIST\n", id);
+		printf("ID: %s ALREADY EXIST\n", id);
 		printf("GENERATE NEW ID\n");
 		id = ft_get_id();
 		printf("NEW ID: %s\n", id);
 	}
-	printf("ID IS UNIQUE\n");
-	printf("UNIQUE ID GENERATED\n\n");
-	
+	printf("UNIQUE ID GENERATED\n");
+
 	new_car -> id = id;
 	if ((*cars_register) -> car == NULL)
 	{
@@ -81,14 +86,14 @@ Cars_list	*ft_add_car_back(Cars_list **cars_register, Car_model *new_car)
     } 
 	else
 	{
-        current_list = *cars_register;
-        while (current_list->next != NULL)
+        current = *cars_register;
+        while (current->next != NULL)
         {
-            current_list = current_list->next;
+            current = current->next;
         }
-		current_list -> car = new_car;
-        current_list -> next = NULL;
-		printf("\n\nID %s REMOVED\n\n",ft_remove_car_model(&*cars_register, current_list->car->id));
+		current -> car = new_car;
+		printf("car: %s %s id: %s\tADDED\n\n", current -> car -> brand, current -> car -> model, current -> car -> id);
+        current -> next = NULL;
     }
     return (*cars_register);
 }
@@ -139,21 +144,16 @@ size_t	ft_strlen(char *s)
 
 int	ft_check_id_exist(Cars_list *cars_register, char *id)
 {
+	printf("\n-----CHECK_ID FUNCTION-----\n");
 
-	printf("SEARCHING FOR ID: %s\n", id);
-	if (cars_register -> next == NULL)
-	{
-		printf("ID NOT FOUND Cars Register Empty\n");
+	if (cars_register && cars_register -> next == NULL)
 		return (0);
-	}
-	do
+	while (cars_register && cars_register -> next != NULL)
 	{
 		if (ft_strncmp((cars_register -> car -> id), id, ft_strlen(id)) == 0)
 			return (1);
 		cars_register = cars_register -> next;
 	}
-	while (cars_register && cars_register -> car != NULL);
-	printf("ID NOT FOUND\n");
 	return (0);
 }
 
@@ -172,23 +172,37 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (0);
 }
 
-char	*ft_remove_car_model(Cars_list **cars_register, char *car_id)
+char	*ft_remove_car_by_id(Cars_list **cars_register, char *car_id)
 {
-	char	*target_id;
+	Cars_list	*last;
+	Cars_list	*current;
 
-	target_id = ft_strdup(car_id);
-	printf("target_id: %s\n", target_id);
-	while ((*cars_register) -> next != NULL)
+	printf("\n\t-----REMOVE_CAR FUNCTION-----\n");
+	last = *cars_register;
+	current = *cars_register;
+	if (ft_strncmp(current -> car -> id, car_id, ft_strlen(car_id)) == 0)
 	{
-		printf("cars_register_id: %s\n", (*cars_register) -> car -> id);
-		if (ft_strncmp(car_id, (*cars_register) -> car -> id, ft_strlen(car_id)) == 0)
+		*cars_register = current -> next;
+		free(current);
+		printf("SUCCESSFULLY REMOVED car_id: %s\n", car_id);
+		return (car_id);
+	}
+	while (*cars_register  != NULL)
+	{
+		if (ft_strncmp(car_id, current -> car -> id, ft_strlen(car_id)) == 0)
 		{
-			printf("TARGET TO REMOVED FOUND\n");
-			free((*cars_register) -> car);
-			*cars_register = (*cars_register) -> next;
-			return (target_id);
+			last -> next = current -> next;
+			free(current);
+			printf("SUCCESSFULLY REMOVED car_id: %s\n", car_id);
+			return (car_id);
 		}
-		*cars_register = (*cars_register) -> next;
+		else if (ft_strncmp(car_id, current -> next -> car -> id, ft_strlen(car_id)) != 0)
+		{
+			current = current -> next;
+			last = current;
+		}
+		else
+			current = current -> next;
 	}
 	return (NULL);
 }
