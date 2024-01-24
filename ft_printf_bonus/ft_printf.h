@@ -23,13 +23,13 @@
 
 typedef	struct s_flags {
 	int		period;
-	char	*precision;
+	int		precision;
 	int		blank;
 	int		zero;
 	int		hashtag;
 	int		plus;
 	int		minus;
-	char	*width;
+	int		width;
 }	t_flags;
 
 typedef struct s_printf {
@@ -41,9 +41,10 @@ typedef struct s_printf {
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
-void		ft_free_flags(t_printf *printf_props);
-int			ft_print_str(char *str, int size, int flags);
+void		ft_reset_flags(t_printf *printf_props);
+int			ft_print_str(t_printf *printf_props, char *str, int size, int flags);
 int			ft_print_nbr(int nb, int size);
+int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
 int			ft_print_hexa(unsigned long hexa, int size, char format, char *base);
 t_printf	*ft_handle_format(t_printf **printf_props, char *format);
@@ -52,6 +53,7 @@ char		*ft_strchr(const char *s, int c);
 size_t		ft_strlen(char *str);
 char		*ft_substr(char *s, unsigned int start, size_t len);
 size_t		ft_strlcpy(char *dst, char *src, size_t size);
+char		*ft_strjoin(char *s1, char *s2);
 
 #endif // !FT_PRINTF_H
 
