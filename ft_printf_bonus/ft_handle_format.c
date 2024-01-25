@@ -27,7 +27,7 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 	{
 		if ((*printf_props) -> flags -> precision || (*printf_props) -> flags -> width)
 			flags = 1;	
-		(*printf_props) -> step += ft_print_str((char *)va_arg(*args, void *), len, flags);
+		(*printf_props) -> step += ft_print_str(*printf_props, (char *)va_arg(*args, void *), len, flags);
 	}
 	else if (*format == 'd' || *format == 'i')
 		(*printf_props) -> step += ft_print_nbr(va_arg(*args, int), len);
@@ -43,7 +43,7 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 		(*printf_props) -> step += write(1, "%", 1);
 	else if (ft_strchr(".0123456789#- +", *format))
 	{
-		*printf_props = ft_handle_special_flags(printf_props, format);
+		*printf_props = ft_check_special_flags(printf_props, format);
 		return (ft_handle_format(printf_props, &format[(*printf_props) -> flags_len]));
 	}
 	return (*printf_props);

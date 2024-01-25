@@ -34,14 +34,14 @@ int	ft_printf(char *format, ...)
 				return (count);
 			}
 			printf_properties = ft_init_printf_props(printf_properties);
-			ft_handle_format(&printf_properties, &format[i + 1]);
+			ft_handle_format(&printf_properties, &format[++i]);
 			count += printf_properties -> step;
-			if (!ft_strchr("scdiupxX%", format[i + 1]))
+			if (!ft_strchr("scdiupxX%", format[i]))
 				i += printf_properties -> flags_len;
-			i += 2;
-			printf_properties -> step = 0;
-			printf_properties -> flags_len = 0;
-		}
+			i++;
+			free(printf_properties -> flags);
+			printf_properties -> flags = NULL;
+			}
 		else 
 		{
 			count += write(1, &format[i], 1);
@@ -49,26 +49,9 @@ int	ft_printf(char *format, ...)
 		}
 	}
 	va_end(printf_properties -> args);
-	ft_free_flags(printf_properties);
-	return (count);
-}
-
-void	ft_free_flags(t_printf *printf_properties)
-{
-	if (printf_properties -> flags -> precision)
-	{
-		free(printf_properties -> flags -> precision);
-		printf_properties -> flags -> precision = NULL;
-	}
-	if (printf_properties -> flags -> width)
-	{
-		free(printf_properties -> flags -> width);
-		printf_properties -> flags -> width = NULL;
-	}
-	free(printf_properties -> flags);
-	printf_properties -> flags = NULL;
 	free(printf_properties);
 	printf_properties = NULL;
+	return (count);
 }
 
 t_printf	*ft_init_printf_props(t_printf *printf_props)
@@ -82,16 +65,16 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	printf_props -> step = 0;
 	printf_props -> flags_len = 0;
 	printf_props -> flags -> period = 0;
-	printf_props -> flags -> precision = NULL;
+	printf_props -> flags -> precision = 0;
 	printf_props -> flags -> blank = 0;
 	printf_props -> flags -> zero = 0;
 	printf_props -> flags -> hashtag = 0;
 	printf_props -> flags -> plus = 0;
 	printf_props -> flags -> minus = 0;
-	printf_props -> flags -> width = NULL;
+	printf_props -> flags -> width = 0;
 	return (printf_props);
 }
-t_printf	*ft_handle_special_flags(t_printf **printf_props, char *format)
+t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 {	
 	int			i;
 	int			j;
@@ -115,9 +98,9 @@ t_printf	*ft_handle_special_flags(t_printf **printf_props, char *format)
 			while (format[i + j] > '0' && format[i + j] <= '9')
 				j++;
 			if ((*printf_props) -> flags -> period)
-				(*printf_props) -> flags -> precision = ft_substr(format + i, 0, j);
+				(*printf_props) -> flags -> precision = ft_atoi(ft_substr(format + i, 0, j));
 			else
-				(*printf_props) -> flags -> width = ft_substr(format + i, 0, j);
+				(*printf_props) -> flags -> width = ft_atoi(ft_substr(format + i, 0, j));
 			i += j;
 		}
 		if (format[i] == ' ')
@@ -177,7 +160,7 @@ size_t	ft_strlen(char *str)
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char			*new;
-
+	
 	if (!s)
 		return (NULL);
 	if (start >= ft_strlen(s))
@@ -210,4 +193,31 @@ size_t	ft_strlcpy(char *dst, char *src, size_t size)
 		dst[i] = '\0';
 	}
 	return (len_src);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*new;
+	int		i;
+	int		j;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+		i++;
+	j = 0;
+	while (s2[j])
+		j++;
+	new = (char *)malloc((i + j + 1) * sizeof(char));
+	if (new == NULL)
+		return (NULL);
+	i = -1;
+	while (s1[++i])
+		new[i] = s1[i];
+	j = -1;
+	while (s2[++j])
+		new[i++] = s2[j];
+	new[i] = '\0';
+	return (new);
 }
