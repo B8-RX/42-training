@@ -41,8 +41,9 @@ typedef struct s_printf {
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
-void		ft_reset_flags(t_printf *printf_props);
+char		*ft_handle_width_flag(char *infill, int width);
 int			ft_print_str(t_printf *printf_props, char *str, int size, int flags);
+int	ft_print_str_flags(t_printf *printf_props, char *str, int width, int precision);
 int			ft_print_nbr(int nb, int size);
 int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
