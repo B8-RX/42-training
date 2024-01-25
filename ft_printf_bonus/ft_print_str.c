@@ -16,11 +16,10 @@ int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
 {
 	int		precision;
 	int		width;
-	size_t	str_len;
 	char	*res;
 	char	*temp;
+	int		i;
 
-	str_len = ft_strlen(str);
 	precision = printf_props -> flags -> precision;
 	width = printf_props -> flags -> width;
 	if (!str)
@@ -30,35 +29,34 @@ int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
 		res = malloc(1);
 		res[0] = '\0';
 		if (precision)
-		{
-			temp = ft_strjoin("", str);
-			str = ft_substr(temp, 0, precision);
-			free(temp);
-		}
-		if (width && width > precision)
+			str = ft_substr(str, 0, precision);
+		if (width > precision)
 		{
 			width -= precision;
-			while (width)
+			i = 0;
+			while (i < width)
 			{
-				temp = ft_strjoin("", res);
+				temp = ft_strjoin(res, "");
 				free(res);
 				res = ft_strjoin(temp, " ");
-				free(temp);
-				width--;
+				free(temp); 
+				i++;
 			}
 		}
-		temp = ft_strjoin("", res);
+		if (printf_props -> flags -> minus)
+			temp = ft_strjoin(str, res);
+		else
+			temp = ft_strjoin(res, str);
 		free(res);
-		res = ft_strjoin(temp, str);
-		free(temp);
 		if (precision)
 			free(str);
-		while (res[width] != '\0')
+		i = 0;
+		while (temp[i] != '\0')
 		{
-			size += write(1, &res[width], 1);
-			width++;
+			size += write(1, &temp[i], 1);
+			i++;
 		}
-		free(res);
+		free(temp);
 	}
 	else
 		while (*str != '\0')

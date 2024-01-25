@@ -34,11 +34,11 @@ int	ft_printf(char *format, ...)
 				return (count);
 			}
 			printf_properties = ft_init_printf_props(printf_properties);
-			ft_handle_format(&printf_properties, &format[i + 1]);
+			ft_handle_format(&printf_properties, &format[++i]);
 			count += printf_properties -> step;
-			if (!ft_strchr("scdiupxX%", format[i + 1]))
+			if (!ft_strchr("scdiupxX%", format[i]))
 				i += printf_properties -> flags_len;
-			i += 2;
+			i++;
 			free(printf_properties -> flags);
 			printf_properties -> flags = NULL;
 			}
