@@ -74,7 +74,7 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	printf_props -> flags -> width = 0;
 	return (printf_props);
 }
-t_printf	*ft_handle_special_flags(t_printf **printf_props, char *format)
+t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 {	
 	int			i;
 	int			j;

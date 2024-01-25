@@ -16,63 +16,60 @@ int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
 {
 	int	precision;
 	int	width;
+	int	i;
 
 	precision = printf_props -> flags -> precision;
 	width = printf_props -> flags -> width;
+	i = 0;
 	if (!str)
 		return (ft_print_str(printf_props, "(null)", size, flags));
-	if (flags)
+	if (flags == 1)
 	{
 		if (precision)
 			str = ft_substr(str, 0, precision);
 		else
 			str = ft_substr(str, 0, ft_strlen(str));
-		size += ft_print_str_flags(printf_props, str, width, precision);
+		str = ft_update_str(printf_props, str);
+		return (ft_print_str(printf_props, str, size, -1));
 	}
 	else
-		while (*str != '\0')
-		{
-			size += write(1, &*str, 1);
-			str++;
-		}
+		while (str[i] != '\0')
+			size += write(1, &str[i++], 1);
+	if (flags == -1)
+		free(str);
 	return (size);
 }
 
-int	ft_print_str_flags(t_printf *printf_props, char *str, int width, int precision)
+char	*ft_update_str(t_printf *printf_props, char *str)
 {
-	char	*result;
+	char	*new_str;
 	char	*infill;
-	int		size;
+	int		width;
+	int		precision;
 	int		i;
-	
-	size = 0;
+
+	precision = printf_props -> flags -> precision;
+	width = printf_props -> flags -> width;
 	infill = malloc(sizeof(char));
-	infill[0] = '\0'; 
+	infill[0] = '\0';
 	if (width > precision)
 	{
 		width -= precision;
 		i = 0;
-		infill = ft_handle_width_flag(infill, width);
+		infill = ft_infill_str(infill, width);
 	}
 	if (printf_props -> flags -> minus)
-		result = ft_strjoin(str, infill);
+		new_str = ft_strjoin(str, infill);
 	else
-		result = ft_strjoin(infill, str);
-	i = 0;
-	while (result[i] != '\0')
-	{
-		size += write(1, &result[i], 1);
-		i++;
-	}
+		new_str = ft_strjoin(infill, str);
 	free(infill);
-	free(result);
 	free(str);
-	return (size);
+	return (new_str);
 }
 
-char	*ft_handle_width_flag(char *infill, int width)
+char	*ft_infill_str(char *infill, int width)
 {
-	char	*temp; 
+	char	*temp;
 	int		i;
 
 	i = 0;
@@ -81,7 +78,7 @@ char	*ft_handle_width_flag(char *infill, int width)
 		temp = ft_strjoin(infill, "");
 		free(infill);
 		infill = ft_strjoin(temp, " ");
-		free(temp); 
+		free(temp);
 		i++;
 	}
 	return (infill);

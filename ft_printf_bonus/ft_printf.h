@@ -33,7 +33,7 @@ typedef	struct s_flags {
 }	t_flags;
 
 typedef struct s_printf {
-	va_list	args;
+	va_list	args;		
 	t_flags	*flags;
 	int		flags_len;
 	int		step;
@@ -41,20 +41,20 @@ typedef struct s_printf {
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
-char		*ft_handle_width_flag(char *infill, int width);
+t_printf	*ft_handle_format(t_printf **printf_props, char *format);
+t_printf	*ft_check_special_flags(t_printf **printf_props, char *format);
+char		*ft_infill_str(char *infill, int width);
+char		*ft_update_str(t_printf *printf_props, char *str);
 int			ft_print_str(t_printf *printf_props, char *str, int size, int flags);
-int	ft_print_str_flags(t_printf *printf_props, char *str, int width, int precision);
 int			ft_print_nbr(int nb, int size);
 int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
 int			ft_print_hexa(unsigned long hexa, int size, char format, char *base);
-t_printf	*ft_handle_format(t_printf **printf_props, char *format);
-t_printf	*ft_handle_special_flags(t_printf **printf_props, char *format);
-char		*ft_strchr(const char *s, int c);
-size_t		ft_strlen(char *str);
-char		*ft_substr(char *s, unsigned int start, size_t len);
-size_t		ft_strlcpy(char *dst, char *src, size_t size);
 char		*ft_strjoin(char *s1, char *s2);
+char		*ft_substr(char *s, unsigned int start, size_t len);
+char		*ft_strchr(const char *s, int c);
+size_t		ft_strlcpy(char *dst, char *src, size_t size);
+size_t		ft_strlen(char *str);
 
 #endif // !FT_PRINTF_H
 
