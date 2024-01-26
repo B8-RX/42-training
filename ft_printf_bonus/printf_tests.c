@@ -38,14 +38,14 @@ int	main(void)
 	ft_printf("clone:    |%.2s|\n", str);	
 	printf("original: |%.2s|\n\n", str);	
 	
-	// printf("--SPECIFIER C, POSSIBLE CASES:--\n\n");
-	
-	// ft_printf("clone: |%c|\n", c);
-	// printf("original: |%c|\n", c);
-	// ft_printf("clone: |%c|\n", c);
-	// printf("original: |%10c|\n", c);
-	// ft_printf("clone: |%c|\n", c);
-	// printf("original: |%-10c|\n", c);
+	printf("--SPECIFIER C, POSSIBLE CASES:--\n\n");
+
+	ft_printf("clone:    |%c|\n", c);
+	printf("original: |%c|\n", c);
+	ft_printf("clone:    |%10c|\n", c);
+	printf("original: |%10c|\n", c);
+	ft_printf("clone:    |%-10c|\n", c);
+	printf("original: |%-10c|\n", c);
 
 
 

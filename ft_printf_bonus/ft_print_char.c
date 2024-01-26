@@ -14,13 +14,11 @@
 
 int	ft_print_char(t_printf **printf_props, char c)
 {
-	int size;
-	int	width;
-	int	minus;
+	char	*res;
 
-	width = (*printf_props) -> flags -> width;
-	minus = (*printf_props) -> flags -> minus;
-	size = 0;
-	size += write(1, &c, 1);
-	return (size);
+	res = malloc(sizeof(char) + 1);
+	res[0] = c;
+	res[1] = '\0';
+	
+	return (ft_print_str(*printf_props, res, 0));
 }

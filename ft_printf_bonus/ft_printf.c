@@ -111,11 +111,21 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 		}
 		if (format[i] == '0')
 		{
+			int pow;
+			
 			j = 0;
-			(*printf_props) -> flags -> zero = 1;
+			pow = 1;
 			while (format[i + j] == '0')
 				j++;
 			i += j;
+			while (j--)
+				pow *= 10;
+			if ((*printf_props) -> flags -> precision)
+				(*printf_props) -> flags -> precision *= pow;
+			else if ((*printf_props) -> flags -> width)
+				(*printf_props) -> flags -> width *= pow;
+			else
+				(*printf_props) -> flags -> zero = 1;
 		}
 		if (format[i] == '#')
 		{

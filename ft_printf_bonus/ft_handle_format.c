@@ -15,16 +15,18 @@
 t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 {
 	int			len;
-	// int			flags;
 	va_list		*args;
+	char		*output;
 
 	args = &((*printf_props) -> args);
 	len = 0;
-	// flags = 0;
 	if (*format == 'c')
 		(*printf_props) -> step += ft_print_char(printf_props, va_arg(*args, int));
 	else if (*format == 's')
-		(*printf_props) -> step += ft_print_str(*printf_props, (char *)va_arg(*args, void *), len);
+	{
+		output = ft_strjoin((char *)va_arg(*args, void *), "");
+		(*printf_props) -> step += ft_print_str(*printf_props, output, len);
+	}
 	else if (*format == 'd' || *format == 'i')
 		(*printf_props) -> step += ft_print_nbr(va_arg(*args, int), len);
 	else if (*format == 'u')
