@@ -64,6 +64,7 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	}
 	printf_props -> step = 0;
 	printf_props -> flags_len = 0;
+	printf_props -> updated = 0;
 	printf_props -> flags -> period = 0;
 	printf_props -> flags -> precision = 0;
 	printf_props -> flags -> blank = 0;

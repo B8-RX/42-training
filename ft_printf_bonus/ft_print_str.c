@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
+int	ft_print_str(t_printf *printf_props, char *str, int size)
 {
 	int	precision;
 	int	width;
@@ -22,20 +22,20 @@ int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
 	width = printf_props -> flags -> width;
 	i = 0;
 	if (!str)
-		return (ft_print_str(printf_props, "(null)", size, flags));
-	if (flags == 1)
+		return (ft_print_str(printf_props, "(null)", size));
+	if (printf_props -> flags_len && !printf_props -> updated)
 	{
 		if (precision)
 			str = ft_substr(str, 0, precision);
 		else
 			str = ft_substr(str, 0, ft_strlen(str));
 		str = ft_update_str(printf_props, str);
-		return (ft_print_str(printf_props, str, size, -1));
+		return (ft_print_str(printf_props, str, size));
 	}
 	else
 		while (str[i] != '\0')
 			size += write(1, &str[i++], 1);
-	if (flags == -1)
+	if (printf_props -> updated)
 		free(str);
 	return (size);
 }
@@ -58,6 +58,7 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 		i = 0;
 		infill = ft_infill_str(infill, width);
 	}
+	printf_props -> updated = 1;
 	if (printf_props -> flags -> minus)
 		new_str = ft_strjoin(str, infill);
 	else

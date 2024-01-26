@@ -15,20 +15,16 @@
 t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 {
 	int			len;
-	int			flags;
+	// int			flags;
 	va_list		*args;
 
 	args = &((*printf_props) -> args);
 	len = 0;
-	flags = 0;
+	// flags = 0;
 	if (*format == 'c')
-		(*printf_props) -> step += write(1, &*format, 1);
+		(*printf_props) -> step += ft_print_char(printf_props, va_arg(*args, int));
 	else if (*format == 's')
-	{
-		if ((*printf_props) -> flags -> precision || (*printf_props) -> flags -> width)
-			flags = 1;	
-		(*printf_props) -> step += ft_print_str(*printf_props, (char *)va_arg(*args, void *), len, flags);
-	}
+		(*printf_props) -> step += ft_print_str(*printf_props, (char *)va_arg(*args, void *), len);
 	else if (*format == 'd' || *format == 'i')
 		(*printf_props) -> step += ft_print_nbr(va_arg(*args, int), len);
 	else if (*format == 'u')
