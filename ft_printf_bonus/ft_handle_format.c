@@ -20,6 +20,8 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 
 	args = &((*printf_props) -> args);
 	len = 0;
+	if (ft_strchr("csdiupxX", *format))
+		(*printf_props) -> specifier = *format;
 	if (*format == 'c')
 		(*printf_props) -> step += ft_print_char(printf_props, va_arg(*args, int));
 	else if (*format == 's')
@@ -41,8 +43,10 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 		(*printf_props) -> step += write(1, "%", 1);
 	else if (ft_strchr(".0123456789#- +", *format))
 	{
-		*printf_props = ft_check_special_flags(printf_props, format);
+		if (!ft_check_special_flags(printf_props, format))
+			return (NULL);
 		return (ft_handle_format(printf_props, &format[(*printf_props) -> flags_len]));
 	}
+	
 	return (*printf_props);
 }

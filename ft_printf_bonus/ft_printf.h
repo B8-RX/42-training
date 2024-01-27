@@ -35,6 +35,7 @@ typedef	struct s_flags {
 typedef struct s_printf {
 	va_list	args;		
 	t_flags	*flags;
+	char	specifier;
 	int		flags_len;
 	int		updated;
 	int		step;
@@ -44,7 +45,7 @@ int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
 t_printf	*ft_handle_format(t_printf **printf_props, char *format);
 t_printf	*ft_check_special_flags(t_printf **printf_props, char *format);
-char		*ft_infill_str(char *infill, int width);
+char		*ft_infill_str(t_printf *printf_props, char *infill, int width);
 char		*ft_update_str(t_printf *printf_props, char *str);
 int			ft_print_str(t_printf *printf_props, char *str, int size);
 int			ft_print_char(t_printf **printf_props, char c);
