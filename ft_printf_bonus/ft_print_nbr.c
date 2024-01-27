@@ -12,27 +12,46 @@
 
 #include "ft_printf.h"
 
-int	ft_print_nbr(int nb, int size)
+int	ft_print_nbr(t_printf *printf_props  ,int nb, int size)
 {
 	char	num;
+	char	*temp;
 
+	if (!printf_props -> itoa)
+		printf_props -> itoa = malloc(sizeof(char));
+	if (!printf_props -> itoa)
+		return (0);
+	else
+		*printf_props -> itoa = '\0';
 	if (nb == -2147483648)
-		return (write(1, "-2147483648", 11));
+	{
+		temp = ft_strjoin(printf_props -> itoa, "");
+		free(printf_props -> itoa);
+		printf_props -> itoa = ft_strjoin(temp, "-2147483648");
+		free(temp);
+		return (ft_print_str(printf_props, printf_props -> itoa, size));
+	}
 	if (nb < 0)
 	{
-		size += write(1, "-", 1);
-		return (ft_print_nbr(-nb, size));
+		printf_props -> negative_nbr = 1;
+		nb = -nb;
 	}
 	if (nb > 9)
 	{
-		size = 1 + ft_print_nbr(nb / 10, size);
 		num = nb % 10 + '0';
-		write(1, &num, 1);
+		temp = ft_strjoin(printf_props -> itoa, "");
+		free(printf_props -> itoa);
+		printf_props -> itoa = ft_strjoin(temp, &num);
+		free(temp);
+		ft_print_nbr(printf_props, nb / 10, size);
 	}
 	else
 	{
+		temp = ft_strjoin(printf_props -> itoa, "");
+		free(printf_props -> itoa);
 		num = nb + '0';
-		size += write(1, &num, 1);
+		printf_props -> itoa = ft_strjoin(temp , &num);
+		free(temp);	
 	}
-	return (size);
+	return (ft_print_str(printf_props, printf_props -> itoa, size));
 }

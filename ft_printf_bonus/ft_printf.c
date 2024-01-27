@@ -33,15 +33,16 @@ int	ft_printf(char *format, ...)
 				count += write(1, &format[i], 1);	
 				break;
 			}
-			printf_properties = ft_init_printf_props(printf_properties);
+			if (ft_init_printf_props(printf_properties) == NULL)
+				break;
 			ft_handle_format(&printf_properties, &format[++i]);
-			count += printf_properties -> step;
+			count += printf_properties -> format_len;
 			if (!ft_strchr("scdiupxX%", format[i]))
 				i += printf_properties -> flags_len;
 			i++;
 			free(printf_properties -> flags);
 			printf_properties -> flags = NULL;
-			}
+		}
 		else 
 		{
 			count += write(1, &format[i], 1);
@@ -49,6 +50,7 @@ int	ft_printf(char *format, ...)
 		}
 	}
 	va_end(printf_properties -> args);
+
 	free(printf_properties);
 	printf_properties = NULL;
 	return (count);
@@ -58,14 +60,13 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 {
 	printf_props -> flags = malloc(sizeof(t_flags));
 	if (!printf_props -> flags)
-	{
-		free(printf_props);
-		return (0);
-	}
+		return (NULL);
 	printf_props -> specifier = '0';
-	printf_props -> step = 0;
+	printf_props -> format_len = 0;
 	printf_props -> flags_len = 0;
 	printf_props -> updated = 0;
+	printf_props -> itoa = NULL;
+	printf_props -> negative_nbr = 0;
 	printf_props -> flags -> period = 0;
 	printf_props -> flags -> precision = 0;
 	printf_props -> flags -> blank = 0;
@@ -213,8 +214,13 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		i;
 	int		j;
 
-	if (!s1 || !s2)
+	if (!s2)
 		return (NULL);
+	if (!s1)
+	{
+		s1 = malloc(sizeof(char));
+		s1[0] = '\0';
+	}
 	i = 0;
 	while (s1[i])
 		i++;

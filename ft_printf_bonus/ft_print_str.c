@@ -30,7 +30,7 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 			new = ft_substr(str, 0, ft_strlen(str));
 		free(str);
 		new = ft_update_str(printf_props, new);
-		return (ft_print_str(printf_props, new, size));
+		return (ft_print_str(printf_props, new, size));	
 	}
 	while (str[i] != '\0')
 		size += write(1, &str[i++], 1);
@@ -67,6 +67,14 @@ char	*ft_infill_str(t_printf *printf_props, char *infill, int width)
 	int		i;
 
 	i = 0;
+	if (printf_props -> negative_nbr)
+	{
+		temp = ft_strjoin(infill, "-");
+		free(infill);
+		infill = ft_strjoin(temp, "");
+		free(temp);
+		width--;
+	}
 	while (i < width)
 	{
 		temp = ft_strjoin(infill, "");

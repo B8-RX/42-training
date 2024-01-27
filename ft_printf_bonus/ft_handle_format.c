@@ -23,24 +23,24 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 	if (ft_strchr("csdiupxX", *format))
 		(*printf_props) -> specifier = *format;
 	if (*format == 'c')
-		(*printf_props) -> step += ft_print_char(printf_props, va_arg(*args, int));
+		(*printf_props) -> format_len += ft_print_char(printf_props, va_arg(*args, int));
 	else if (*format == 's')
 	{
 		output = ft_strjoin((char *)va_arg(*args, void *), "");
-		(*printf_props) -> step += ft_print_str(*printf_props, output, len);
+		(*printf_props) -> format_len += ft_print_str(*printf_props, output, len);
 	}
 	else if (*format == 'd' || *format == 'i')
-		(*printf_props) -> step += ft_print_nbr(va_arg(*args, int), len);
+		(*printf_props) -> format_len += ft_print_nbr(*printf_props, va_arg(*args, int), len);
 	else if (*format == 'u')
-		(*printf_props) -> step += ft_print_unsigned(va_arg(*args, unsigned int), len);
+		(*printf_props) -> format_len += ft_print_unsigned(va_arg(*args, unsigned int), len);
 	else if (*format == 'p')
-		(*printf_props) -> step += ft_print_hexa(va_arg(*args, unsigned long), len, *format, BASE_LOW);
+		(*printf_props) -> format_len += ft_print_hexa(va_arg(*args, unsigned long), len, *format, BASE_LOW);
 	else if (*format == 'x')
-		(*printf_props) -> step += ft_print_hexa(va_arg(*args, unsigned int), len, *format, BASE_LOW);
+		(*printf_props) -> format_len += ft_print_hexa(va_arg(*args, unsigned int), len, *format, BASE_LOW);
 	else if (*format == 'X')
-		(*printf_props) -> step += ft_print_hexa(va_arg(*args, unsigned int), len, *format, BASE_UP);
+		(*printf_props) -> format_len += ft_print_hexa(va_arg(*args, unsigned int), len, *format, BASE_UP);
 	else if (*format == '%')	
-		(*printf_props) -> step += write(1, "%", 1);
+		(*printf_props) -> format_len += write(1, "%", 1);
 	else if (ft_strchr(".0123456789#- +", *format))
 	{
 		if (!ft_check_special_flags(printf_props, format))

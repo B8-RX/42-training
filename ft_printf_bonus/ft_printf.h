@@ -37,8 +37,10 @@ typedef struct s_printf {
 	t_flags	*flags;
 	char	specifier;
 	int		flags_len;
+	int		format_len;
 	int		updated;
-	int		step;
+	char	*itoa;
+	int		negative_nbr;
 }	t_printf;
 
 int			ft_printf(char *format, ...);
@@ -49,7 +51,7 @@ char		*ft_infill_str(t_printf *printf_props, char *infill, int width);
 char		*ft_update_str(t_printf *printf_props, char *str);
 int			ft_print_str(t_printf *printf_props, char *str, int size);
 int			ft_print_char(t_printf **printf_props, char c);
-int			ft_print_nbr(int nb, int size);
+int			ft_print_nbr(t_printf *printf_props, int nb, int size);
 int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
 int			ft_print_hexa(unsigned long hexa, int size, char format, char *base);

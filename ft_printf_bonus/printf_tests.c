@@ -42,8 +42,8 @@ int	main(void)
 
 	ft_printf("clone:    |%c|\n", c);
 	printf("original: |%c|\n\n", c);
-	ft_printf("clone:    |%010c|\n", c);
-	printf("original: |%010c|\n\n", c);
+	// ft_printf("clone:    |%010c|\n", c);
+	// printf("original: |%010c|\n\n", c);
 	ft_printf("clone:    |%-10c|\n", c);
 	printf("original: |%-10c|\n\n", c);
 
@@ -51,6 +51,8 @@ int	main(void)
 
 	ft_printf("clone:    |%010d|\n", 5);
 	printf("original: |%010d|\n\n", 5);
+	ft_printf("clone:    |%010d|\n", -5);
+	printf("original: |%010d|\n\n", -5);
 
 	// ft_printf("\n======================END========================\n\n\n");
 
