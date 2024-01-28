@@ -50,7 +50,6 @@ int	ft_printf(char *format, ...)
 		}
 	}
 	va_end(printf_properties -> args);
-
 	free(printf_properties);
 	printf_properties = NULL;
 	return (count);

@@ -48,11 +48,14 @@ int	main(void)
 	printf("original: |%-10c|\n\n", c);
 
 	printf("--SPECIFIER d and i, POSSIBLE CASES:--\n\n");
-
 	ft_printf("clone:    |%010d|\n", 5);
 	printf("original: |%010d|\n\n", 5);
+	ft_printf("clone:    |%010d|\n", 5420);
+	printf("original: |%010d|\n\n", 5420);
 	ft_printf("clone:    |%010d|\n", -5);
 	printf("original: |%010d|\n\n", -5);
+	ft_printf("clone:    |%010d|\n", -500);
+	printf("original: |%010d|\n\n", -500);
 
 	// ft_printf("\n======================END========================\n\n\n");
 
