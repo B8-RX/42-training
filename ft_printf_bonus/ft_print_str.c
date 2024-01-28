@@ -30,6 +30,7 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 			new = ft_substr(str, 0, ft_strlen(str));
 		free(str);
 		new = ft_update_str(printf_props, new);
+	
 		return (ft_print_str(printf_props, new, size));	
 	}
 	while (str[i] != '\0')
@@ -48,6 +49,7 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	width = printf_props -> flags -> width;
 	infill = malloc(sizeof(char));
 	infill[0] = '\0';
+		
 	if (width > precision)
 	{
 		width -= ft_strlen(str);
@@ -56,7 +58,19 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	if (printf_props -> flags -> minus)
 		new_str = ft_strjoin(str, infill);
 	else
-		new_str = ft_strjoin(infill, str);
+	{
+		if (printf_props -> negative_nbr && printf_props -> flags -> zero)
+		{
+			new_str = ft_substr(str, 1, ft_strlen(str) - 1);
+			free(str);
+			str = ft_strjoin(infill, new_str);
+			free(new_str);
+			new_str = ft_strjoin("-", str);
+		}
+		else
+			new_str = ft_strjoin(infill, str);
+	}
+
 	printf_props -> updated = 1;
 	return (free(infill), free(str), new_str);
 }
@@ -67,14 +81,6 @@ char	*ft_infill_str(t_printf *printf_props, char *infill, int width)
 	int		i;
 
 	i = 0;
-	if (printf_props -> negative_nbr)
-	{
-		temp = ft_strjoin(infill, "-");
-		free(infill);
-		infill = ft_strjoin(temp, "");
-		free(temp);
-		width--;
-	}
 	while (i < width)
 	{
 		temp = ft_strjoin(infill, "");

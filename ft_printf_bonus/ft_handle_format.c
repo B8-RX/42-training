@@ -35,7 +35,10 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 		(*printf_props) -> format_len += ft_print_str(*printf_props, output, len);
 	}
 	else if (*format == 'u')
-		(*printf_props) -> format_len += ft_print_unsigned(va_arg(*args, unsigned int), len);
+	{
+		output = ft_itoa(*printf_props, va_arg(*args, unsigned int));
+		(*printf_props) -> format_len += ft_print_str(*printf_props, output, len);
+	}
 	else if (*format == 'p')
 		(*printf_props) -> format_len += ft_print_hexa(va_arg(*args, unsigned long), len, *format, BASE_LOW);
 	else if (*format == 'x')

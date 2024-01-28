@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_check_int_len(int nb)
+int	ft_check_int_len(int nb, int parity)
 {
 	int	int_len;
 
@@ -24,10 +24,12 @@ int	ft_check_int_len(int nb)
 	}
 	if (nb > 0)
 		int_len++;
+	if (parity == -1)
+		int_len++;
 	return (int_len);
 }
 
-char	*ft_fill_str(char *res, int nb, int int_len)
+char	*ft_fill_str(char *res, int nb, int int_len, int parity)
 {
 	int	i;
 
@@ -38,6 +40,8 @@ char	*ft_fill_str(char *res, int nb, int int_len)
 		nb /= 10;
 		i++;
 	}
+	if (parity == -1)
+		res[0] = '-';
 	res[int_len] = '\0';
 	return (res);
 }
@@ -59,9 +63,9 @@ char	*ft_itoa(t_printf *printf_props, int n)
 		sign = -1;
 	}
 	n *= sign;
-	int_len = ft_check_int_len(n);
+	int_len = ft_check_int_len(n, sign);
 	str = (char *)malloc ((int_len + 1) * sizeof(char));
 	if (str == NULL)
 		return (str);
-	return (ft_fill_str(str, n, int_len));
+	return (ft_fill_str(str, n, int_len, sign));
 }
