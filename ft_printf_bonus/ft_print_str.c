@@ -49,6 +49,7 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	width = printf_props -> flags -> width;
 	infill = malloc(sizeof(char));
 	infill[0] = '\0';
+		
 	if (width > precision)
 	{
 		width -= ft_strlen(str);
