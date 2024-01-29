@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_check_int_len(int nb, int parity)
+int	ft_check_int_len(t_printf *printf_props, int nb)
 {
 	int	int_len;
 
@@ -24,12 +24,12 @@ int	ft_check_int_len(int nb, int parity)
 	}
 	if (nb > 0)
 		int_len++;
-	if (parity == -1)
+	if (printf_props -> negative_nbr)
 		int_len++;
 	return (int_len);
 }
 
-char	*ft_fill_str(char *res, int nb, int int_len, int parity)
+char	*ft_fill_str(t_printf *printf_props, char *res, int nb, int int_len)
 {
 	int	i;
 
@@ -40,7 +40,9 @@ char	*ft_fill_str(char *res, int nb, int int_len, int parity)
 		nb /= 10;
 		i++;
 	}
-	if (parity == -1)
+	if (!printf_props -> negative_nbr && printf_props -> flags -> plus)
+		res[0] = '+';
+	else if (printf_props -> negative_nbr)
 		res[0] = '-';
 	res[int_len] = '\0';
 	return (res);
@@ -49,26 +51,23 @@ char	*ft_fill_str(char *res, int nb, int int_len, int parity)
 char	*ft_itoa(t_printf *printf_props, int n)
 {
 	char	*str;
-	int		sign;
 	int		int_len;
 
-	sign = 1;
+	int_len = 0;
 	if (n == 0)
 		return (ft_strjoin("0", ""));
-	if (ft_strchr("di", printf_props -> specifier))
+	if (n == -2147483648)
+		return (ft_strjoin("-2147483648", ""));
+	if (!printf_props -> negative_nbr && printf_props -> flags -> plus)
+		int_len++;
+	if (n < 0)
 	{
-		if (n == -2147483648)
-			return (ft_strjoin("-2147483648", ""));
-		if (n < 0)
-		{
-			printf_props -> negative_nbr = 1;
-			sign = -1;
-		}
+		printf_props -> negative_nbr = 1;
+		n *= -1;
 	}
-	n *= sign;
-	int_len = ft_check_int_len(n, sign);
+	int_len += ft_check_int_len(printf_props, n);
 	str = (char *)malloc ((int_len + 1) * sizeof(char));
 	if (str == NULL)
 		return (str);
-	return (ft_fill_str(str, n, int_len, sign));
+	return (ft_fill_str(printf_props, str, n, int_len));
 }

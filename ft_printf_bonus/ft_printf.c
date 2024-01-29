@@ -119,7 +119,8 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			multiple = 1;
 			while (format[i + j] == '0')
 				j++;
-			if (format[i - 1] == '%' && !(*printf_props) -> flags -> minus)
+			if ((format[i - 1] == '%' || format[i - 1] == '+')
+				&& !(*printf_props) -> flags -> minus)
 				(*printf_props) -> flags -> zero = 1;
 			i += j;
 			while (j--)
