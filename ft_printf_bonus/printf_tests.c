@@ -50,6 +50,10 @@ int	main(void)
 	printf("--SPECIFIER d and i, POSSIBLE CASES:--\n\n");
 	ft_printf("clone:    |%010d|\n", 5);
 	printf("original: |%010d|\n\n", 5);
+	ft_printf("clone:    |%+010d|\n", 5);
+	printf("original: |%+010d|\n\n", 5);
+	ft_printf("clone:    |%+10d|\n", 5);
+	printf("original: |%+10d|\n\n", 5);
 	ft_printf("clone:    |%010d|\n", 5420);
 	printf("original: |%010d|\n\n", 5420);
 	ft_printf("clone:    |%10d|\n", -5);

@@ -50,7 +50,6 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	width = printf_props -> flags -> width;
 	infill = malloc(sizeof(char));
 	infill[0] = '\0';
-		
 	if (width > precision)
 	{
 		width -= ft_strlen(str);
@@ -67,6 +66,14 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 			str = ft_strjoin(infill, new_str);
 			free(new_str);
 			new_str = ft_strjoin("-", str);
+		}
+		else if (printf_props -> flags -> plus && printf_props -> flags -> zero)
+		{
+			new_str = ft_substr(str, 1, ft_strlen(str) - 1);
+			free(str);
+			str = ft_strjoin(infill, new_str);
+			free(new_str);
+			new_str = ft_strjoin("+", str);
 		}
 		else
 			new_str = ft_strjoin(infill, str);
