@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_uitoa.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/28 02:46:50 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/01/28 02:46:52 by ssghioua         ###   ########.fr       */
+/*   Created: 2024/01/29 02:51:56 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/01/29 02:51:59 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
+
 #include "ft_printf.h"
 
-int	ft_check_int_len(int nb, int parity)
+int	ft_check_uint_len(unsigned int nb)
 {
 	int	int_len;
 
@@ -24,12 +26,10 @@ int	ft_check_int_len(int nb, int parity)
 	}
 	if (nb > 0)
 		int_len++;
-	if (parity == -1)
-		int_len++;
 	return (int_len);
 }
 
-char	*ft_fill_str(char *res, int nb, int int_len, int parity)
+char	*ft_fill_ui_str(char *res, unsigned int nb, int int_len)
 {
 	int	i;
 
@@ -40,35 +40,20 @@ char	*ft_fill_str(char *res, int nb, int int_len, int parity)
 		nb /= 10;
 		i++;
 	}
-	if (parity == -1)
-		res[0] = '-';
 	res[int_len] = '\0';
 	return (res);
 }
 
-char	*ft_itoa(t_printf *printf_props, int n)
+char	*ft_uitoa(unsigned int n)
 {
 	char	*str;
-	int		sign;
 	int		int_len;
 
-	sign = 1;
 	if (n == 0)
 		return (ft_strjoin("0", ""));
-	if (ft_strchr("di", printf_props -> specifier))
-	{
-		if (n == -2147483648)
-			return (ft_strjoin("-2147483648", ""));
-		if (n < 0)
-		{
-			printf_props -> negative_nbr = 1;
-			sign = -1;
-		}
-	}
-	n *= sign;
-	int_len = ft_check_int_len(n, sign);
+	int_len = ft_check_uint_len(n);
 	str = (char *)malloc ((int_len + 1) * sizeof(char));
 	if (str == NULL)
 		return (str);
-	return (ft_fill_str(str, n, int_len, sign));
+	return (ft_fill_ui_str(str, n, int_len));
 }

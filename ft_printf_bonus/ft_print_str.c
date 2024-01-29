@@ -33,8 +33,9 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 	
 		return (ft_print_str(printf_props, new, size));	
 	}
-	while (str[i] != '\0')
-		size += write(1, &str[i++], 1);
+	if (ft_strchr("csdiu", printf_props -> specifier))
+		while (str[i] != '\0')
+			size += write(1, &str[i++], 1);
 	return (free(str), size);
 }
 

@@ -40,6 +40,7 @@ typedef struct s_printf {
 	int		format_len;
 	int		updated;
 	char	*itoa;
+	char	*base;
 	int		negative_nbr;
 }	t_printf;
 
@@ -59,7 +60,8 @@ char		*ft_substr(char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlcpy(char *dst, char *src, size_t size);
 size_t		ft_strlen(char *str);
-char		*ft_itoa(t_printf *printf_props, int n);
+char		*ft_itoa(t_printf *printf_props, int nb);
+char		*ft_uitoa(unsigned int n);
+char		*ft_ultoa(unsigned long n);
 
 #endif // !FT_PRINTF_H
-
