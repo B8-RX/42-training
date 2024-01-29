@@ -35,18 +35,23 @@ typedef	struct s_flags {
 typedef struct s_printf {
 	va_list	args;		
 	t_flags	*flags;
+	char	specifier;
 	int		flags_len;
-	int		step;
+	int		format_len;
+	int		updated;
+	char	*itoa;
+	char	*base;
+	int		negative_nbr;
 }	t_printf;
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
 t_printf	*ft_handle_format(t_printf **printf_props, char *format);
 t_printf	*ft_check_special_flags(t_printf **printf_props, char *format);
-char		*ft_infill_str(char *infill, int width);
+char		*ft_infill_str(t_printf *printf_props, char *infill, int width);
 char		*ft_update_str(t_printf *printf_props, char *str);
-int			ft_print_str(t_printf *printf_props, char *str, int size, int flags);
-int			ft_print_nbr(int nb, int size);
+int			ft_print_str(t_printf *printf_props, char *str, int size);
+int			ft_print_char(t_printf **printf_props, char c);
 int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
 int			ft_print_hexa(unsigned long hexa, int size, char format, char *base);
@@ -55,6 +60,8 @@ char		*ft_substr(char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlcpy(char *dst, char *src, size_t size);
 size_t		ft_strlen(char *str);
+char		*ft_itoa(t_printf *printf_props, int nb);
+char		*ft_uitoa(unsigned int n);
+char		*ft_ultoa(unsigned long n);
 
 #endif // !FT_PRINTF_H
-

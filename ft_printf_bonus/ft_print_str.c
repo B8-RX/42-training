@@ -12,32 +12,31 @@
 
 #include "ft_printf.h"
 
-int	ft_print_str(t_printf *printf_props, char *str, int size, int flags)
+int	ft_print_str(t_printf *printf_props, char *str, int size)
 {
-	int	precision;
-	int	width;
-	int	i;
+	int		precision;
+	int		i;
+	char	*new;
 
 	precision = printf_props -> flags -> precision;
-	width = printf_props -> flags -> width;
 	i = 0;
 	if (!str)
-		return (ft_print_str(printf_props, "(null)", size, flags));
-	if (flags == 1)
+		return (ft_print_str(printf_props, "(null)", size));
+	if (printf_props -> flags_len && !printf_props -> updated)
 	{
 		if (precision)
-			str = ft_substr(str, 0, precision);
+			new = ft_substr(str, 0, precision);
 		else
-			str = ft_substr(str, 0, ft_strlen(str));
-		str = ft_update_str(printf_props, str);
-		return (ft_print_str(printf_props, str, size, -1));
+			new = ft_substr(str, 0, ft_strlen(str));
+		free(str);
+		new = ft_update_str(printf_props, new);
+	
+		return (ft_print_str(printf_props, new, size));	
 	}
-	else
+	if (ft_strchr("csdiu", printf_props -> specifier))
 		while (str[i] != '\0')
 			size += write(1, &str[i++], 1);
-	if (flags == -1)
-		free(str);
-	return (size);
+	return (free(str), size);
 }
 
 char	*ft_update_str(t_printf *printf_props, char *str)
@@ -46,28 +45,38 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	char	*infill;
 	int		width;
 	int		precision;
-	int		i;
 
 	precision = printf_props -> flags -> precision;
 	width = printf_props -> flags -> width;
 	infill = malloc(sizeof(char));
 	infill[0] = '\0';
+		
 	if (width > precision)
 	{
-		width -= precision;
-		i = 0;
-		infill = ft_infill_str(infill, width);
+		width -= ft_strlen(str);
+		infill = ft_infill_str(printf_props, infill, width);
 	}
 	if (printf_props -> flags -> minus)
 		new_str = ft_strjoin(str, infill);
 	else
-		new_str = ft_strjoin(infill, str);
-	free(infill);
-	free(str);
-	return (new_str);
+	{
+		if (printf_props -> negative_nbr && printf_props -> flags -> zero)
+		{
+			new_str = ft_substr(str, 1, ft_strlen(str) - 1);
+			free(str);
+			str = ft_strjoin(infill, new_str);
+			free(new_str);
+			new_str = ft_strjoin("-", str);
+		}
+		else
+			new_str = ft_strjoin(infill, str);
+	}
+
+	printf_props -> updated = 1;
+	return (free(infill), free(str), new_str);
 }
 
-char	*ft_infill_str(char *infill, int width)
+char	*ft_infill_str(t_printf *printf_props, char *infill, int width)
 {
 	char	*temp;
 	int		i;
@@ -77,7 +86,11 @@ char	*ft_infill_str(char *infill, int width)
 	{
 		temp = ft_strjoin(infill, "");
 		free(infill);
-		infill = ft_strjoin(temp, " ");
+		if (!ft_strchr("cs", printf_props -> specifier)
+			&& printf_props -> flags -> zero)
+			infill = ft_strjoin(temp, "0");
+		else
+			infill = ft_strjoin(temp, " ");
 		free(temp);
 		i++;
 	}
