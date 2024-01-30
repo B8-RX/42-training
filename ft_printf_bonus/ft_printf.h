@@ -33,7 +33,7 @@ typedef	struct s_flags {
 }	t_flags;
 
 typedef struct s_printf {
-	va_list	args;		
+	va_list	args;
 	t_flags	*flags;
 	char	specifier;
 	int		flags_len;
@@ -62,6 +62,6 @@ size_t		ft_strlcpy(char *dst, char *src, size_t size);
 size_t		ft_strlen(char *str);
 char		*ft_itoa(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);
-char		*ft_ultoa(unsigned long n);
+char		*ft_ultoa(t_printf *printf_props, unsigned long n);
 
 #endif // !FT_PRINTF_H
