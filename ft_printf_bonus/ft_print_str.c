@@ -33,7 +33,7 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 	
 		return (ft_print_str(printf_props, new, size));	
 	}
-	if (ft_strchr("csdiu", printf_props -> specifier))
+	if (ft_strchr("csdiupxX", printf_props -> specifier))
 		while (str[i] != '\0')
 			size += write(1, &str[i++], 1);
 	return (free(str), size);
@@ -67,7 +67,8 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 			free(new_str);
 			new_str = ft_strjoin("-", str);
 		}
-		else if (printf_props -> flags -> plus && printf_props -> flags -> zero)
+		else if (ft_strchr( "di",printf_props -> specifier)
+			&& printf_props -> flags -> plus && printf_props -> flags -> zero)
 		{
 			new_str = ft_substr(str, 1, ft_strlen(str) - 1);
 			free(str);

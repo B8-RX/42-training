@@ -12,46 +12,46 @@
 
 #include "ft_printf.h"
 
-int	ft_check_ul_len(unsigned long nb)
+char	*ft_fill_ul_str(t_printf *printf_props, unsigned long nb)
 {
-	int	int_len;
+	char	*base;
+	char	*res;
+	char	*temp;
 
-	int_len = 0;
-	while (nb > 9)
+	base = printf_props -> base;
+	res = ft_strjoin("", "");
+	while (nb >= ft_strlen(base))
 	{
-		nb /= 10;
-		int_len++;
+		temp = malloc(2);
+		if (!temp)
+			return (NULL);
+		temp[0] = base[nb % ft_strlen(base)];
+		temp[1] = '\0';
+		res = ft_strjoin(temp, res);
+		free(temp);
+		nb /= ft_strlen(base);
 	}
-	if (nb > 0)
-		int_len++;
-	return (int_len);
-}
-
-char	*ft_fill_ul_str(char *res, unsigned long nb, int int_len)
-{
-	int	i;
-
-	i = 0;
-	while (nb)
+	temp = malloc(2);
+	if (!temp)
+		return (NULL);
+	temp[0] = base[nb % ft_strlen(base)];
+	temp[1] = '\0';
+	res = ft_strjoin(temp, res);
+	free(temp);
+	if (printf_props -> specifier == 'p')
 	{
-		res[int_len - 1 - i] = (nb % 10) + '0';
-		nb /= 10;
-		i++;
-	}
-	res[int_len] = '\0';
+		temp = ft_strjoin("0x", res);
+		free(res);
+		res = ft_strjoin(temp, "");
+		free(temp);
+	} 
 	return (res);
 }
 
-char	*ft_ultoa(unsigned long n)
+char	*ft_ultoa(t_printf *printf_props, unsigned long n)
 {
-	char	*str;
-	int		int_len;
-
 	if (n == 0)
 		return (ft_strjoin("0", ""));
-	int_len = ft_check_ul_len(n);
-	str = (char *)malloc ((int_len + 1) * sizeof(char));
-	if (str == NULL)
-		return (str);
-	return (ft_fill_ul_str(str, n, int_len));
+
+	return (ft_fill_ul_str(printf_props, n));
 }
