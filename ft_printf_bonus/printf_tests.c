@@ -14,22 +14,8 @@ int	main(void)
 	str = "just do it";
 	c = 'T';
 	// printf("\n\n\t---------------FT_PRINTF TESTS----------------\n\n");
-	// 
-	// printf("--SPECIFIER S, POSSIBLE CASES:--\n\n");
-	// 
-	// printf("\t========-ORIGINAL PRINTF-========\n");
-	// printf("0: test %%s\n==>\t|%s|\n\n", str);	
-	// printf("1: test %%20s\n==>\t|%20s|\n\n", str);	
-	// printf("2: test %%5.2s\n==>\t|%5.2s|\n\n", str);	
-	// printf("3: test %%-20.2s\n==>\t|%-20.2s|\n\n", str);	
-	// printf("4: test %%.2s\n==>\t|%.2s|\n\n", str);	
-	// printf("lenght = %d\n", printf("#: test output lenght\n==>\t|%s|\n", str));	
-	// 
-	// printf("\n======================END========================\n\n\n");
 	
-	// ft_printf("\t========-FT_PRINTF CLONE VS ORIGINAL PRINTF FUNCTION-========\n\n");
-	
-	printf("--SPECIFIER s, POSSIBLE CASES:--\n\n");
+	printf("==========================--SPECIFIER s, POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%-5.2s|\n", str);	
 	printf("original: |%-5.2s|\n\n", str);	
 	
@@ -39,7 +25,7 @@ int	main(void)
 	ft_printf("clone:    |%.2s|\n", str);	
 	printf("original: |%.2s|\n\n", str);	
 	
-	printf("--SPECIFIER c, POSSIBLE CASES:--\n\n");
+	printf("==========================--SPECIFIER c, POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%c|\n", c);
 	printf("original: |%c|\n\n", c);
 	
@@ -49,7 +35,7 @@ int	main(void)
 	ft_printf("clone:    |%-10c|\n", c);
 	printf("original: |%-10c|\n\n", c);
 
-	printf("--SPECIFIER d and i, POSSIBLE CASES:--\n\n");
+	printf("==========================--SPECIFIER d and i, POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%010d|\n", 5);
 	printf("original: |%010d|\n\n", 5);
 	
@@ -71,18 +57,24 @@ int	main(void)
 	ft_printf("clone:    |%010d|\n", -500);
 	printf("original: |%010d|\n\n", -500);
 
-	printf("--SPECIFIER u, POSSIBLE CASES:--\n\n");
-	ft_printf("clone:    |%050u|\n", -500);
-	printf("original: |%050u|\n\n", -500);
+	printf("==========================--SPECIFIER u, POSSIBLE CASES:--====================\n\n");
+	ft_printf("clone:    |%050u|\n", 500);
+	printf("original: |%050u|\n\n", 500);
+	
+	ft_printf("clone:    |%-50u|\n", 500);
+	printf("original: |%-50u|\n\n", 500);
 	
 	ft_printf("clone:    |%-50u|\n", -500);
 	printf("original: |%-50u|\n\n", -500);
-	
-	printf("--SPECIFIER p, POSSIBLE CASES:--\n\n");
+
+	printf("==========================--SPECIFIER p, POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%p|\n", str);
 	printf("original: |%p|\n\n", str);
 
-	printf("--SPECIFIER  x and X POSSIBLE CASES:--\n\n");
+	ft_printf("clone:    |%p|\n", book);
+	printf("original: |%p|\n\n", book);
+
+	printf("==========================--SPECIFIER  x and X POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%x|\n", 37);
 	printf("original: |%x|\n\n", 37);
 
