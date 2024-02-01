@@ -81,7 +81,7 @@ int	main(void)
 	
 	printf("#13\n");
 	ft_printf("clone:    |%-10d|\n", -5);
-	printf("original: |%-10d|\n\n", -5);
+	printf("original: |%-10d|\n\n", -5);	
 	
 	printf("#14\n");
 	ft_printf("clone:    |%010d|\n", -500);
@@ -123,7 +123,7 @@ int	main(void)
 
 	printf("==========================-- %% --====================\n\n");
 	printf("#22\n");
-	ft_printf("clone:    test percent sign|%%|\n");
+	ft_printf("clone:    test percent sign: |%%|\n");
 	printf("original: test percent sign: |%%|\n\n");
 
 

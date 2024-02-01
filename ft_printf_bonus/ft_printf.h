@@ -41,6 +41,7 @@ typedef struct s_printf {
 	int		updated;
 	char	*base;
 	int		negative_nbr;
+	int		error;
 }	t_printf;
 
 int			ft_printf(char *format, ...);
@@ -62,5 +63,6 @@ size_t		ft_strlen(char *str);
 char		*ft_itoa(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);
 char		*ft_ultoa(t_printf *printf_props, unsigned long n);
+char		*ft_append_char_str(char *str, char c, int position);
 
 #endif // !FT_PRINTF_H
