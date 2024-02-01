@@ -46,7 +46,13 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format)
 	else if (ft_strchr(".0123456789#- +", *format))
 	{
 		if (!ft_check_special_flags(printf_props, format))
-			return (NULL);
+		{
+			char	*error_format;
+
+			error_format = ft_substr(format, 0, (*printf_props) -> flags_len + 1);
+			(*printf_props) -> format_len += ft_print_str(*printf_props, ft_append_char_str(error_format, '%', 1), len);
+			return (free(error_format), *printf_props);
+		}
 		return (ft_handle_format(printf_props, &format[(*printf_props) -> flags_len]));
 	}
 	

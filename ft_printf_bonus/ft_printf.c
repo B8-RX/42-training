@@ -33,9 +33,13 @@ int	ft_printf(char *format, ...)
 				count += write(1, &format[i], 1);	
 				break;
 			}
-			if (ft_init_printf_props(printf_properties) == NULL)
+			if (!ft_init_printf_props(printf_properties))
 				break;
-			ft_handle_format(&printf_properties, &format[++i]);
+			if (!ft_handle_format(&printf_properties, &format[++i]))
+			{
+				free(printf_properties -> flags);
+				break;
+			}
 			count += printf_properties -> format_len;
 			if (!ft_strchr("scdiupxX%", format[i]))
 				i += printf_properties -> flags_len;
@@ -45,8 +49,8 @@ int	ft_printf(char *format, ...)
 		}
 		else 
 		{
-			count += write(1, &format[i], 1);
-			i++;
+			count += write(1, &format[i++], 1);
+			// i++;
 		}
 	}
 	va_end(printf_properties -> args);
@@ -65,6 +69,7 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	printf_props -> flags_len = 0;
 	printf_props -> updated = 0;
 	printf_props -> base = NULL;
+	printf_props -> error = 0;
 	printf_props -> negative_nbr = 0;
 	printf_props -> flags -> period = 0;
 	printf_props -> flags -> precision = 0;
@@ -86,7 +91,10 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 	{
 		if (format[i] == '-' && !(*printf_props) -> flags -> plus)
 		{
-			(*printf_props) -> flags -> minus = 1;
+			if (format[i - 1] != '%')
+				(*printf_props) -> error = 1;
+			else
+				(*printf_props) -> flags -> minus = 1;
 			i++;
 		}
 		if (format[i] == '.')
@@ -134,110 +142,19 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			i++;
 		}
 		if (format[i] == '+' && !(*printf_props) -> flags -> minus)
-		{	
-			(*printf_props) -> flags -> plus = 1;
+		{
+			if (format[i - 1] != '%')
+				(*printf_props) -> error = 1;
+			else
+				(*printf_props) -> flags -> plus = 1;
 			i++;
 		}
 		(*printf_props) -> flags_len = i;
 	}
+	if ((*printf_props) -> error)
+		return (NULL);
 	if (((*printf_props) -> flags -> minus || (*printf_props) -> flags -> precision) 
 		&& (*printf_props) -> flags -> zero)
 		(*printf_props) -> flags -> zero = 0;
 	return (*printf_props);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (*(s + i))
-	{
-		if (*(unsigned char *)(s + i) == (unsigned char)c)
-			return ((char *)(s + i));
-		i++;
-	}
-	if (c == '\0')
-		return ((char *)(s + i));
-	return (NULL);
-}
-
-size_t	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	char			*new;
-	
-	if (!s)
-		return (NULL);
-	if (start >= ft_strlen(s))
-		len = 0;
-	if (len > ft_strlen(s + start))
-		len = ft_strlen(s + start);
-	new = malloc((len + 1) * sizeof(char));
-	if (!new)
-		return (NULL);
-	ft_strlcpy(new, s + start, len + 1);
-	return (new);
-}
-
-size_t	ft_strlcpy(char *dst, char *src, size_t size)
-{
-	int		len_src;
-	size_t	i;
-
-	i = 0;
-	len_src = ft_strlen(src);
-	if (!dst || !src)
-		return (0);
-	if (size > 0)
-	{
-		while (src[i] && i < size - 1)
-		{
-			dst[i] = src[i];
-			i++;
-		}
-		dst[i] = '\0';
-	}
-	return (len_src);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*new;
-	int		i;
-	int		j;
-
-	if (!s2)
-		return (NULL);
-	if (!s1)
-	{
-		s1 = malloc(sizeof(char));
-		s1[0] = '\0';
-	}
-	i = 0;
-	while (s1[i])
-		i++;
-	j = 0;
-	while (s2[j])
-		j++;
-	new = (char *)malloc((i + j + 1) * sizeof(char));
-	if (new == NULL)
-		return (NULL);
-	i = -1;
-	while (s1[++i])
-		new[i] = s1[i];
-	j = -1;
-	while (s2[++j])
-		new[i++] = s2[j];
-	new[i] = '\0';
-	return (new);
 }
