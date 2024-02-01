@@ -18,13 +18,14 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 	int		i;
 	char	*new;
 
+	// printf("======================ITOA==========%s========\n", str);
 	precision = printf_props -> flags -> precision;
 	i = 0;
 	if (!str)
 		return (ft_print_str(printf_props, "(null)", size));
 	if (printf_props -> flags_len && !printf_props -> updated)
 	{
-		if (precision)
+		if (precision && ft_strchr("sc", printf_props -> specifier))
 			new = ft_substr(str, 0, precision);
 		else
 			new = ft_substr(str, 0, ft_strlen(str));
@@ -95,7 +96,7 @@ char	*ft_infill_str(t_printf *printf_props, char *infill, int width)
 		temp = ft_strjoin(infill, "");
 		free(infill);
 		if (!ft_strchr("cs", printf_props -> specifier)
-			&& printf_props -> flags -> zero)
+			&& printf_props -> flags -> zero && !printf_props -> flags -> precision)
 			infill = ft_strjoin(temp, "0");
 		else
 			infill = ft_strjoin(temp, " ");

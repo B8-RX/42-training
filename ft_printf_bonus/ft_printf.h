@@ -39,7 +39,6 @@ typedef struct s_printf {
 	int		flags_len;
 	int		format_len;
 	int		updated;
-	char	*itoa;
 	char	*base;
 	int		negative_nbr;
 }	t_printf;

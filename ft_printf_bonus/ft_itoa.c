@@ -12,62 +12,65 @@
 
 #include "ft_printf.h"
 
-int	ft_check_int_len(t_printf *printf_props, int nb)
+int	ft_check_num_len(t_printf *printf_props, int nb)
 {
-	int	int_len;
+	int	num_len;
 
-	int_len = 0;
+	num_len = 0;
 	while (nb > 9)
 	{
 		nb /= 10;
-		int_len++;
+		num_len++;
 	}
 	if (nb > 0)
-		int_len++;
-	if (printf_props -> negative_nbr)
-		int_len++;
-	return (int_len);
+		num_len++;
+	if (printf_props -> flags -> precision > num_len)
+		num_len = printf_props -> flags -> precision;
+	if (printf_props -> negative_nbr || printf_props -> flags -> plus)
+		num_len++;
+	return (num_len);
 }
 
-char	*ft_fill_str(t_printf *printf_props, char *res, int nb, int int_len)
+char	*ft_fill_str(t_printf *printf_props, int nb, int num_len)
 {
-	int	i;
-
+	int		i;
+	char	*res;
+	
 	i = 0;
+	res = (char *)malloc ((num_len + 1) * sizeof(char));
+	if (res == NULL)
+		return (res);
 	while (nb)
 	{
-		res[int_len - 1 - i] = (nb % 10) + '0';
+		res[num_len - 1 - i] = (nb % 10) + '0';
 		nb /= 10;
 		i++;
 	}
-	if (!printf_props -> negative_nbr && printf_props -> flags -> plus)
+	if (num_len - 1 - i >= 0)
+		while (num_len - 1 - i >= 0)
+			res[num_len - 1 - i++] = '0';
+	if (printf_props -> flags -> plus)
 		res[0] = '+';
 	else if (printf_props -> negative_nbr)
 		res[0] = '-';
-	res[int_len] = '\0';
+	res[num_len] = '\0';
 	return (res);
 }
 
 char	*ft_itoa(t_printf *printf_props, int n)
 {
-	char	*str;
-	int		int_len;
+	int		num_len;
 
-	int_len = 0;
+	num_len = 0;
 	if (n == 0)
 		return (ft_strjoin("0", ""));
 	if (n == -2147483648)
 		return (ft_strjoin("-2147483648", ""));
-	if (!printf_props -> negative_nbr && printf_props -> flags -> plus)
-		int_len++;
 	if (n < 0)
 	{
 		printf_props -> negative_nbr = 1;
 		n *= -1;
 	}
-	int_len += ft_check_int_len(printf_props, n);
-	str = (char *)malloc ((int_len + 1) * sizeof(char));
-	if (str == NULL)
-		return (str);
-	return (ft_fill_str(printf_props, str, n, int_len));
+	num_len += ft_check_num_len(printf_props, n);
+	return (ft_fill_str(printf_props, n, num_len));
 }

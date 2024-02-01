@@ -64,7 +64,6 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	printf_props -> format_len = 0;
 	printf_props -> flags_len = 0;
 	printf_props -> updated = 0;
-	printf_props -> itoa = NULL;
 	printf_props -> base = NULL;
 	printf_props -> negative_nbr = 0;
 	printf_props -> flags -> period = 0;
@@ -85,7 +84,7 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 	i = 0;
 	while (!ft_strchr("csdiupxX", format[i]))
 	{
-		if (format[i] == '-')
+		if (format[i] == '-' && !(*printf_props) -> flags -> plus)
 		{
 			(*printf_props) -> flags -> minus = 1;
 			i++;
@@ -119,8 +118,7 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			multiple = 1;
 			while (format[i + j] == '0')
 				j++;
-			if ((format[i - 1] == '%' || format[i - 1] == '+')
-				&& !(*printf_props) -> flags -> minus)
+			if (format[i - 1] == '%' || format[i - 1] == '+')
 				(*printf_props) -> flags -> zero = 1;
 			i += j;
 			while (j--)
@@ -135,13 +133,16 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			(*printf_props) -> flags -> hashtag = 1;
 			i++;
 		}
-		if (format[i] == '+')
+		if (format[i] == '+' && !(*printf_props) -> flags -> minus)
 		{	
 			(*printf_props) -> flags -> plus = 1;
 			i++;
 		}
 		(*printf_props) -> flags_len = i;
 	}
+	if (((*printf_props) -> flags -> minus || (*printf_props) -> flags -> precision) 
+		&& (*printf_props) -> flags -> zero)
+		(*printf_props) -> flags -> zero = 0;
 	return (*printf_props);
 }
 
