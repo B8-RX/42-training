@@ -48,10 +48,7 @@ int	ft_printf(char *format, ...)
 			printf_properties -> flags = NULL;
 		}
 		else 
-		{
 			count += write(1, &format[i++], 1);
-			// i++;
-		}
 	}
 	va_end(printf_properties -> args);
 	free(printf_properties);
@@ -91,15 +88,26 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 	{
 		if (format[i] == '-' && !(*printf_props) -> flags -> plus)
 		{
-			if (format[i - 1] != '%')
+			if (format[i - 1] != '%' && !(*printf_props) -> flags -> minus)
 				(*printf_props) -> error = 1;
 			else
 				(*printf_props) -> flags -> minus = 1;
 			i++;
 		}
+		if (format[i] == '+' && !(*printf_props) -> flags -> minus)
+		{
+			if (format[i - 1] != '%' && !(*printf_props) -> flags -> plus)
+				(*printf_props) -> error = 1;
+			else
+				(*printf_props) -> flags -> plus = 1;
+			i++;
+		}
 		if (format[i] == '.')
 		{
-			(*printf_props) -> flags -> period = 1;
+			if ((*printf_props) -> flags -> period)
+				(*printf_props) -> error = 1;
+			else
+				(*printf_props) -> flags -> period = 1;
 			i++;
 		}
 		if (format[i] > '0' && format[i] <= '9')
@@ -112,11 +120,6 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			else
 				(*printf_props) -> flags -> width = ft_atoi(ft_substr(format + i, 0, j));
 			i += j;
-		}
-		if (format[i] == ' ')
-		{
-			(*printf_props) -> flags -> blank = 1;
-			i++;
 		}
 		if (format[i] == '0')
 		{
@@ -136,17 +139,14 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			else if ((*printf_props) -> flags -> width)
 				(*printf_props) -> flags -> width *= multiple;
 		}
+		if (format[i] == ' ')
+		{
+			(*printf_props) -> flags -> blank = 1;
+			i++;
+		}
 		if (format[i] == '#')
 		{
 			(*printf_props) -> flags -> hashtag = 1;
-			i++;
-		}
-		if (format[i] == '+' && !(*printf_props) -> flags -> minus)
-		{
-			if (format[i - 1] != '%')
-				(*printf_props) -> error = 1;
-			else
-				(*printf_props) -> flags -> plus = 1;
 			i++;
 		}
 		(*printf_props) -> flags_len = i;
