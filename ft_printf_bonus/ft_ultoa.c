@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 
+
 char *ft_append_char_str(char *str, char c, int position)
 {
 	char	*new;
