@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_print_str(t_printf *printf_props, char *str, int size)
+int	ft_print_str(t_printf *printf_props, char *str)
 {
 	int		precision;
 	int		i;
@@ -21,7 +21,7 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 	precision = printf_props -> flags -> precision;
 	i = 0;
 	if (!str)
-		return (ft_print_str(printf_props, "(null)", size));
+		return (ft_print_str(printf_props, "(null)"));
 	if (printf_props -> flags_len && !printf_props -> updated && !printf_props -> error)
 	{
 		if (precision && ft_strchr("sc", printf_props -> specifier))
@@ -30,12 +30,13 @@ int	ft_print_str(t_printf *printf_props, char *str, int size)
 			new = ft_substr(str, 0, ft_strlen(str));
 		free(str);
 		new = ft_update_str(printf_props, new);
-		return (ft_print_str(printf_props, new, size));	
+		return (ft_print_str(printf_props, new));	
 	}
 	if (ft_strchr("csdiupxX", printf_props -> specifier) || printf_props -> error)
 		while (str[i] != '\0')
-			size += write(1, &str[i++], 1);
-	return (free(str), size);
+			printf_props->format_len += write(1, &str[i++], 1);
+	free(str);
+	return (printf_props->format_len);
 }
 
 char	*ft_update_str(t_printf *printf_props, char *str)

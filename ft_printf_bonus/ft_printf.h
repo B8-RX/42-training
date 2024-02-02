@@ -50,11 +50,10 @@ t_printf	*ft_handle_format(t_printf **printf_props, char *format);
 t_printf	*ft_check_special_flags(t_printf **printf_props, char *format);
 char		*ft_infill_str(t_printf *printf_props, char *infill, int width);
 char		*ft_update_str(t_printf *printf_props, char *str);
-int			ft_print_str(t_printf *printf_props, char *str, int size);
+int			ft_print_str(t_printf *printf_props, char *str);
 int			ft_print_char(t_printf **printf_props, char c);
 int			ft_atoi(char *str);
 int			ft_print_unsigned(unsigned int nb, int len);
-int			ft_print_hexa(unsigned long hexa, int size, char format, char *base);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_substr(char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
@@ -64,5 +63,7 @@ char		*ft_itoa(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);
 char		*ft_ultoa(t_printf *printf_props, unsigned long n);
 char		*ft_append_char_str(char *str, char c, int position);
+void		ft_init_specifier(t_printf *printf_props, char format);
+void		*ft_handle_error_format(t_printf *printf_props, char *format);
 
 #endif // !FT_PRINTF_H

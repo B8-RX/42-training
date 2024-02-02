@@ -35,11 +35,7 @@ int	ft_printf(char *format, ...)
 			}
 			if (!ft_init_printf_props(printf_properties))
 				break;
-			if (!ft_handle_format(&printf_properties, &format[++i]))
-			{
-				free(printf_properties -> flags);
-				break;
-			}
+			ft_handle_format(&printf_properties, &format[++i]);
 			count += printf_properties -> format_len;
 			if (!ft_strchr("scdiupxX%", format[i]))
 				i += printf_properties -> flags_len;
@@ -86,6 +82,12 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 	i = 0;
 	while (!ft_strchr("csdiupxX", format[i]))
 	{
+		if (format[i] == '%')
+		{
+			write(1, "%", 1);
+			(*printf_props) -> flags_len = 1;
+			return (*printf_props);
+		}
 		if (format[i] == '-')
 		{
 			if (format[i - 1] != '%'
@@ -153,12 +155,13 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			(*printf_props) -> flags -> hashtag = 1;
 			i++;
 		}
-		(*printf_props) -> flags_len = i;
 	}
+	(*printf_props) -> flags_len = i;
 	if ((*printf_props) -> error)
-		return (NULL);
+		return (ft_handle_error_format(*printf_props, format));
 	if (((*printf_props) -> flags -> minus || (*printf_props) -> flags -> precision) 
 		&& (*printf_props) -> flags -> zero)
 		(*printf_props) -> flags -> zero = 0;
-	return (*printf_props);
+	return (ft_handle_format(printf_props, &format[(*printf_props)->flags_len]));
+
 }

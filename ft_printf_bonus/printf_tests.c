@@ -80,8 +80,8 @@ int	main(void)
 	printf("original: |%10d|\n\n", -5);
 
 	printf("#13\n");
-	ft_printf("clone:    |%0-10d|\n", -5);
-	printf("original: |%0-10d|\n\n", -5);	
+	ft_printf("clone:    |%-10d|\n", -5);
+	printf("original: |%-10d|\n\n", -5);	
 
 	printf("#14\n");
 	ft_printf("clone:    |%010d|\n", -500);
@@ -127,15 +127,23 @@ int	main(void)
 
 	printf("==========================--SPECIFIER  x and X POSSIBLE CASES:--====================\n\n");
 	printf("#20\n");
+	ft_printf("clone:    |%x|\n", 42);
+	printf("original: |%x|\n\n", 42);
+
+	printf("#21\n");
+	ft_printf("clone:    |%X|\n", 42);
+	printf("original: |%X|\n\n", 42);
+
+	printf("#22\n");
 	ft_printf("clone:    |%#x|\n", 42);
 	printf("original: |%#x|\n\n", 42);
 
-	printf("#21\n");
+	printf("#23\n");
 	ft_printf("clone:    |%#X|\n", 42);
 	printf("original: |%#X|\n\n", 42);
-
+	
 	printf("==========================-- %% --====================\n\n");
-	printf("#22\n");
+	printf("#24\n");
 	ft_printf("clone:    test percent sign: |%%|\n");
 	printf("original: test percent sign: |%%|\n\n");
 

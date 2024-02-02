@@ -20,5 +20,5 @@ int	ft_print_char(t_printf **printf_props, char c)
 	res[0] = c;
 	res[1] = '\0';
 	
-	return (ft_print_str(*printf_props, res, 0));
+	return (ft_print_str(*printf_props, res));
 }
