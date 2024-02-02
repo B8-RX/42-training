@@ -86,17 +86,21 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 	i = 0;
 	while (!ft_strchr("csdiupxX", format[i]))
 	{
-		if (format[i] == '-' && !(*printf_props) -> flags -> plus)
+		if (format[i] == '-')
 		{
-			if (format[i - 1] != '%' && !(*printf_props) -> flags -> minus)
+			if (format[i - 1] != '%'
+				&& (((*printf_props)->flags->width || (*printf_props)->flags->precision)
+				|| (*printf_props) -> flags -> minus))
 				(*printf_props) -> error = 1;
 			else
 				(*printf_props) -> flags -> minus = 1;
 			i++;
 		}
-		if (format[i] == '+' && !(*printf_props) -> flags -> minus)
+		if (format[i] == '+')
 		{
-			if (format[i - 1] != '%' && !(*printf_props) -> flags -> plus)
+			if (format[i - 1] != '%'
+				&& format[i - 1] != '-'
+				&& format[i - 1] != '0')
 				(*printf_props) -> error = 1;
 			else
 				(*printf_props) -> flags -> plus = 1;

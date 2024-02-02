@@ -56,8 +56,8 @@ int	main(void)
 	printf("original: |%+010d|\n\n", 5);
 
 	printf("#8\n");
-	ft_printf("clone:    |%+10.2d|\n", 5);
-	printf("original: |%+10.2d|\n\n", 5);
+	ft_printf("clone:    |%-10.2d|\n", 5);
+	printf("original: |%-10.2d|\n\n", 5);
 
 	printf("#8.1\n");
 	ft_printf("clone:    |%+10.2d|\n", 50);
@@ -80,13 +80,26 @@ int	main(void)
 	printf("original: |%10d|\n\n", -5);
 
 	printf("#13\n");
-	ft_printf("clone:    |%-10d|\n", -5);
-	printf("original: |%-10d|\n\n", -5);	
+	ft_printf("clone:    |%0-10d|\n", -5);
+	printf("original: |%0-10d|\n\n", -5);	
 
 	printf("#14\n");
 	ft_printf("clone:    |%010d|\n", -500);
 	printf("original: |%010d|\n\n", -500);
 
+	// printf("=============--SPECIFIER d and i, ERROR CASES (compile without flags):--========\n\n");
+	// printf("###1\n");
+	// ft_printf("clone:    |%010-d|\n", 5);
+	// printf("original: |%010-d|\n\n", 5);
+	//
+	// printf("###2\n");
+	// ft_printf("clone:    |%+-010d|\n", 5);
+	// printf("original: |%+-010d|\n\n", 5);
+	//
+	// printf("###3\n");
+	// ft_printf("clone:    |%-+10.2d|\n", 5);
+	// printf("original: |%-+10.2d|\n\n", 5);
+	
 	printf("==========================--SPECIFIER u, POSSIBLE CASES:--====================\n\n");
 	ft_printf("clone:    |%u|\n", 500);
 	printf("original: |%u|\n\n", 500);
