@@ -28,6 +28,9 @@ int	ft_check_num_len(t_printf *printf_props, int nb)
 		num_len = printf_props -> flags -> precision;
 	if (printf_props -> negative_nbr || printf_props -> flags -> plus)
 		num_len++;
+	if (printf_props -> flags -> blank
+		&& !printf_props -> flags -> plus && !printf_props -> negative_nbr)
+		num_len++;
 	return (num_len);
 }
 
@@ -49,10 +52,20 @@ char	*ft_fill_str(t_printf *printf_props, int nb, int num_len)
 	if (num_len - 1 - i >= 0)
 		while (num_len - 1 - i >= 0)
 			res[num_len - 1 - i++] = '0';
+	i = 0;
 	if (printf_props -> flags -> plus)
-		res[0] = '+';
+	{
+		res[i] = '+';
+		i++;
+	}
 	else if (printf_props -> negative_nbr)
-		res[0] = '-';
+	{
+		res[i] = '-';
+		i++;
+	}
+	if (printf_props -> flags -> blank
+		&& !printf_props -> flags -> plus && !printf_props -> negative_nbr)
+		res[i] = ' ';
 	res[num_len] = '\0';
 	return (res);
 }

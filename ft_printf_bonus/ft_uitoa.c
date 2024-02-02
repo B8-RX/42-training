@@ -29,11 +29,15 @@ int	ft_check_uint_len(unsigned int nb)
 	return (int_len);
 }
 
-char	*ft_fill_ui_str(char *res, unsigned int nb, int int_len)
+char	*ft_fill_ui_str(unsigned int nb, int int_len)
 {
-	int	i;
+	int		i;
+	char	*res;
 
 	i = 0;
+	res = (char *)malloc ((int_len + 1) * sizeof(char));
+	if (res == NULL)
+		return (res);
 	while (nb)
 	{
 		res[int_len - 1 - i] = (nb % 10) + '0';
@@ -46,14 +50,10 @@ char	*ft_fill_ui_str(char *res, unsigned int nb, int int_len)
 
 char	*ft_uitoa(unsigned int n)
 {
-	char	*str;
 	int		int_len;
 
 	if (n == 0)
 		return (ft_strjoin("0", ""));
 	int_len = ft_check_uint_len(n);
-	str = (char *)malloc ((int_len + 1) * sizeof(char));
-	if (str == NULL)
-		return (str);
-	return (ft_fill_ui_str(str, n, int_len));
+	return (ft_fill_ui_str(n, int_len));
 }

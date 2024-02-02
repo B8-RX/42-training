@@ -59,7 +59,7 @@ char	*ft_fill_ul_str(t_printf *printf_props, unsigned long nb, char *res)
 	free(res);
 	res = ft_strjoin(temp, "");
 	free(temp);
-	if (printf_props -> specifier == 'p')
+	if (printf_props -> specifier == 'p' || printf_props -> flags -> hashtag)
 	{
 		temp = ft_strjoin("0x", res);
 		free(res);
