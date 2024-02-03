@@ -34,15 +34,11 @@ int	ft_check_num_len(t_printf *printf_props, int nb)
 	return (num_len);
 }
 
-char	*ft_fill_str(t_printf *printf_props, int nb, int num_len)
+char	*ft_fill_str(t_printf *printf_props, char *res, int nb, int num_len)
 {
 	int		i;
-	char	*res;
-	
+
 	i = 0;
-	res = (char *)malloc ((num_len + 1) * sizeof(char));
-	if (res == NULL)
-		return (res);
 	while (nb)
 	{
 		res[num_len - 1 - i] = (nb % 10) + '0';
@@ -54,15 +50,9 @@ char	*ft_fill_str(t_printf *printf_props, int nb, int num_len)
 			res[num_len - 1 - i++] = '0';
 	i = 0;
 	if (printf_props -> flags -> plus)
-	{
-		res[i] = '+';
-		i++;
-	}
+		res[i++] = '+';
 	else if (printf_props -> negative_nbr)
-	{
-		res[i] = '-';
-		i++;
-	}
+		res[i++] = '-';
 	if (printf_props -> flags -> blank
 		&& !printf_props -> flags -> plus && !printf_props -> negative_nbr)
 		res[i] = ' ';
@@ -73,6 +63,7 @@ char	*ft_fill_str(t_printf *printf_props, int nb, int num_len)
 char	*ft_itoa(t_printf *printf_props, int n)
 {
 	int		num_len;
+	char	*res;
 
 	num_len = 0;
 	if (n == 0)
@@ -85,5 +76,8 @@ char	*ft_itoa(t_printf *printf_props, int n)
 		n *= -1;
 	}
 	num_len += ft_check_num_len(printf_props, n);
-	return (ft_fill_str(printf_props, n, num_len));
+	res = (char *)malloc ((num_len + 1) * sizeof(char));
+	if (!res)
+		return (NULL);
+	return (ft_fill_str(printf_props, res, n, num_len));
 }

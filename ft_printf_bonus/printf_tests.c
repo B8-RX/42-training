@@ -56,8 +56,8 @@ int	main(void)
 	printf("original: |%+010d|\n\n", 5);
 
 	printf("#8\n");
-	ft_printf("clone:    |%-10.2d|\n", 5);
-	printf("original: |%-10.2d|\n\n", 5);
+	ft_printf("clone:    |%-+10.2d|\n", 5);
+	printf("original: |%-+10.2d|\n\n", 5);
 
 	printf("#8.1\n");
 	ft_printf("clone:    |%+10.2d|\n", 50);

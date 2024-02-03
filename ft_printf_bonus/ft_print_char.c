@@ -19,6 +19,5 @@ int	ft_print_char(t_printf **printf_props, char c)
 	res = malloc(sizeof(char) + 1);
 	res[0] = c;
 	res[1] = '\0';
-	
 	return (ft_print_str(*printf_props, res));
 }

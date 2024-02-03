@@ -46,10 +46,17 @@ typedef struct s_printf {
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
+void		ft_end_process(t_printf *printf_props);
+int			ft_handle_percent(t_printf *printf_props, char *format);
 t_printf	*ft_handle_format(t_printf **printf_props, char *format);
 t_printf	*ft_check_special_flags(t_printf **printf_props, char *format);
-char		*ft_infill_str(t_printf *printf_props, char *infill, int width);
+char		*ft_infill_str(t_printf *printf_props, char *infill, char *str);
 char		*ft_update_str(t_printf *printf_props, char *str);
+char		*ft_handle_precision(t_printf *printf_props, char *str);
+char		*ft_handle_plus(char *str, char *infill);
+char		*ft_handle_minus(char *str, char *infill);
+char		*ft_justify_right(t_printf *printf_props, char *str, char *infill);
+char		*ft_justify_left(char *str, char *infill);
 int			ft_print_str(t_printf *printf_props, char *str);
 int			ft_print_char(t_printf **printf_props, char c);
 int			ft_atoi(char *str);

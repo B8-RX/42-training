@@ -28,28 +28,49 @@ int	ft_printf(char *format, ...)
 	{
 		if (format[i] == '%')
 		{
-			if (!ft_strchr("scdiupxX%.0123456789# -+", format[i + 1]))
-			{
-				count += write(1, &format[i], 1);	
-				break;
-			}
-			if (!ft_init_printf_props(printf_properties))
-				break;
-			ft_handle_format(&printf_properties, &format[++i]);
+			i += ft_handle_percent(printf_properties, format + i);
+			if (printf_properties -> error && !ft_strchr(
+					"scdiupxX%.0123456789# -+", format[i + 1]) && count++)
+				break ;
 			count += printf_properties -> format_len;
-			if (!ft_strchr("scdiupxX%", format[i]))
-				i += printf_properties -> flags_len;
-			i++;
-			free(printf_properties -> flags);
-			printf_properties -> flags = NULL;
 		}
-		else 
+		else
 			count += write(1, &format[i++], 1);
 	}
-	va_end(printf_properties -> args);
-	free(printf_properties);
-	printf_properties = NULL;
+	ft_end_process(printf_properties);
 	return (count);
+}
+
+void	ft_end_process(t_printf *printf_props)
+{
+	va_end(printf_props -> args);
+	free(printf_props);
+	printf_props = NULL;
+}
+
+int	ft_handle_percent(t_printf *printf_props, char *format)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_strchr("scdiupxX%.0123456789# -+", format[i + 1]))
+	{
+		write(1, &format[i], 1);
+		printf_props -> error = 1;
+		return (0);
+	}
+	if (!ft_init_printf_props(printf_props))
+	{
+		printf_props -> error = 1;
+		return (0);
+	}	
+	ft_handle_format(&printf_props, &format[++i]);
+	if (!ft_strchr("scdiupxX%", format[i]))
+		i += printf_props -> flags_len;
+	i++;
+	free(printf_props -> flags);
+	printf_props -> flags = NULL;
+	return (i);
 }
 
 t_printf	*ft_init_printf_props(t_printf *printf_props)
@@ -74,10 +95,12 @@ t_printf	*ft_init_printf_props(t_printf *printf_props)
 	printf_props -> flags -> width = 0;
 	return (printf_props);
 }
+
 t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 {	
-	int			i;
-	int			j;
+	int	i;
+	int	j;
+	int	multiple;
 
 	i = 0;
 	while (!ft_strchr("csdiupxX", format[i]))
@@ -85,17 +108,18 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 		if (format[i] == '%')
 		{
 			write(1, "%", 1);
-			(*printf_props) -> flags_len = 1;
+			(*printf_props)->flags_len = 1;
 			return (*printf_props);
 		}
 		if (format[i] == '-')
 		{
 			if (format[i - 1] != '%'
-				&& (((*printf_props)->flags->width || (*printf_props)->flags->precision)
-				|| (*printf_props) -> flags -> minus))
-				(*printf_props) -> error = 1;
+				&& (((*printf_props)->flags->width
+						|| (*printf_props)->flags->precision)
+					|| (*printf_props)->flags -> minus))
+				(*printf_props)->error = 1;
 			else
-				(*printf_props) -> flags -> minus = 1;
+				(*printf_props)->flags -> minus = 1;
 			i++;
 		}
 		if (format[i] == '+')
@@ -103,17 +127,17 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			if (format[i - 1] != '%'
 				&& format[i - 1] != '-'
 				&& format[i - 1] != '0')
-				(*printf_props) -> error = 1;
+				(*printf_props)->error = 1;
 			else
-				(*printf_props) -> flags -> plus = 1;
+				(*printf_props)->flags -> plus = 1;
 			i++;
 		}
 		if (format[i] == '.')
 		{
-			if ((*printf_props) -> flags -> period)
-				(*printf_props) -> error = 1;
+			if ((*printf_props)->flags -> period)
+				(*printf_props)->error = 1;
 			else
-				(*printf_props) -> flags -> period = 1;
+				(*printf_props)->flags -> period = 1;
 			i++;
 		}
 		if (format[i] > '0' && format[i] <= '9')
@@ -121,47 +145,44 @@ t_printf	*ft_check_special_flags(t_printf **printf_props, char *format)
 			j = 0;
 			while (format[i + j] > '0' && format[i + j] <= '9')
 				j++;
-			if ((*printf_props) -> flags -> period)
-				(*printf_props) -> flags -> precision = ft_atoi(ft_substr(format + i, 0, j));
+			if ((*printf_props)->flags -> period)
+				(*printf_props)->flags -> precision = ft_atoi(ft_substr(format + i, 0, j));
 			else
-				(*printf_props) -> flags -> width = ft_atoi(ft_substr(format + i, 0, j));
+				(*printf_props)->flags -> width = ft_atoi(ft_substr(format + i, 0, j));
 			i += j;
 		}
 		if (format[i] == '0')
 		{
-			int multiple;
-			
 			j = 0;
 			multiple = 1;
 			while (format[i + j] == '0')
 				j++;
 			if (format[i - 1] == '%' || format[i - 1] == '+')
-				(*printf_props) -> flags -> zero = 1;
+				(*printf_props)->flags -> zero = 1;
 			i += j;
 			while (j--)
 				multiple *= 10;
-			if ((*printf_props) -> flags -> precision)
-				(*printf_props) -> flags -> precision *= multiple;
-			else if ((*printf_props) -> flags -> width)
-				(*printf_props) -> flags -> width *= multiple;
+			if ((*printf_props)->flags -> precision)
+				(*printf_props)->flags -> precision *= multiple;
+			else if ((*printf_props)->flags -> width)
+				(*printf_props)->flags -> width *= multiple;
 		}
 		if (format[i] == ' ')
 		{
-			(*printf_props) -> flags -> blank = 1;
+			(*printf_props)->flags -> blank = 1;
 			i++;
 		}
 		if (format[i] == '#')
 		{
-			(*printf_props) -> flags -> hashtag = 1;
+			(*printf_props)->flags -> hashtag = 1;
 			i++;
 		}
 	}
-	(*printf_props) -> flags_len = i;
-	if ((*printf_props) -> error)
+	(*printf_props)->flags_len = i;
+	if ((*printf_props)->error)
 		return (ft_handle_error_format(*printf_props, format));
-	if (((*printf_props) -> flags -> minus || (*printf_props) -> flags -> precision) 
-		&& (*printf_props) -> flags -> zero)
-		(*printf_props) -> flags -> zero = 0;
+	if (((*printf_props)->flags -> minus || (*printf_props)->flags -> precision)
+		&& (*printf_props)->flags -> zero)
+		(*printf_props)->flags -> zero = 0;
 	return (ft_handle_format(printf_props, &format[(*printf_props)->flags_len]));
-
 }
