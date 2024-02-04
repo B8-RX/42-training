@@ -15,7 +15,7 @@
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char			*new;
-	
+
 	if (!s)
 		return (NULL);
 	if (start >= ft_strlen(s))
@@ -58,11 +58,6 @@ char	*ft_strjoin(char *s1, char *s2)
 
 	if (!s2)
 		return (NULL);
-	if (!s1)
-	{
-		s1 = malloc(sizeof(char));
-		s1[0] = '\0';
-	}
 	i = 0;
 	while (s1[i])
 		i++;

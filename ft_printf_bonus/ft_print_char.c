@@ -21,3 +21,10 @@ int	ft_print_char(t_printf **printf_props, char c)
 	res[1] = '\0';
 	return (ft_print_str(*printf_props, res));
 }
+
+void	*ft_print_percent_sign(t_printf **printf_props)
+{
+	(*printf_props)->specifier = '%';
+	ft_print_char(printf_props, '%');
+	return (*printf_props);
+}

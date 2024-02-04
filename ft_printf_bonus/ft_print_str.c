@@ -22,13 +22,13 @@ int	ft_print_str(t_printf *printf_props, char *str)
 		return (ft_print_str(printf_props, "(null)"));
 	if (printf_props -> flags_len
 		&& !printf_props -> updated
-		&& !printf_props -> error)
+		&& !printf_props -> error_format)
 	{
 		new = ft_update_str(printf_props, str);
 		return (ft_print_str(printf_props, new));
 	}
-	if (ft_strchr("csdiupxX", printf_props -> specifier)
-		|| printf_props -> error)
+	if (ft_strchr("csdiupxX%", printf_props -> specifier)
+		|| printf_props -> error_format || *str == '%')
 		while (str[i] != '\0')
 			printf_props->format_len += write(1, &str[i++], 1);
 	free(str);
@@ -40,22 +40,24 @@ char	*ft_update_str(t_printf *printf_props, char *str)
 	char	*new;
 	char	*infill;
 	int		width;
+	int		precision;
 
+	precision = printf_props->flags->precision;
 	width = printf_props -> flags -> width;
 	infill = ft_strjoin("", "");
-	if (printf_props -> flags -> precision)
-		str = ft_handle_precision(printf_props, str);
-	if (width > printf_props -> flags -> precision)
-		infill = ft_infill_str(printf_props, infill, str);
+	if (precision && ft_strchr("sc", printf_props->specifier))
+		str = ft_slice_str(printf_props, str);
+	if (width > precision)
+		infill = ft_generate_infill(printf_props, infill, str);
 	if (printf_props -> flags -> minus)
-		new = ft_justify_left(str, infill);
+		new = ft_justify_infill_right(str, infill);
 	else
-		new = ft_justify_right(printf_props, str, infill);
+		new = ft_justify_infill_left(printf_props, str, infill);
 	printf_props -> updated = 1;
 	return (new);
 }
 
-char	*ft_infill_str(t_printf *printf_props, char *infill, char *str)
+char	*ft_generate_infill(t_printf *printf_props, char *infill, char *str)
 {
 	char	*temp;
 	int		i;

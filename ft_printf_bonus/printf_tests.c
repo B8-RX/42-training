@@ -141,7 +141,7 @@ int	main(void)
 	printf("#23\n");
 	ft_printf("clone:    |%#X|\n", 42);
 	printf("original: |%#X|\n\n", 42);
-	
+
 	printf("==========================-- %% --====================\n\n");
 	printf("#24\n");
 	ft_printf("clone:    test percent sign: |%%|\n");
