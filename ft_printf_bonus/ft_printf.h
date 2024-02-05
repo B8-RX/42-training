@@ -36,17 +36,15 @@ typedef struct s_printf {
 	char	specifier;
 	int		flags_len;
 	int		format_len;
-	int		total_len;
 	int		updated;
 	char	*base;
 	int		negative_nbr;
 	int		error_format;
-	int		error_init;
 }	t_printf;
 
 int			ft_printf(char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
-void		ft_end_process(t_printf *printf_props);
+int			ft_end_process(t_printf *printf_props);
 int			ft_verify_format(t_printf *printf_props, char *format);
 t_printf	*ft_verify_flags(t_printf *printf_props, char *format, int i);
 t_printf	*ft_format_processing(t_printf **printf_props, char *format);
@@ -56,6 +54,7 @@ int			ft_handle_plus_flag(t_printf *printf_props, char prev_char);
 int			ft_handle_period_flag(t_printf *printf_props);
 int			ft_handle_zero_flag(t_printf *printf_props, char *format, int i);
 int			ft_handle_num_flag(t_printf *printf_props, char *format, int i);
+int			ft_handle_hashtag_flag(t_printf *printf_props, char *format, int i);
 char		*ft_generate_infill(t_printf *printf_props,
 				char *infill, char *str);
 char		*ft_update_str(t_printf *printf_props, char *str);

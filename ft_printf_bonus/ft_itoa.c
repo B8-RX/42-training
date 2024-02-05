@@ -76,7 +76,7 @@ char	*ft_itoa(t_printf *printf_props, int n)
 		n *= -1;
 	}
 	num_len += ft_check_num_len(printf_props, n);
-	res = (char *)malloc ((num_len + 1) * sizeof(char));
+	res = (char *)malloc((num_len + 1) * sizeof(char));
 	if (!res)
 		return (NULL);
 	return (ft_fill_str(printf_props, res, n, num_len));

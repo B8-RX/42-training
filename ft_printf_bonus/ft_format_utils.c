@@ -30,7 +30,7 @@ int	ft_handle_minus_flag(t_printf *printf_props, char prev_char)
 
 int	ft_handle_plus_flag(t_printf *printf_props, char prev_char)
 {
-	if (!ft_strchr("%-0", prev_char))
+	if (!ft_strchr("%- 0#", prev_char))
 		printf_props -> error_format = 1;
 	else
 		printf_props -> flags -> plus = 1;
