@@ -12,55 +12,58 @@
 
 #include "../lib/ft_printf.h"
 
-int	ft_print_str_bonus(t_printf *printf_props, char *str)
+int	ft_print_str_bonus(t_printf *props, char *str)
 {
 	int		i;
 	char	*new;
 
 	i = 0;
 	if (!str)
-		return (ft_print_str_bonus(printf_props, ft_strjoin("(null)", "")));
-	if (printf_props -> flags_len
-		&& !printf_props -> updated
-		&& !printf_props -> error_format)
+		return (ft_print_str_bonus(props, ft_strjoin("(null)", "")));
+	if (*str || props -> flags -> width)
 	{
-		new = ft_update_str(printf_props, str);
-		return (ft_print_str_bonus(printf_props, new));
+		if (props -> flags_len
+			&& !props -> updated
+			&& !props -> error_format)
+		{
+			new = ft_update_str(props, str);
+			return (ft_print_str_bonus(props, new));
+		}
 	}
-	if (ft_strchr("csdiupxX%", printf_props -> specifier)
-		|| printf_props -> error_format || *str == '%')
+	if (ft_strchr("csdiupxX%", props -> specifier)
+		|| props -> error_format || *str == '%')
 		while (str[i] != '\0')
-			printf_props->format_len += write(1, &str[i++], 1);
+			props->format_len += write(1, &str[i++], 1);
 	free(str);
-	return (printf_props->format_len);
+	return (props->format_len);
 }
 
-char	*ft_update_str(t_printf *printf_props, char *str)
+char	*ft_update_str(t_printf *props, char *str)
 {
 	char	*new;
 	char	*infill;
 	int		width;
 	int		precision;
 
-	precision = printf_props->flags->precision;
-	width = printf_props -> flags -> width;
+	precision = props->flags->precision;
+	width = props -> flags -> width;
 	infill = ft_strjoin("", "");
-	if (*str && (precision == -1 || (precision
-				&& ft_strchr("sc", printf_props->specifier))))
-		str = ft_slice_str(printf_props, str);
+	if (precision == -1 || (precision
+			&& ft_strchr("sc", props->specifier)))
+		str = ft_slice_str(props, str);
 	if (width > precision || precision)
 	{
 		if (width > precision)
-			infill = ft_generate_infill(printf_props, infill, str, width);
-		else
-			infill = ft_generate_infill(printf_props, infill, str, precision);
+			infill = ft_generate_infill(props, infill, str, width);
+		else if (precision < (int)ft_strlen(str) || props->specifier != 's')
+			infill = ft_generate_infill(props, infill, str, precision);
 	}
-	if (printf_props -> flags -> minus)
-		new = ft_justify_infill_right(printf_props, str, infill);
+	if (props -> flags -> minus)
+		new = ft_justify_infill_right(props, str, infill);
 	else
-		new = ft_justify_infill_left(printf_props, str, infill);
-	if (printf_props -> flags -> plus || printf_props -> negative_nbr)
-		new = ft_append_sign(printf_props, new);
+		new = ft_justify_infill_left(props, str, infill);
+	if (props -> flags -> plus || props -> negative_nbr)
+		new = ft_append_sign(props, new);
 	return (new);
 }
 
