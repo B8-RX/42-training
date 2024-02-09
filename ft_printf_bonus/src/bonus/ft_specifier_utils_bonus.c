@@ -1,31 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_unsigned.c                                :+:      :+:    :+:   */
+/*   ft_specifier_utils_bonus.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/18 21:16:40 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/01/18 21:16:41 by ssghioua         ###   ########.fr       */
+/*   Created: 2024/02/06 07:12:27 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/02/06 07:12:29 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../lib/ft_printf.h"
 
-int	ft_print_unsigned(unsigned int nb, int size)
+void	ft_handle_s_specifier(t_printf *printf_props)
 {
-	char	num;
+	char	*output;
 
-	if (nb > 9)
-	{
-		size = 1 + ft_print_unsigned(nb / 10, size);
-		num = nb % 10 + '0';
-		write(1, &num, 1);
-	}
+	output = (char *)va_arg(printf_props -> args, void *);
+	if (output == NULL)
+		ft_print_str_bonus(printf_props, ft_strjoin("(null)", ""));
 	else
-	{
-		num = nb + '0';
-		size += write(1, &num, 1);
-	}
-	return (size);
+		ft_print_str_bonus(printf_props, ft_strjoin(output, ""));
 }
