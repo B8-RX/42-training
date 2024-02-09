@@ -86,7 +86,7 @@ char	*ft_generate_infill(t_printf *props, char *fill, char *str, int len)
 		free(fill);
 		if (!ft_strchr("sc", props->specifier)
 			&& (props->flags->zero
-				|| (props->flags->precision && props->negative_nbr)))
+				|| props->flags->precision))
 			fill = ft_strjoin(temp, "0");
 		else
 			fill = ft_strjoin(temp, " ");
