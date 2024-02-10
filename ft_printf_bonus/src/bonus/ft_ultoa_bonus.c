@@ -30,13 +30,8 @@ char	*ft_fill_ul_str(t_printf *printf_props, unsigned long nb, char *res)
 	free(res);
 	res = ft_strjoin(temp, "");
 	free(temp);
-	if (printf_props -> specifier == 'p' || printf_props -> flags -> hashtag)
-	{
-		temp = ft_strjoin("0x", res);
-		free(res);
-		res = ft_strjoin(temp, "");
-		free(temp);
-	}
+	if (printf_props -> specifier == 'p' || printf_props -> flags -> sharp)
+		res = ft_append_hexa_prefix(printf_props, res);
 	return (res);
 }
 
@@ -50,4 +45,18 @@ char	*ft_ultoa(t_printf *printf_props, unsigned long n)
 		return (ft_strjoin("0", ""));
 	res = ft_strjoin("", "");
 	return (ft_fill_ul_str(printf_props, n, res));
+}
+
+char	*ft_append_hexa_prefix(t_printf *printf_props, char *str)
+{
+	char	*temp;
+
+	if (printf_props -> specifier == 'X')
+		temp = ft_strjoin("0X", str);
+	else
+		temp = ft_strjoin("0x", str);
+	free(str);
+	str = ft_strjoin(temp, "");
+	free(temp);
+	return (str);
 }

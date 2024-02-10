@@ -72,7 +72,7 @@ int	ft_handle_sharp_flag(t_printf *printf_props, const char *format, int i)
 {
 	if (format[i - 1] != '%')
 		printf_props -> error_format = 1;
-	printf_props -> flags -> hashtag = 1;
+	printf_props -> flags -> sharp = 1;
 	return (1);
 }
 
@@ -87,7 +87,7 @@ t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i)
 	precision = printf_props -> flags -> precision;
 	zero = printf_props -> flags -> zero;
 	if (printf_props -> error_format
-		&& printf_props -> flags -> hashtag
+		&& printf_props -> flags -> sharp
 		&& ft_strchr("sc", format[i]))
 		printf_props -> error_format = 0;
 	if (printf_props -> error_format)

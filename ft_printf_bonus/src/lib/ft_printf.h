@@ -24,7 +24,7 @@ typedef struct s_flags {
 	int		precision;
 	int		blank;
 	int		zero;
-	int		hashtag;
+	int		sharp;
 	int		plus;
 	int		minus;
 	int		width;
@@ -84,6 +84,7 @@ char		*ft_justify_infill_left(t_printf *printf_props,
 char		*ft_justify_infill_right(t_printf *printf_props,
 				char *str, char *infill);
 char		*ft_append_sign(t_printf *printf_props, char *str);
+char		*ft_append_hexa_prefix(t_printf *printf_props, char *str);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
