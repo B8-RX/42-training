@@ -12,34 +12,34 @@
 
 #include "../lib/ft_printf.h"
 
-char	*ft_justify_infill_left(t_printf *printf_props, char *str, char *fill)
+char	*ft_justify_infill_left(t_printf *props, char *str, char *infill)
 {
 	char	*new;
 
-	new = ft_strjoin(fill, str);
+	new = ft_strjoin(infill, str);
 	free(str);
-	free(fill);
-	printf_props->updated = 1;
+	free(infill);
+	props->updated = 1;
 	return (new);
 }
 
-char	*ft_justify_infill_right(t_printf *printf_props, char *str, char *fill)
+char	*ft_justify_infill_right(t_printf *props, char *str, char *infill)
 {
 	char	*new;
 
-	new = ft_strjoin(str, fill);
+	new = ft_strjoin(str, infill);
 	free(str);
-	free(fill);
-	printf_props->updated = 1;
+	free(infill);
+	props->updated = 1;
 	return (new);
 }
 
-char	*ft_slice_str(t_printf *printf_props, char *str)
+char	*ft_slice_str(t_printf *props, char *str)
 {
 	char	*temp;
 	int		precision;
 
-	precision = printf_props->flags->precision;
+	precision = props->flags->precision;
 	if (precision == -1)
 		temp = ft_substr(str, ft_strlen(str) - 1, ft_strlen(str) - 1);
 	else
@@ -50,20 +50,20 @@ char	*ft_slice_str(t_printf *printf_props, char *str)
 	return (str);
 }
 
-char	*ft_append_prefix(t_printf *printf_props, char *str)
+char	*ft_append_prefix(t_printf *props, char *str)
 {
 	char	*new;
 
-	if (printf_props->flags->plus || printf_props->negative_nbr)
+	if (props->flags->plus || props->negative_nbr)
 	{
-		if (printf_props->negative_nbr)
+		if (props->negative_nbr)
 			new = ft_strjoin("-", str);
 		else
 			new = ft_strjoin("+", str);
 		free(str);
 		str = NULL;
 	}
-	if (printf_props->flags->blank)
+	if (props->flags->blank && !props->negative_nbr)
 	{
 		if (str)
 		{

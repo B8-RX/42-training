@@ -92,22 +92,22 @@ void	ft_save_specifier_if_found(t_printf *printf_props, char format)
 
 	flags = printf_props->flags;
 	if (ft_strchr("csdiupxX", format))
-	{
 		printf_props->specifier = format;
-		if (ft_strchr("px", format))
-			printf_props->base = BASE_LOW;
-		if (format == 'X')
-			printf_props->base = BASE_UP;
-	}
-	if (ft_strchr("sc", printf_props->specifier))
+	if (ft_strchr("px", format))
+		printf_props->base = BASE_LOW;
+	else if (format == 'X')
+		printf_props->base = BASE_UP;
+	else if (ft_strchr("sc", printf_props->specifier))
 	{
 		if (flags->zero)
 			flags->zero = 0;
-		if (flags->period && printf_props->specifier != 's')
+		if (flags->period && printf_props->specifier == 'c')
 		{
 			flags->period = 0;
 			flags->precision = 0;
 		}
+		if (printf_props->flags->blank)
+			printf_props->flags->blank = 0;
 	}
 }
 

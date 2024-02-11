@@ -67,7 +67,7 @@ char	*ft_update_str(t_printf *props, char *str)
 	return (new);
 }
 
-char	*ft_generate_infill(t_printf *props, char *fill, char *str, int size)
+char	*ft_generate_infill(t_printf *props, char *infill, char *str, int size)
 {
 	char	*temp;
 	int		i;
@@ -77,21 +77,21 @@ char	*ft_generate_infill(t_printf *props, char *fill, char *str, int size)
 	str_len = (int)ft_strlen(str);
 	if (props->flags->plus || (props->negative_nbr && !props->flags->precision))
 		size--;
-	if (props->flags->blank && !props->flags->precision)
+	if (props->flags->blank)
 		size--;
 	size -= str_len;
 	while (i < size)
 	{
-		temp = ft_strjoin(fill, "");
-		free(fill);
+		temp = ft_strjoin(infill, "");
+		free(infill);
 		if (!ft_strchr("sc", props->specifier)
 			&& (props->flags->zero
 				|| props->flags->precision))
-			fill = ft_strjoin(temp, "0");
+			infill = ft_strjoin(temp, "0");
 		else
-			fill = ft_strjoin(temp, " ");
+			infill = ft_strjoin(temp, " ");
 		free(temp);
 		i++;
 	}
-	return (fill);
+	return (infill);
 }
