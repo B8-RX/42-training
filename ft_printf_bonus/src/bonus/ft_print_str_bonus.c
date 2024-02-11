@@ -20,18 +20,18 @@ int	ft_print_str_bonus(t_printf *props, char *str)
 	i = 0;
 	if (!str)
 		return (ft_print_str_bonus(props, ft_strjoin("(null)", "")));
-	if (*str || props -> flags -> width)
+	if (*str || props->flags->width)
 	{
-		if (props -> flags_len
-			&& !props -> updated
-			&& !props -> error_format)
+		if (props->flags_len
+			&& !props->updated
+			&& !props->error_format)
 		{
 			new = ft_update_str(props, str);
 			return (ft_print_str_bonus(props, new));
 		}
 	}
-	if (ft_strchr("csdiupxX%", props -> specifier)
-		|| props -> error_format || *str == '%')
+	if (ft_strchr("csdiupxX%", props->specifier)
+		|| props->error_format || *str == '%')
 		while (str[i] != '\0')
 			props->format_len += write(1, &str[i++], 1);
 	free(str);
@@ -46,7 +46,7 @@ char	*ft_update_str(t_printf *props, char *str)
 	int		precision;
 
 	precision = props->flags->precision;
-	width = props -> flags -> width;
+	width = props->flags->width;
 	infill = ft_strjoin("", "");
 	if (precision == -1 || (precision
 			&& ft_strchr("sc", props->specifier)))
@@ -58,29 +58,29 @@ char	*ft_update_str(t_printf *props, char *str)
 		else if (precision < (int)ft_strlen(str) || props->specifier != 's')
 			infill = ft_generate_infill(props, infill, str, precision);
 	}
-	if (props -> flags -> minus)
+	if (props->flags->minus)
 		new = ft_justify_infill_right(props, str, infill);
 	else
 		new = ft_justify_infill_left(props, str, infill);
-	if (props -> flags -> plus || props -> negative_nbr)
-		new = ft_append_sign(props, new);
+	if (props->flags->plus || props->negative_nbr || props->flags->blank)
+		new = ft_append_prefix(props, new);
 	return (new);
 }
 
-char	*ft_generate_infill(t_printf *props, char *fill, char *str, int len)
+char	*ft_generate_infill(t_printf *props, char *fill, char *str, int size)
 {
 	char	*temp;
-	int		width;
 	int		i;
 	int		str_len;
 
 	i = 0;
-	width = len;
 	str_len = (int)ft_strlen(str);
 	if (props->flags->plus || (props->negative_nbr && !props->flags->precision))
-		width--;
-	width -= str_len;
-	while (i < width)
+		size--;
+	if (props->flags->blank && !props->flags->precision)
+		size--;
+	size -= str_len;
+	while (i < size)
 	{
 		temp = ft_strjoin(fill, "");
 		free(fill);

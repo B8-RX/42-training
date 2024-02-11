@@ -75,21 +75,21 @@ int			ft_atoi(char *str);
 int			ft_print_char_bonus(t_printf *printf_props, char c);
 void		*ft_print_percent_sign(t_printf *printf_props);
 int			ft_print_str_bonus(t_printf *printf_props, char *str);
-char		*ft_generate_infill(t_printf *printf_props,
-				char *infill, char *str, int len);
 char		*ft_update_str(t_printf *printf_props, char *str);
+char		*ft_generate_infill(t_printf *printf_props,
+				char *infill, char *str, int size);
 char		*ft_slice_str(t_printf *printf_props, char *str);
 char		*ft_justify_infill_left(t_printf *printf_props,
 				char *str, char *infill);
 char		*ft_justify_infill_right(t_printf *printf_props,
 				char *str, char *infill);
-char		*ft_append_sign(t_printf *printf_props, char *str);
-char		*ft_append_hexa_prefix(t_printf *printf_props, char *str);
+char		*ft_append_prefix(t_printf *printf_props, char *str);
+char		*ft_append_prefix_hexa(t_printf *printf_props, char *str);
+char		*ft_append_char_to_str(char *str, char c, int c_position);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 size_t		ft_strlen(const char *str);
-char		*ft_append_char_to_str(char *str, char c, int c_position);
 
 #endif // !FT_PRINTF_H

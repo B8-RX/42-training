@@ -17,12 +17,12 @@ int	ft_print_char_bonus(t_printf *printf_props, char c)
 	char	*temp;
 
 	temp = NULL;
-	if (printf_props -> flags->width > 1)
+	if (printf_props->flags->width > 1)
 	{
 		if (c == 0)
 		{
-			printf_props -> format_len += write(1, &c, 1);
-			printf_props -> flags -> width -= 1;
+			printf_props->format_len += write(1, &c, 1);
+			printf_props->flags->width -= 1;
 			temp = ft_update_str(printf_props, ft_strjoin("", ""));
 		}
 		else
@@ -31,14 +31,14 @@ int	ft_print_char_bonus(t_printf *printf_props, char c)
 	}	
 	else
 	{
-		printf_props -> format_len += write(1, &c, 1);
-		return (printf_props -> format_len);
+		printf_props->format_len += write(1, &c, 1);
+		return (printf_props->format_len);
 	}
 }
 
 void	*ft_print_percent_sign(t_printf *printf_props)
 {
-	printf_props -> specifier = '%';
+	printf_props->specifier = '%';
 	ft_print_char_bonus(printf_props, '%');
 	return (printf_props);
 }

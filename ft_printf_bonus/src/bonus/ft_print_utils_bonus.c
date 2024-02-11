@@ -19,7 +19,7 @@ char	*ft_justify_infill_left(t_printf *printf_props, char *str, char *fill)
 	new = ft_strjoin(fill, str);
 	free(str);
 	free(fill);
-	printf_props -> updated = 1;
+	printf_props->updated = 1;
 	return (new);
 }
 
@@ -30,7 +30,7 @@ char	*ft_justify_infill_right(t_printf *printf_props, char *str, char *fill)
 	new = ft_strjoin(str, fill);
 	free(str);
 	free(fill);
-	printf_props -> updated = 1;
+	printf_props->updated = 1;
 	return (new);
 }
 
@@ -39,7 +39,7 @@ char	*ft_slice_str(t_printf *printf_props, char *str)
 	char	*temp;
 	int		precision;
 
-	precision = printf_props -> flags -> precision;
+	precision = printf_props->flags->precision;
 	if (precision == -1)
 		temp = ft_substr(str, ft_strlen(str) - 1, ft_strlen(str) - 1);
 	else
@@ -50,15 +50,31 @@ char	*ft_slice_str(t_printf *printf_props, char *str)
 	return (str);
 }
 
-char	*ft_append_sign(t_printf *printf_props, char *str)
+char	*ft_append_prefix(t_printf *printf_props, char *str)
 {
 	char	*new;
 
-	if (printf_props -> flags -> plus)
-		new = ft_strjoin("+", str);
-	else
-		new = ft_strjoin("-", str);
-	free(str);
+	if (printf_props->flags->plus || printf_props->negative_nbr)
+	{
+		if (printf_props->negative_nbr)
+			new = ft_strjoin("-", str);
+		else
+			new = ft_strjoin("+", str);
+		free(str);
+		str = NULL;
+	}
+	if (printf_props->flags->blank)
+	{
+		if (str)
+		{
+			new = ft_strjoin(str, "");
+			free(str);
+		}
+		str = ft_strjoin(" ", new);
+		free(new);
+		new = ft_strjoin(str, "");
+		free(str);
+	}
 	return (new);
 }
 

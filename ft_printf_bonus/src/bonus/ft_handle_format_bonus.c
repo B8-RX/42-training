@@ -59,7 +59,7 @@ t_printf	*ft_handle_flags(t_printf *printf_props, const char *format)
 		if (format[i] == '0')
 			i += ft_handle_zero_flag(printf_props, format, i);
 		if (format[i] == ' ' && ++i)
-			printf_props -> flags -> blank = 1;
+			printf_props->flags->blank = 1;
 		if (format[i] == '#')
 			i += ft_handle_sharp_flag(printf_props, format, i);
 		if (!ft_strchr("csdiupxX%.0123456789# -+", format[i]))
@@ -71,8 +71,8 @@ t_printf	*ft_handle_flags(t_printf *printf_props, const char *format)
 int	ft_handle_sharp_flag(t_printf *printf_props, const char *format, int i)
 {
 	if (format[i - 1] != '%')
-		printf_props -> error_format = 1;
-	printf_props -> flags -> sharp = 1;
+		printf_props->error_format = 1;
+	printf_props->flags->sharp = 1;
 	return (1);
 }
 
@@ -82,20 +82,20 @@ t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i)
 	int	precision;
 	int	zero;
 
-	printf_props -> flags_len = i;
-	minus = printf_props -> flags -> minus;
-	precision = printf_props -> flags -> precision;
-	zero = printf_props -> flags -> zero;
-	if (printf_props -> error_format
-		&& printf_props -> flags -> sharp
+	printf_props->flags_len = i;
+	minus = printf_props->flags->minus;
+	precision = printf_props->flags->precision;
+	zero = printf_props->flags->zero;
+	if (printf_props->error_format
+		&& printf_props->flags->sharp
 		&& ft_strchr("sc", format[i]))
-		printf_props -> error_format = 0;
-	if (printf_props -> error_format)
+		printf_props->error_format = 0;
+	if (printf_props->error_format)
 		return (ft_handle_error_format(printf_props, format));
 	if ((minus || precision) && zero)
-		printf_props -> flags -> zero = 0;
-	if (printf_props -> flags -> period && precision == 0)
-		printf_props -> flags -> precision = -1;
+		printf_props->flags->zero = 0;
+	if (printf_props->flags->period && precision == 0)
+		printf_props->flags->precision = -1;
 	return (ft_format_processing(&printf_props, &format[i]));
 }
 
@@ -103,7 +103,7 @@ void	*ft_handle_error_format(t_printf *printf_props, const char *format)
 {
 	char		*error_format;
 
-	printf_props -> error_format = 1;
+	printf_props->error_format = 1;
 	error_format = ft_substr(format, 0, printf_props->flags_len + 1);
 	ft_print_str_bonus(printf_props,
 		ft_append_char_to_str(error_format, '%', 1));

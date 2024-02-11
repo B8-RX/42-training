@@ -16,7 +16,7 @@ void	ft_handle_s_specifier(t_printf *printf_props)
 {
 	char	*output;
 
-	output = (char *)va_arg(printf_props -> args, void *);
+	output = (char *)va_arg(printf_props->args, void *);
 	if (output == NULL)
 		ft_print_str_bonus(printf_props, ft_strjoin("(null)", ""));
 	else

@@ -55,12 +55,12 @@ char	*ft_itoa(t_printf *printf_props, int n)
 		return (ft_strjoin("0", ""));
 	if (n == -2147483648)
 	{
-		printf_props -> negative_nbr = 1;
+		printf_props->negative_nbr = 1;
 		return (ft_strjoin("2147483648", ""));
 	}
 	if (n < 0)
 	{
-		printf_props -> negative_nbr = 1;
+		printf_props->negative_nbr = 1;
 		n *= -1;
 	}
 	num_len += ft_check_num_len(n);
