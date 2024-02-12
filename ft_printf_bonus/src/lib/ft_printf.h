@@ -43,18 +43,12 @@ typedef struct s_printf {
 }	t_printf;
 
 int			ft_printf(const char *format, ...);
-int			ft_handle_format(char f, va_list args);
-int			ft_print_char(char c);
-int			ft_print_str(char *str, int size);
-int			ft_print_nbr(int nb, int size);
-int			ft_print_unsigned(unsigned int nb, int size);
-int			ft_print_hexa(unsigned long nb, int size, char format, char *base);
-int			ft_printf_bonus(const char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
 int			ft_end_process(t_printf *printf_props);
 int			ft_verify_format(t_printf *printf_props, const char *format);
 t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i);
 t_printf	*ft_format_processing(t_printf **printf_props, const char *format);
+char		*ft_flags_processing(t_printf *printf_props, char *str);
 t_printf	*ft_handle_flags(t_printf *printf_props, const char *format);
 int			ft_handle_minus_flag(t_printf *printf_props, char prev_char);
 int			ft_handle_plus_flag(t_printf *printf_props, char prev_char);
@@ -65,24 +59,23 @@ int			ft_handle_num_flag(t_printf *printf_props,
 				const char *format, int i);
 int			ft_handle_sharp_flag(t_printf *printf_props,
 				const char *format, int i);
-void		*ft_handle_error_format(t_printf *printf_props, const char *format);
+void		*ft_handle_err_format(t_printf *printf_props,
+				const char *format, int i);
 void		ft_save_specifier_if_found(t_printf *printf_props, char format);
 void		ft_handle_s_specifier(t_printf *printf_props);
 char		*ft_itoa(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);
 char		*ft_ultoa(t_printf *printf_props, unsigned long n);
 int			ft_atoi(char *str);
-int			ft_print_char_bonus(t_printf *printf_props, char c);
+int			ft_print_char(t_printf *printf_props, char c);
 void		*ft_print_percent_sign(t_printf *printf_props);
-int			ft_print_str_bonus(t_printf *printf_props, char *str);
+int			ft_print_str(t_printf *printf_props, char *str);
 char		*ft_update_str(t_printf *printf_props, char *str);
 char		*ft_generate_infill(t_printf *printf_props,
 				char *infill, char *str, int size);
 char		*ft_slice_str(t_printf *printf_props, char *str);
-char		*ft_justify_infill_left(t_printf *printf_props,
-				char *str, char *infill);
-char		*ft_justify_infill_right(t_printf *printf_props,
-				char *str, char *infill);
+char		*ft_justify_infill_left(char *str, char *infill);
+char		*ft_justify_infill_right(char *str, char *infill);
 char		*ft_append_prefix(t_printf *printf_props, char *str);
 char		*ft_append_prefix_hexa(t_printf *printf_props, char *str);
 char		*ft_append_char_to_str(char *str, char c, int c_position);

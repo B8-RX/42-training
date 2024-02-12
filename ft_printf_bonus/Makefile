@@ -10,10 +10,10 @@
 #                                                                              #
 # **************************************************************************** #
 
-SOURCES = ./src/mandatory/ft_printf.c ./src/mandatory/ft_handle_format.c ./src/mandatory/ft_print_utils.c \
+SOURCES = ./src/ft_printf.c ./src/ft_atoi.c ./src/ft_specifier_utils.c ./src/ft_handle_format.c ./src/ft_itoa.c ./src/ft_print_char.c \
+./src/ft_print_str.c ./src/ft_print_utils.c ./src/ft_printf_utils.c ./src/ft_uitoa.c ./src/ft_ultoa.c\
 
-SOURCES_BONUS = ./src/bonus/ft_printf_bonus.c ./src/bonus/ft_atoi_bonus.c ./src/bonus/ft_flags_utils_bonus.c ./src/bonus/ft_specifier_utils_bonus.c ./src/bonus/ft_handle_format_bonus.c ./src/bonus/ft_itoa_bonus.c ./src/bonus/ft_print_char_bonus.c \
-./src/bonus/ft_print_str_bonus.c ./src/bonus/ft_print_utils_bonus.c ./src/bonus/ft_printf_utils_bonus.c ./src/bonus/ft_uitoa_bonus.c ./src/bonus/ft_ultoa_bonus.c\
+SOURCES_BONUS = ./src/bonus/ft_flags_utils_bonus.c ${SOURCES}
 
 NAME = libftprintf.a
 
