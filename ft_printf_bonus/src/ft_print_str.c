@@ -18,13 +18,9 @@ int	ft_print_str(t_printf *props, char *str)
 	char	*new;
 
 	i = 0;
-	if (!str)
-		return (ft_print_str(props, ft_strjoin("(null)", "")));
-	if (*str || props->flags->width)
+	if (!props->updated && (*str || props->flags->width))
 	{
-		if ((props->flags_len || props->negative_nbr)
-			&& !props->updated
-			&& !props->error_format)
+		if ((props->flags_len || props->negative_nbr) && !props->error_format)
 		{
 			new = ft_update_str(props, str);
 			return (ft_print_str(props, new));
@@ -54,22 +50,12 @@ char	*ft_flags_processing(t_printf *props, char *str)
 {
 	char	*new;
 	char	*infill;
-	int		width;
 	int		precision;
 
 	precision = props->flags->precision;
-	width = props->flags->width;
-	infill = ft_strjoin("", "");
-	if (precision == -1 || (precision
-			&& ft_strchr("sc", props->specifier)))
+	if (precision == -1 || (precision && ft_strchr("sc", props->specifier)))
 		str = ft_slice_str(props, str);
-	if (width > precision || precision)
-	{
-		if (width > precision)
-			infill = ft_generate_infill(props, infill, str, width);
-		else if (precision < (int)ft_strlen(str) || props->specifier != 's')
-			infill = ft_generate_infill(props, infill, str, precision);
-	}
+	infill = ft_set_infill(props, str);
 	if (props->flags->minus)
 		new = ft_justify_infill_right(str, infill);
 	else
@@ -77,6 +63,28 @@ char	*ft_flags_processing(t_printf *props, char *str)
 	if (props->flags->plus || props->negative_nbr || props->flags->blank)
 		new = ft_append_prefix(props, new);
 	return (new);
+}
+
+char	*ft_set_infill(t_printf *props, char *str)
+{
+	int		width;
+	int		precision;
+	char	*infill;
+
+	infill = ft_strjoin("", "");
+	precision = props->flags->precision;
+	if (precision > (int)ft_strlen(str) && ft_strchr("sc", props->specifier))
+		precision = (int)ft_strlen(str);
+	props->flags->precision = precision;
+	width = props->flags->width;
+	if (width > precision || precision)
+	{
+		if (width > precision)
+			infill = ft_generate_infill(props, infill, str, width);
+		else
+			infill = ft_generate_infill(props, infill, str, precision);
+	}
+	return (infill);
 }
 
 char	*ft_generate_infill(t_printf *props, char *infill, char *str, int size)
@@ -88,8 +96,6 @@ char	*ft_generate_infill(t_printf *props, char *infill, char *str, int size)
 	i = 0;
 	str_len = (int)ft_strlen(str);
 	if (props->flags->plus || (props->negative_nbr && !props->flags->precision))
-		size--;
-	if (props->flags->blank)
 		size--;
 	size -= str_len;
 	while (i < size)

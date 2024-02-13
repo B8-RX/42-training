@@ -77,24 +77,29 @@ int	ft_handle_sharp_flag(t_printf *printf_props, const char *format, int i)
 
 t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i)
 {
-	int	minus;
 	int	precision;
-	int	zero;
 
 	printf_props->flags_len = i;
-	minus = printf_props->flags->minus;
 	precision = printf_props->flags->precision;
-	zero = printf_props->flags->zero;
 	if (printf_props->error_format
 		&& printf_props->flags->sharp
 		&& ft_strchr("sc", format[i]))
 		printf_props->error_format = 0;
 	if (printf_props->error_format)
 		return (ft_handle_err_format(printf_props, format, i));
-	if ((minus || precision) && zero)
+	if ((printf_props->flags->minus || precision) && printf_props->flags->zero)
 		printf_props->flags->zero = 0;
-	if (printf_props->flags->period && precision == 0)
+	if (printf_props->flags->period && !(precision > 0))
+	{
+		if (!(printf_props->flags->width > 0))
+		{
+			if (format[i] == 'c')
+				return (ft_format_processing(&printf_props, &format[i]));
+			else
+				return (NULL);
+		}
 		printf_props->flags->precision = -1;
+	}
 	return (ft_format_processing(&printf_props, &format[i]));
 }
 

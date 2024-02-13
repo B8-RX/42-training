@@ -17,10 +17,14 @@ void	ft_handle_s_specifier(t_printf *printf_props)
 	char	*output;
 
 	output = (char *)va_arg(printf_props->args, void *);
-	if (output == NULL && printf_props->flags->period)
-		ft_print_str(printf_props, ft_strjoin("", ""));
-	else if (output == NULL)
-		ft_print_str(printf_props, ft_strjoin("(null)", ""));
+	if (output == NULL)
+	{
+		printf_props->updated = 1;
+		if ((printf_props->flags_len >= 1) && !printf_props->flags->precision)
+			ft_print_str(printf_props, ft_strjoin("", ""));
+		else
+			ft_print_str(printf_props, ft_strjoin("(null)", ""));
+	}
 	else
 		ft_print_str(printf_props, ft_strjoin(output, ""));
 }

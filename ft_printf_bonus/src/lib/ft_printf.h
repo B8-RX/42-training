@@ -71,6 +71,7 @@ int			ft_print_char(t_printf *printf_props, char c);
 void		*ft_print_percent_sign(t_printf *printf_props);
 int			ft_print_str(t_printf *printf_props, char *str);
 char		*ft_update_str(t_printf *printf_props, char *str);
+char		*ft_set_infill(t_printf *props, char *str);
 char		*ft_generate_infill(t_printf *printf_props,
 				char *infill, char *str, int size);
 char		*ft_slice_str(t_printf *printf_props, char *str);
