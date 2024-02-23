@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_print_utils.c                                   :+:      :+:    :+:   */
+/*   ft_print_str_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,23 +12,43 @@
 
 #include "./lib/ft_printf.h"
 
-char	*ft_justify_infill_left(char *str, char *infill)
+char	*ft_justify_infill_left(t_printf *props, char *str, char *infill)
 {
 	char	*new;
+	int		str_len;
+	int		prefix_parity;
+	int		prefix_hexa;
 
+	str_len = (int)ft_strlen(str);
+	prefix_parity = 0;
+	prefix_hexa = 0;
+	if (props->flags->plus || props->negative_nbr)
+		prefix_parity = 1;
+	if (props->specifier == 'p'
+		|| (props->flags->sharp && !props->error_format))
+		prefix_hexa = 1;
+	if (prefix_parity || prefix_hexa)
+	{
+		if (props->flags->zero)
+			infill = ft_append_parity(props, infill);
+		else if (prefix_hexa)
+			str = ft_append_prefix_hexa(props, str);
+		else
+			str = ft_append_parity(props, str);
+	}
 	new = ft_strjoin(infill, str);
-	free(str);
-	free(infill);
-	return (new);
+	return (free(str), free(infill), new);
 }
 
-char	*ft_justify_infill_right(char *str, char *infill)
+char	*ft_justify_infill_right(t_printf *props, char *str, char *infill)
 {
 	char	*new;
 
 	new = ft_strjoin(str, infill);
 	free(str);
 	free(infill);
+	if (props->negative_nbr || props->flags->plus)
+		new = ft_append_parity(props, new);
 	return (new);
 }
 
@@ -39,67 +59,11 @@ char	*ft_slice_str(t_printf *props, char *str)
 
 	precision = props->flags->precision;
 	if (precision == -1)
-		temp = ft_substr(str, ft_strlen(str) - 1, ft_strlen(str) - 1);
+		temp = ft_strjoin("", "");
 	else
 		temp = ft_substr(str, 0, precision);
 	free(str);
 	str = ft_strjoin(temp, "");
 	free(temp);
 	return (str);
-}
-
-char	*ft_append_prefix(t_printf *props, char *str)
-{
-	char	*new;
-
-	if (props->flags->plus || props->negative_nbr)
-	{
-		if (props->negative_nbr)
-			new = ft_strjoin("-", str);
-		else
-			new = ft_strjoin("+", str);
-		free(str);
-		str = NULL;
-	}
-	if (props->flags->blank && !props->negative_nbr)
-	{
-		if (str)
-		{
-			new = ft_strjoin(str, "");
-			free(str);
-		}
-		str = ft_strjoin(" ", new);
-		free(new);
-		new = ft_strjoin(str, "");
-		free(str);
-	}
-	return (new);
-}
-
-char	*ft_append_char_to_str(char *str, char c, int position)
-{
-	char	*new;
-	int		i;
-
-	if (!str || (!c && c != 0))
-		return (NULL);
-	new = malloc((ft_strlen(str) + 2) * sizeof(char));
-	if (!new)
-		return (NULL);
-	i = -1;
-	if (position == 1)
-	{
-		new[i + 1] = c;
-		while (str[++i])
-			new[i + 1] = str[i];
-		new[i + 1] = '\0';
-	}	
-	else
-	{
-		while (str[++i])
-			new[i] = str[i];
-		new[i] = c;
-		new[i + 1] = '\0';
-	}
-	return (new);
 }

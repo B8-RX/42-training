@@ -15,12 +15,19 @@
 void	ft_handle_s_specifier(t_printf *printf_props)
 {
 	char	*output;
+	int		width;
+	int		period;
+	int		precision;
 
+	width = printf_props->flags->width;
+	period = printf_props->flags->period;
+	precision = printf_props->flags->precision;
 	output = (char *)va_arg(printf_props->args, void *);
 	if (output == NULL)
 	{
-		printf_props->updated = 1;
-		if ((printf_props->flags_len >= 1) && !printf_props->flags->precision)
+		if ((!width && !precision && period)
+			|| (!width && precision && precision < (int)ft_strlen("(null)"))
+			|| (width && period && precision < (int)ft_strlen("(null)")))
 			ft_print_str(printf_props, ft_strjoin("", ""));
 		else
 			ft_print_str(printf_props, ft_strjoin("(null)", ""));

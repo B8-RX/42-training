@@ -52,10 +52,8 @@ t_printf	*ft_handle_flags(t_printf *printf_props, const char *format)
 			i += ft_handle_plus_flag(printf_props, format[i - 1]);
 		if (format[i] == '.')
 			i += ft_handle_period_flag(printf_props);
-		if (format[i] > '0' && format[i] <= '9')
+		if (format[i] >= '0' && format[i] <= '9')
 			i += ft_handle_num_flag(printf_props, format, i);
-		if (format[i] == '0')
-			i += ft_handle_zero_flag(printf_props, format, i);
 		if (format[i] == ' ' && ++i)
 			printf_props->flags->blank = 1;
 		if (format[i] == '#')
@@ -69,7 +67,7 @@ t_printf	*ft_handle_flags(t_printf *printf_props, const char *format)
 
 int	ft_handle_sharp_flag(t_printf *printf_props, const char *format, int i)
 {
-	if (format[i - 1] != '%')
+	if (!ft_strchr("% ", format[i - 1]))
 		printf_props->error_format = 1;
 	printf_props->flags->sharp = 1;
 	return (1);
@@ -91,13 +89,8 @@ t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i)
 		printf_props->flags->zero = 0;
 	if (printf_props->flags->period && !(precision > 0))
 	{
-		if (!(printf_props->flags->width > 0))
-		{
-			if (format[i] == 'c')
-				return (ft_format_processing(&printf_props, &format[i]));
-			else
-				return (NULL);
-		}
+		if (printf_props->flags->width == 0 && format[i] == 'c')
+			return (ft_format_processing(&printf_props, &format[i]));
 		printf_props->flags->precision = -1;
 	}
 	return (ft_format_processing(&printf_props, &format[i]));

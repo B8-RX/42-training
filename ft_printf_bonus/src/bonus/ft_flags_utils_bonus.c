@@ -21,7 +21,7 @@ int	ft_handle_minus_flag(t_printf *printf_props, char prev_char)
 	width = printf_props->flags->width;
 	precision = printf_props->flags->precision;
 	minus = printf_props->flags->minus;
-	if (prev_char != '%' && (width || precision || minus))
+	if (prev_char != '%' && (width || precision))
 		printf_props->error_format = 1;
 	else
 		printf_props->flags->minus = 1;
@@ -30,7 +30,7 @@ int	ft_handle_minus_flag(t_printf *printf_props, char prev_char)
 
 int	ft_handle_plus_flag(t_printf *printf_props, char prev_char)
 {
-	if (!ft_strchr("%- 0#", prev_char))
+	if (!ft_strchr("%-+ 0#", prev_char))
 		printf_props->error_format = 1;
 	else
 		printf_props->flags->plus = 1;
@@ -51,8 +51,13 @@ int	ft_handle_num_flag(t_printf *printf_props, const char *format, int i)
 	int	j;
 
 	j = 0;
-	while (format[i + j] > '0' && format[i + j] <= '9')
-		j++;
+	while (format[i + j] >= '0' && format[i + j] <= '9')
+	{
+		if (format[i + j] == '0')
+			j += ft_handle_zero_flag(printf_props, format, i + j);
+		else
+			j++;
+	}
 	if (printf_props->flags->period)
 		printf_props->flags->precision = ft_atoi(ft_substr(format + i, 0, j));
 	else
@@ -63,20 +68,11 @@ int	ft_handle_num_flag(t_printf *printf_props, const char *format, int i)
 int	ft_handle_zero_flag(t_printf *printf_props, const char *format, int i)
 {
 	int	j;
-	int	multiple;
 
 	j = 0;
-	multiple = 1;
+	if (!printf_props->flags->zero && ft_strchr("%+", format[i - 1]))
+		printf_props->flags->zero = 1;
 	while (format[i + j] == '0')
 		j++;
-	if (ft_strchr("%+", format[i - 1]))
-		printf_props->flags->zero = 1;
-	i = j;
-	while (j--)
-		multiple *= 10;
-	if (printf_props->flags->precision)
-		printf_props->flags->precision *= multiple;
-	else if (printf_props ->flags->width)
-		printf_props->flags->width *= multiple;
-	return (i);
+	return (j);
 }

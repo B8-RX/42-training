@@ -68,18 +68,26 @@ char		*ft_uitoa(unsigned int n);
 char		*ft_ultoa(t_printf *printf_props, unsigned long n);
 int			ft_atoi(char *str);
 int			ft_print_char(t_printf *printf_props, char c);
+int			ft_handle_char_with_flags(t_printf *printf_props, char c);
 void		*ft_print_percent_sign(t_printf *printf_props);
 int			ft_print_str(t_printf *printf_props, char *str);
 char		*ft_update_str(t_printf *printf_props, char *str);
-char		*ft_set_infill(t_printf *props, char *str);
-char		*ft_generate_infill(t_printf *printf_props,
-				char *infill, char *str, int size);
 char		*ft_slice_str(t_printf *printf_props, char *str);
-char		*ft_justify_infill_left(char *str, char *infill);
-char		*ft_justify_infill_right(char *str, char *infill);
-char		*ft_append_prefix(t_printf *printf_props, char *str);
+char		*ft_set_infill(t_printf *props, char *str);
+char		*ft_populate_infill(t_printf *printf_props,
+				char *infill, char *str);
+char		*ft_infill_precision(t_printf *props, char *str_input);
+char		*ft_infill_width(t_printf *props, char *infill, int input_len);
+char		*ft_justify_infill(t_printf *props, char *infill, char *str);
+char		*ft_justify_infill_left(t_printf *printf_props,
+				char *str, char *infill);
+char		*ft_justify_infill_right(t_printf *printf_props,
+				char *str, char *infill);
+char		*ft_append_parity(t_printf *printf_props, char *str);
+char		*ft_append_blank(t_printf *printf_props, char *src);
 char		*ft_append_prefix_hexa(t_printf *printf_props, char *str);
 char		*ft_append_char_to_str(char *str, char c, int c_position);
+char		*ft_bzero(int size);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);

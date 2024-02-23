@@ -59,19 +59,19 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s2)
 		return (NULL);
 	i = 0;
-	while (s1[i])
+	while (s1[i] != '\0')
 		i++;
 	j = 0;
-	while (s2[j])
+	while (s2[j] != '\0')
 		j++;
 	new = (char *)malloc((i + j + 1) * sizeof(char));
 	if (new == NULL)
 		return (NULL);
 	i = -1;
-	while (s1[++i])
+	while (s1[++i] != '\0')
 		new[i] = s1[i];
 	j = -1;
-	while (s2[++j])
+	while (s2[++j] != '\0')
 		new[i++] = s2[j];
 	new[i] = '\0';
 	return (new);
@@ -98,7 +98,7 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] != '\0')
 		i++;
 	return (i);
 }

@@ -24,6 +24,7 @@ int	ft_printf(const char *format, ...)
 		return (0);
 	va_start(printf_props->args, format);
 	i = 0;
+	printf_props->updated = 0;
 	while (format[i] != '\0')
 	{
 		if (format[i] == '%')
@@ -119,10 +120,12 @@ void	ft_save_specifier_if_found(t_printf *printf_props, char format)
 
 int	ft_end_process(t_printf *printf_props)
 {
-	if (printf_props->flags)
-		va_end(printf_props->args);
-	free(printf_props->flags);
-	printf_props->flags = NULL;
+	if (printf_props->updated)
+	{
+		free(printf_props->flags);
+		printf_props->flags = NULL;
+	}
+	va_end(printf_props->args);
 	free(printf_props);
 	printf_props = NULL;
 	return (0);
