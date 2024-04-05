@@ -44,7 +44,7 @@ typedef struct s_printf {
 
 int			ft_printf(const char *format, ...);
 t_printf	*ft_init_printf_props(t_printf *props);
-int			ft_end_process(t_printf *printf_props);
+int			ft_end_process(t_printf *printf_props, const char *format);
 int			ft_verify_format(t_printf *printf_props, const char *format);
 t_printf	*ft_verify_flags(t_printf *printf_props, const char *format, int i);
 t_printf	*ft_format_processing(t_printf **printf_props, const char *format);
@@ -61,7 +61,8 @@ int			ft_handle_sharp_flag(t_printf *printf_props,
 				const char *format, int i);
 void		*ft_handle_err_format(t_printf *printf_props,
 				const char *format, int i);
-void		ft_save_specifier_if_found(t_printf *printf_props, char format);
+void		ft_save_specifier_if_found(t_printf *printf_props,
+				const char format);
 void		ft_handle_s_specifier(t_printf *printf_props);
 char		*ft_itoa(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);

@@ -16,11 +16,9 @@ int	ft_handle_minus_flag(t_printf *printf_props, char prev_char)
 {
 	int	width;
 	int	precision;
-	int	minus;
 
 	width = printf_props->flags->width;
 	precision = printf_props->flags->precision;
-	minus = printf_props->flags->minus;
 	if (prev_char != '%' && (width || precision))
 		printf_props->error_format = 1;
 	else

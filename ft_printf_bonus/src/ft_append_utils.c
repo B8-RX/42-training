@@ -51,7 +51,10 @@ char	*ft_append_prefix_hexa(t_printf *printf_props, char *str)
 
 	valid_hexa = 0;
 	error = printf_props->error_format;
-	if ((*str == 0 && ft_strlen(str) > 1) || *str != '0')
+	if ((*str == '0' && ft_strlen(str) > 1)
+		|| *str != '0'
+		|| (ft_strchr("xX", printf_props->specifier)
+			&& (ft_strlen(str) > 1 || *str != '0')))
 		valid_hexa = 1;
 	if (ft_strchr("pxX", printf_props->specifier) && valid_hexa && !error)
 	{

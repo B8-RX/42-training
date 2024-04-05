@@ -20,8 +20,8 @@ int	ft_printf(const char *format, ...)
 
 	total_len = 0;
 	printf_props = malloc(sizeof(t_printf));
-	if (!printf_props)
-		return (0);
+	if (!printf_props || !format)
+		return (ft_end_process(printf_props, format));
 	va_start(printf_props->args, format);
 	i = 0;
 	printf_props->updated = 0;
@@ -30,14 +30,14 @@ int	ft_printf(const char *format, ...)
 		if (format[i] == '%')
 		{
 			if (!ft_init_printf_props(printf_props))
-				return (ft_end_process(printf_props));
+				return (ft_end_process(printf_props, format));
 			i += ft_verify_format(printf_props, &format[i]);
 			total_len += printf_props->format_len;
 		}
 		else
 			total_len += write(1, &format[i++], 1);
 	}
-	ft_end_process(printf_props);
+	ft_end_process(printf_props, format);
 	return (total_len);
 }
 
@@ -93,7 +93,7 @@ int	ft_verify_format(t_printf *printf_props, const char *format)
 	return (i);
 }
 
-void	ft_save_specifier_if_found(t_printf *printf_props, char format)
+void	ft_save_specifier_if_found(t_printf *printf_props, const char format)
 {
 	t_flags	*flags;
 
@@ -118,8 +118,14 @@ void	ft_save_specifier_if_found(t_printf *printf_props, char format)
 	}
 }
 
-int	ft_end_process(t_printf *printf_props)
+int	ft_end_process(t_printf *printf_props, const char *format)
 {
+	if (!format)
+	{
+		if (printf_props)
+			free(printf_props);
+		return (-1);
+	}
 	if (printf_props->updated)
 	{
 		free(printf_props->flags);

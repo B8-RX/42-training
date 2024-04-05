@@ -36,10 +36,8 @@ char	*ft_set_infill(t_printf *props, char *str)
 
 char	*ft_populate_infill(t_printf *props, char *infill, char *str)
 {
-	int		precision;
 	int		str_len;
 
-	precision = props->flags->precision;
 	if (props->flags->period && ft_strchr("diuxX", props->specifier))
 		str = ft_infill_precision(props, str);
 	str_len = (int)ft_strlen(str);
