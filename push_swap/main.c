@@ -18,7 +18,9 @@ int	main(int argc, char **argv)
 	t_stack	*stack_a;
 	int		*sorted_entries;
 
-	stack_a = NULL;
+	stack_a = malloc (sizeof(t_stack));
+	if (!stack_a)
+		return (0);
 	sorted_entries = NULL;
 	if (argc == 1)
 		return (0);
@@ -31,34 +33,40 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-t_stack	*ft_handle_args(int argc, char **argv, t_stack **stack_a)
+t_stack	*ft_handle_args(int argc, char **argv, t_stack **stack)
 {
+	t_stack	*stack_a;
 	char	**tmp;
 	int		i;
 
+	stack_a = *stack; 
 	tmp = NULL;
 	if (argc == 2)
 		tmp = ft_handle_second_arg(argv);
-	i = 0;
-	if (tmp)
+	else
+		tmp = argv + 1;
+	i = -1;
+	while (tmp[++i])
 	{
-		while (tmp[i])
-		{
-			printf("word: |%s|\n", tmp[i]);
+		printf("word: |%s|\n", tmp[i]);
+		stack_a -> value = ft_atoi(tmp[i]);
+		stack_a -> previous = NULL;
+		stack_a -> next = NULL;
+		if (argc == 2)
 			free(tmp[i]);
-			i++;
-		}
-		free(tmp);			
 	}
-	return (*stack_a);
+	if (argc == 2 && tmp)
+		free(tmp);
+	
+	return (stack_a);
 }
 
 char	**ft_handle_second_arg(char **argv)
 {
-	char	*args;
+	char	**args;
 
-	args = argv[1];
-	return (ft_split(args, ' '));
+	args = ft_split(argv[1], ' ');
+	return (args);
 }
 
 /*
