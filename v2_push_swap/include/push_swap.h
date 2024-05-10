@@ -32,6 +32,9 @@ void		*free_array_str(char **array);
 void		init_stack_a(t_stack_node **stack_a, char **args, char **argv);	
 int			is_numeric(char *args);
 void		free_on_error(t_stack_node *stack, char **args);
+void		free_stack(t_stack_node *stack);
+int			is_duplicate(t_stack_node *stack_a, int val);
+void		append_node(t_stack_node **stack, int val);
 
 
 #endif // ! PUSH_SWAP_H
