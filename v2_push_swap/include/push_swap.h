@@ -9,17 +9,17 @@
 # include <limits.h>
 
 
-typedef struct s_stack_node {
+typedef struct s_stack {
 	char	*stack_name;
 	int		value;
 	int		index;
 	int		operations_cost;
 	int		is_best_move;
 
-	struct s_stack_node	*target_node;
-	struct s_stack_node	*prev;
-	struct s_stack_node	*next;
-}	t_stack_node;
+	struct s_stack	*target_node;
+	struct s_stack	*prev;
+	struct s_stack	*next;
+}	t_stack;
 
 char		**split(char *str, const char splitter);
 int			append_child(char *child, const char *value, const char splitter);
@@ -29,12 +29,36 @@ int			count_spaces(const char *str);
 long int	ft_atol(const char *str);
 int			get_len_value(const char *value);
 void		*free_array_str(char **array);
-void		init_stack_a(t_stack_node **stack_a, char **args, char **argv);	
+void		init_stack_a(t_stack **stack_a, char **args, char **argv);	
 int			is_numeric(char *args);
-void		free_on_error(t_stack_node *stack, char **args);
-void		free_stack(t_stack_node *stack);
-int			is_duplicate(t_stack_node *stack_a, int val);
-void		append_node(t_stack_node **stack, int val);
+void		free_on_error(t_stack *stack, char **args);
+void		free_stack(t_stack *stack);
+int			is_duplicate(t_stack *stack_a, int val);
+void		append_node(t_stack **stack, int val);
 
+void		sa(t_stack **stack_a);
+void		sb(t_stack **stack_b);
+void		ss(t_stack **stack_a, t_stack **stack_b);
+void		ra(t_stack **stack_a);
+t_stack		*get_last_node(t_stack *stack);
 
 #endif // ! PUSH_SWAP_H
+
+
+
+// init stack
+//  - errors checking
+//	- populate with values
+// 
+// check if stack len is < 3 or == 3 or > 3
+//	if < 3 trigger sa()
+//	if == 3 trigger mini sort function
+//	if > 3 trigger big sort function
+//
+//
+//
+// TODO:
+//	- CREATE OPERATIONS FUNCTIONS
+//	- CREATE LITTLE SORT FUNCTION
+//	- CREATE BIG SORT FUNCTION
+

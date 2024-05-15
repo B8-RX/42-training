@@ -1,14 +1,23 @@
 
 #include "./include/push_swap.h"
 
+void	print_values(t_stack *stack)
+{
+	while (stack)
+	{
+		printf("[%d]\n", stack -> value);
+		stack = stack -> next;
+	}
+}
 int	main(int argc, char **argv)
 {
-	t_stack_node	*stack_a;
-	// t_stack_node	*stack_b;
+	t_stack	*stack_a;
+	// t_stack	*stack_b;
 	//
 	stack_a = NULL;
 	// stack_b = NULL;
-	char **args;
+	char	**args;
+	// int		stack_len;	
 
 	args = NULL;
 	if (argc == 1 || ( argc == 2 && !argv[1][0]))
@@ -16,6 +25,16 @@ int	main(int argc, char **argv)
 	if (argc == 2)
 		args = split(argv[1], ' ');
 	init_stack_a(&stack_a, args, argv + 1);
+	// stack_len = get_stack_len(stack_a);
+	// if (stack_len < 3)
+	// 	sa(stack_a);
+	// else if (stack_len == 3)
+	// 	sort_three(stack_a);
+	// else
+	// 	sort_big(stack_a);
+
+
+	// print_values(stack_a);
 	if (args)
 		free_array_str(args);
 	if (stack_a)
@@ -23,7 +42,7 @@ int	main(int argc, char **argv)
 	return (0);
 }
 
-void	init_stack_a(t_stack_node **stack_a, char **args, char **argv)
+void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 {
 	char	**array;
 	long	val;
@@ -42,22 +61,17 @@ void	init_stack_a(t_stack_node **stack_a, char **args, char **argv)
 		if (is_duplicate(*stack_a, val))
 			free_on_error(*stack_a, args);
 		append_node(stack_a, val);
-		// append node
 		array++;
 	}
 	printf("TEST SYNTAX OK\n");
-	*stack_a = NULL;
-	// check if duplicate
-	// create stack
-	//		null for the last next and null for the first prev
 }
 
-void	append_node(t_stack_node **stack, int val)
+void	append_node(t_stack **stack, int val)
 {
-	t_stack_node	*new_node;
-	t_stack_node	*curr;
+	t_stack	*new_node;
+	t_stack	*curr;
 
-	new_node = malloc(sizeof(t_stack_node));
+	new_node = malloc(sizeof(t_stack));
 	if (!new_node)
 		return ;
 	new_node -> value = val;
@@ -78,9 +92,9 @@ void	append_node(t_stack_node **stack, int val)
 	}	
 }
 
-int	is_duplicate(t_stack_node *stack_a, int val)
+int	is_duplicate(t_stack *stack_a, int val)
 {
-	t_stack_node *curr;
+	t_stack *curr;
 
 	curr = stack_a;
 	if (!stack_a)
@@ -97,9 +111,9 @@ int	is_duplicate(t_stack_node *stack_a, int val)
 	return (0);
 }
 
-void	free_on_error(t_stack_node *stack, char **args)
+void	free_on_error(t_stack *stack, char **args)
 {
-	t_stack_node	*tmp;
+	t_stack	*tmp;
 	int				i;
 
 	tmp = stack;
@@ -122,10 +136,18 @@ void	free_on_error(t_stack_node *stack, char **args)
 	exit(1);
 }
 
-void	free_stack(t_stack_node *stack)
+void	free_stack(t_stack *stack)
 {
+	t_stack	*tmp;
+
 	while (stack -> next)
+	{
+		tmp = stack -> next; 
 		free(stack);
+		stack = NULL;
+		stack = tmp;
+	}
+	free(stack);
 }
 
 int	is_numeric(char *argv)
