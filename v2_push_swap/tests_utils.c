@@ -2,80 +2,108 @@
 
 void	tests_functions(void)
 {
-// test function ft_get_big_value(t_stack *stack)
-//
-	t_stack	*init_stack_test(int num)
+
+	void	free_stack_test(t_stack *stack_test)
 	{
-		t_stack	*stack_test;
-		t_stack *head;
+		t_stack	*temp;
+	
+		if (!stack_test)
+			return ;
+		while (stack_test)
+		{
+			temp = stack_test -> next;
+			free(stack_test);
+			stack_test = NULL;
+			stack_test = temp;
+		}
+	}
+	
+	void	init_stack_test(t_stack **stack_test, int nodes)
+	{
+		t_stack	*new_node;
+		t_stack	*head;
 		int		i;
 
-		head = NULL;
 		i = 0;
-		while (++i <= num)
+		head = NULL;
+		while (++i <= nodes)
 		{
-			t_stack *new_node;
-
 			new_node = malloc (sizeof(t_stack));
 			if (!new_node)
-				return (NULL);
+			{
+				if (head)
+				{
+					free_stack_test(head);
+					*stack_test = NULL;
+				}
+				return ;
+			}
 			new_node -> value = i;
 			new_node -> next = NULL;
 			if (!head)
 				head = new_node;
 			else
-				stack_test -> next = new_node;
-			stack_test = new_node;
+				(*stack_test) -> next = new_node;
+			*stack_test = new_node;
 		}
-		stack_test = head;
-		return (stack_test);
-	}
-	
-	void	free_stack_test(t_stack *stack_test)
-	{
-		t_stack	*temp;
-	
-		while (stack_test)
-		{
-			temp = stack_test -> next;
-			free(stack_test);
-			stack_test = temp;
-		}
+		*stack_test = head;
 	}
 
-	void	test_function_big_value(void)
-	{
 
-		t_stack	*stack_test;
+	void	test_function_big_value(t_stack *stack_test, int biggest_value)
+	{
 		int i;
-		int	num;
 		
-		num = 37;
-		// when call get_big_value(t_stack *stack) it should return 10
-		stack_test = init_stack_test(num);
+		if (!stack_test)
+			return ; 
 		i = get_big_value(stack_test);
-		printf("When call get_big_value() it should return %d\n", num);
-		printf("THE BIGGEST VALUE IS: [%d]\n", i);
+		if (biggest_value)
+			printf("When call get_big_value(stack) it should return [%d]\n", biggest_value);
+		printf("THE RETURNED VALUE OF GET_BIG_VALUE IS : [%d]\n", i);
+		printf("\n");
 		free_stack_test(stack_test);
 	}
 
 	
-	void	test_function_get_last_node(void)
+	void	test_function_get_last_node(t_stack *stack_test, int last_node_value)
 	{
-		t_stack	*stack_test;
 		t_stack *last_node;
-		int		num;
 
-		num = 15;
-		stack_test = init_stack_test(num);
-		// when call get_last_node(t_stack *stack) it should return last node which have 10 as value
+		if (!stack_test)
+			return ;
 		last_node = get_last_node(stack_test);
-		printf("When call get_last_node() it should return last node which have [%d] as value\n", num);
-		printf("THE VALUE OF THE LAST NODE IS: [%d]\n", last_node -> value);
+		if (last_node_value)
+			printf("When call get_last_node(stack) it should return the last node which have [%d] as value\n", last_node_value);
+		printf("THE RETURNED NODE OF GET_LAST_NODE HAVE VALUE : [%d]\n", last_node -> value);
+		printf("\n");
 		free_stack_test(stack_test);
 	}
 
 
-	test_function_big_value();	
-	test_function_get_last_node();
+	void	test_function_get_stack_len(t_stack *stack, int stack_len)
+	{
+		int	result;
+
+		if (!stack)
+			return ;
+		result = get_stack_len(stack);
+		printf("When call get_stack_len(stack) it should return [%d]\n", stack_len);
+		printf("THE RETURNED VALUE OF GET_STACK_LEN() IS : [%d]\n", result);
+		printf("\n");
+	}
+
+	printf("\n");
+	t_stack	*stack_test;
+	int		nodes_quantity;
+
+	stack_test = NULL;
+	nodes_quantity = 37;
+	init_stack_test(&stack_test, nodes_quantity);
+	test_function_big_value(stack_test, nodes_quantity);
+	nodes_quantity = 15;
+	init_stack_test(&stack_test, nodes_quantity);
+	test_function_get_last_node(stack_test, nodes_quantity);
+	nodes_quantity = 21;
+	init_stack_test(&stack_test, nodes_quantity);
+	test_function_get_stack_len(stack_test, nodes_quantity);
 }
