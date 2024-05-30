@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/16 18:03:56 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/05/16 18:03:59 by ssghioua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "./include/push_swap.h"
 
@@ -9,36 +21,39 @@ void	print_values(t_stack *stack)
 		stack = stack -> next;
 	}
 }
+
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
 	// t_stack	*stack_b;
-	//
+
 	stack_a = NULL;
 	// stack_b = NULL;
 	char	**args;
-	// int		stack_len;	
+	int		stack_len;	
 
 	args = NULL;
 	if (argc == 1 || ( argc == 2 && !argv[1][0]))
 		return (-1);
 	if (argc == 2)
 		args = split(argv[1], ' ');
+	// if (argc == 2 && !ft_is_digit(**args))
+	// 	return (free_array_str(args), -1);
 	init_stack_a(&stack_a, args, argv + 1);
-	// stack_len = get_stack_len(stack_a);
-	// if (stack_len < 3)
-	// 	sa(stack_a);
+	stack_len = get_stack_len(stack_a);
+	print_values(stack_a);
+	if (stack_len > 1 && stack_len < 3 && stack_a -> value > stack_a -> next -> value)
+		 sa(&stack_a, 1);
 	// else if (stack_len == 3)
-	// 	sort_three(stack_a);
+		// sort_three(&stack_a);
 	// else
-	// 	sort_big(stack_a);
-
-
-	// print_values(stack_a);
+	// 	sort_big(&stack_a, &stack_b);
+	print_values(stack_a);
 	if (args)
 		free_array_str(args);
 	if (stack_a)
 		free_stack(stack_a);
+	tests_functions();
 	return (0);
 }
 
