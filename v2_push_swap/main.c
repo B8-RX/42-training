@@ -53,6 +53,7 @@ int	main(int argc, char **argv)
 		free_array_str(args);
 	if (stack_a)
 		free_stack(stack_a);
+	
 	tests_functions();
 	return (0);
 }
@@ -118,7 +119,7 @@ int	is_duplicate(t_stack *stack_a, int val)
 	{
 		if (curr -> value == val)
 		{
-			printf("ERROR DUPLICATE NUMBER\n");
+			printf("ERROR DUPLICATED NUMBER\n");
 			return (1);
 		}
 		curr = curr -> next;
