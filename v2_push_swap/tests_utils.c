@@ -7,7 +7,6 @@ void	tests_functions(void)
 	int		nodes_quantity;
 
 	stack_test = NULL;
-	nodes_quantity = 37;
 	printf("\n");
 	
 
@@ -70,7 +69,6 @@ void	tests_functions(void)
 			printf("When call get_big_value() it should return [%d]\n", biggest_value);
 		printf("THE RETURNED VALUE OF GET_BIG_VALUE() IS : [%d]\n", i);
 		printf("\n");
-		free_stack_test(stack_test);
 	}
 
 	
@@ -86,7 +84,6 @@ void	tests_functions(void)
 			printf("When call get_last_node() it should return the last node which have [%d] as value\n", last_node_value);
 		printf("THE RETURNED NODE OF GET_LAST_NODE() HAVE VALUE : [%d]\n", last_node -> value);
 		printf("\n");
-		free_stack_test(stack_test);
 	}
 
 
@@ -129,16 +126,51 @@ void	tests_functions(void)
 		printf("\n");
 	}
 
+	void	test_function_append_node(t_stack *stack)
+	{
+		printf("TEST APPEND_NODE()\n");
+		int		node_value;
+		t_stack	*tail;
+
+		node_value = 99;
+		printf("When call append_node(stack , %d) the value of the last node should be [%d]\n", node_value, node_value);
+		append_node(&stack, node_value);
+		tail = stack;
+		while (tail -> next)
+			tail = tail -> next;
+		printf("RETURNED LAST NODE VALUE : [%d]", tail -> value);
+		printf("\n");
+	}
+
+	printf("/////////////////////////\n");
+	nodes_quantity = 37;
 	init_stack_test(&stack_test, nodes_quantity);
 	test_function_big_value(stack_test, nodes_quantity);
+	free_stack_test(stack_test);
+	
+	printf("/////////////////////////\n");
 	nodes_quantity = 15;
 	init_stack_test(&stack_test, nodes_quantity);
 	test_function_get_last_node(stack_test, nodes_quantity);
+	free_stack_test(stack_test);
+	
+	printf("/////////////////////////\n");
 	nodes_quantity = 21;
 	init_stack_test(&stack_test, nodes_quantity);
 	test_function_get_stack_len(stack_test, nodes_quantity);
+	free_stack_test(stack_test);
+	
+	printf("/////////////////////////\n");
 	test_function_is_numeric();
+	
+	printf("/////////////////////////\n");
 	nodes_quantity = 5;
 	init_stack_test(&stack_test, nodes_quantity);
 	test_function_is_duplicate(stack_test, nodes_quantity, nodes_quantity + 1);
+	free_stack_test(stack_test);
+	
+	printf("/////////////////////////\n");
+	init_stack_test(&stack_test, nodes_quantity);
+	test_function_append_node(stack_test);
+	free_stack_test(stack_test);
 }

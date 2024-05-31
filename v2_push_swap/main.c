@@ -130,15 +130,20 @@ int	is_duplicate(t_stack *stack_a, int val)
 void	free_on_error(t_stack *stack, char **args)
 {
 	t_stack	*tmp;
-	int				i;
+	int		i;
 
 	tmp = stack;
 	i = 0;
 	if (args)
 	{
 		while (args[i])
-			free(args[i++]);
+		{
+			free(args[i]);
+			args[i] = NULL;
+			i++;
+		}
 		free(args);
+		args = NULL;
 	}
 	if (stack)
 	{
@@ -146,6 +151,7 @@ void	free_on_error(t_stack *stack, char **args)
 		{
 			tmp = stack -> next;
 			free(stack);
+			stack = NULL;
 			stack = tmp;
 		}
 	}
