@@ -70,12 +70,18 @@ void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 	while (*array)
 	{
 		if (!is_numeric(*array))
-			free_on_error(*stack_a, args);
+			free_on_error(stack_a, &args);
 		val = ft_atol(*array);
 		if (val < INT_MIN || val > INT_MAX)
-			free_on_error(*stack_a, args);
+		{
+			free_on_error(stack_a, &args);
+			exit(1);
+		}
 		if (is_duplicate(*stack_a, val))
-			free_on_error(*stack_a, args);
+		{
+			free_on_error(stack_a, &args);
+			exit(1);
+		}
 		append_node(stack_a, val);
 		array++;
 	}
@@ -127,35 +133,66 @@ int	is_duplicate(t_stack *stack_a, int val)
 	return (0);
 }
 
-void	free_on_error(t_stack *stack, char **args)
+size_t	ft_strlen(const char *str)
+{
+	size_t	len;
+	int		i;
+
+	len = 0;
+	i	= 0;
+	while (str[i++])
+		len++;
+	return (len);
+}
+
+size_t	ft_strlcpy(char *dest, char *src, size_t size)
+{
+	size_t	i;
+	size_t	len_src;
+
+	i = 0;
+	if (!dest || !src)
+		return (0);
+	len_src = ft_strlen(src);
+	if (size > 0)
+	{
+		while (src[i] && i < size - 1)
+		{
+			dest[i] = src[i];
+			i++;
+		}
+		dest[i] = '\0';
+	}
+	return (len_src);
+}
+
+void	free_on_error(t_stack **stack, char ***args)
 {
 	t_stack	*tmp;
 	int		i;
 
-	tmp = stack;
+	tmp = *stack;
 	i = 0;
-	if (args)
+	if (args && *args)
 	{
-		while (args[i])
+		while ((*args)[i])
 		{
-			free(args[i]);
-			args[i] = NULL;
+			free((*args)[i]);
+			(*args)[i] = NULL;
 			i++;
 		}
-		free(args);
-		args = NULL;
+		free(*args);
+		*args = NULL;
 	}
-	if (stack)
+	if (stack && *stack)
 	{
-		while (stack)
+		while (*stack)
 		{
-			tmp = stack -> next;
-			free(stack);
-			stack = NULL;
-			stack = tmp;
+			tmp = (*stack) -> next;
+			free(*stack);
+			*stack = tmp;
 		}
 	}
-	exit(1);
 }
 
 void	free_stack(t_stack *stack)

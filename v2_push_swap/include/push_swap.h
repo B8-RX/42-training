@@ -32,7 +32,7 @@ void		*free_array_str(char **array);
 
 void		init_stack_a(t_stack **stack_a, char **args, char **argv);	
 int			is_numeric(char *args);
-void		free_on_error(t_stack *stack, char **args);
+void		free_on_error(t_stack **stack, char ***args);
 void		free_stack(t_stack *stack);
 int			is_duplicate(t_stack *stack_a, int val);
 void		append_node(t_stack **stack, int val);
@@ -46,7 +46,8 @@ void		sb(t_stack **stack_b, int print);
 void		ss(t_stack **stack_a, t_stack **stack_b, int print);
 void		ra(t_stack **stack_a, int print);
 void		rb(t_stack **stack_b, int print);
-
+size_t		ft_strlen(const char *str);
+size_t		ft_strlcpy(char *dest, char *src, size_t size);
 void		tests_functions(void);
 #endif // ! PUSH_SWAP_H
 
