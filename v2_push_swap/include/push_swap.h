@@ -41,11 +41,16 @@ int			get_stack_len(t_stack *stack);
 int			get_big_value(t_stack *stack);
 int			get_small_value(t_stack *stack);
 
+void		sort_three(t_stack	**stack_a);
+
+
 void		sa(t_stack **stack_a, int print);
 void		sb(t_stack **stack_b, int print);
 void		ss(t_stack **stack_a, t_stack **stack_b, int print);
 void		ra(t_stack **stack_a, int print);
 void		rb(t_stack **stack_b, int print);
+void		rra(t_stack **stack_a, int print);
+void		rrb(t_stack **stack_b, int print);
 size_t		ft_strlen(const char *str);
 size_t		ft_strlcpy(char *dest, char *src, size_t size);
 void		tests_functions(void);

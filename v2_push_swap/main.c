@@ -42,10 +42,12 @@ int	main(int argc, char **argv)
 	init_stack_a(&stack_a, args, argv + 1);
 	stack_len = get_stack_len(stack_a);
 	print_values(stack_a);
+	printf("////////////\n");
+	printf("STACK LEN: [%d]\n", stack_len);
 	if (stack_len > 1 && stack_len < 3 && stack_a -> value > stack_a -> next -> value)
 		 sa(&stack_a, 1);
-	// else if (stack_len == 3)
-		// sort_three(&stack_a);
+	else if (stack_len == 3)
+		sort_three(&stack_a);
 	// else
 	// 	sort_big(&stack_a, &stack_b);
 	print_values(stack_a);
@@ -54,7 +56,7 @@ int	main(int argc, char **argv)
 	if (stack_a)
 		free_stack(stack_a);
 	
-	tests_functions();
+	// tests_functions();
 	return (0);
 }
 
