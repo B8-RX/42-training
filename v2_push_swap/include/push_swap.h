@@ -53,7 +53,10 @@ void		rra(t_stack **stack_a, int print);
 void		rrb(t_stack **stack_b, int print);
 size_t		ft_strlen(const char *str);
 size_t		ft_strlcpy(char *dest, char *src, size_t size);
-void		tests_functions(void);
+void		tests_stack_utils_functions(void);
+void		tests_operations_functions(void);
+void		init_stack_test(t_stack **stack_test, int nodes);
+void		free_stack_test(t_stack *stack_test);
 #endif // ! PUSH_SWAP_H
 
 

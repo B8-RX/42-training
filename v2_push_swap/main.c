@@ -56,7 +56,10 @@ int	main(int argc, char **argv)
 	if (stack_a)
 		free_stack(stack_a);
 	
-	// tests_functions();
+
+	// TESTS FUNCTIONS 
+	// tests_stack_utils_functions();
+	// tests_operations_functions();
 	return (0);
 }
 
