@@ -59,7 +59,7 @@ int	main(int argc, char **argv)
 
 	// TESTS FUNCTIONS 
 	// tests_stack_utils_functions();
-	// tests_operations_functions();
+	tests_operations_functions();
 	return (0);
 }
 
@@ -129,10 +129,7 @@ int	is_duplicate(t_stack *stack_a, int val)
 	while (curr)
 	{
 		if (curr -> value == val)
-		{
-			printf("ERROR DUPLICATED NUMBER\n");
 			return (1);
-		}
 		curr = curr -> next;
 	}
 	return (0);

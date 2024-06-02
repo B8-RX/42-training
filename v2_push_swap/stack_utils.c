@@ -14,7 +14,7 @@
 
 t_stack	*get_last_node(t_stack *stack)
 {
-	while (stack -> next)
+	while (stack && stack -> next)
 		stack = stack -> next;
 	return (stack);
 }

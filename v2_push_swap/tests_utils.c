@@ -39,9 +39,15 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 		new_node -> value = i;
 		new_node -> next = NULL;
 		if (!head)
+		{
+			new_node -> prev = NULL;
 			head = new_node;
+		}
 		else
+		{
+			new_node -> prev = *stack_test;
 			(*stack_test) -> next = new_node;
+		}
 		*stack_test = new_node;
 	}
 	*stack_test = head;

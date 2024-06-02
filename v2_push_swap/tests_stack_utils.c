@@ -20,7 +20,7 @@ void	tests_stack_utils_functions(void)
 		if (!stack_test)
 			return ; 
 		result = get_big_value(stack_test);
-		printf("When call get_big_value() it SHOULD RETURN [%d]\n", nodes_quantity);
+		printf("When call get_big_value() \nIT SHOULD RETURN [%d]\n", nodes_quantity);
 		printf("THE RETURNED VALUE OF GET_BIG_VALUE() IS : [%d]\n", result);
 		printf("\n");
 		free_stack_test(stack_test);
@@ -39,7 +39,7 @@ void	tests_stack_utils_functions(void)
 		if (!stack_test)
 			return ;
 		last_node = get_last_node(stack_test);
-		printf("When call get_last_node() it SHOULD RETURN THE LAST NODE : [%d] \n", last_node_value);
+		printf("When call get_last_node() \nIT SHOULD RETURN THE LAST NODE : [%d] \n", last_node_value);
 		printf("THE RETURNED NODE OF GET_LAST_NODE() HAVE VALUE : [%d]\n", last_node -> value);
 		printf("\n");
 		free_stack_test(stack_test);
@@ -58,7 +58,7 @@ void	tests_stack_utils_functions(void)
 		if (!stack_test)
 			return ;
 		result = get_stack_len(stack_test);
-		printf("When call get_stack_len() it SHOULD RETURN [%d]\n", stack_len);
+		printf("When call get_stack_len() \nIT SHOULD RETURN [%d]\n", stack_len);
 		printf("THE RETURNED VALUE OF GET_STACK_LEN() IS : [%d]\n", result);
 		printf("\n");
 		free_stack_test(stack_test);
@@ -70,11 +70,11 @@ void	tests_stack_utils_functions(void)
 		char	*test;
 
 		test = "123";
-		printf("When call is_numeric() with [%s] as argument it SHOULD RETURN [1]\n", test);
+		printf("When call is_numeric() with [%s] as argument \nIT SHOULD RETURN [1]\n", test);
 		printf("RETURNED VALUE OF IS_NUMERIC(\"%s\") : [%d]\n", test, is_numeric(test));
 		printf("\n");
 		test = "1a3";
-		printf("When call is_numeric() with [%s] as argument it SHOULD RETURN [0]\n", test);
+		printf("When call is_numeric() with [%s] as argument \nIT SHOULD RETURN [0]\n", test);
 		printf("RETURNED VALUE OF IS_NUMERIC(\"%s\") : [%d]\n", test, is_numeric(test));
 		printf("\n");
 	}
@@ -89,10 +89,10 @@ void	tests_stack_utils_functions(void)
 		printf("TEST IS_DUPLICATE()\n");
 		nodes_quantity = 5;
 		init_stack_test(&stack_test, nodes_quantity);
-		printf("When call is_duplicate() with [%d] as argument it SHOULD RETURN [1]\n", val_in_stack);
+		printf("When call is_duplicate() with [%d] as argument \nIT SHOULD RETURN [1]\n", val_in_stack);
 		printf("RETURNED VALUE OF IS_DUPLICATE() : [%d]\n", is_duplicate(stack_test, val_in_stack));
 		printf("\n");
-		printf("When call is_duplicate() with [%d] as argument it SHOULD RETURN [0]\n", val_not_in_stack);
+		printf("When call is_duplicate() with [%d] as argument \nIT SHOULD RETURN [0]\n", val_not_in_stack);
 		printf("RETURNED VALUE OF IS_DUPLICATE() : [%d]\n", is_duplicate(stack_test, val_not_in_stack));
 		printf("\n");
 		free_stack_test(stack_test);
@@ -107,7 +107,7 @@ void	tests_stack_utils_functions(void)
 		node_value = 99;
 		nodes_quantity = 5;
 		init_stack_test(&stack_test, nodes_quantity);
-		printf("When call append_node(stack , %d) the value of the LAST NODE SHOULD BE [%d]\n", node_value, node_value);
+		printf("When call append_node(stack , %d) the value of the \nLAST NODE SHOULD BE [%d]\n", node_value, node_value);
 		append_node(&stack_test, node_value);
 		tail = stack_test;
 		while (tail -> next)
@@ -141,7 +141,7 @@ void	tests_stack_utils_functions(void)
 		arr[2] = NULL;
 		nodes_quantity = 3;
 		init_stack_test(&stack_test, nodes_quantity);
-		printf("When call free_on_error() with stack_test and arr as arguments they SHOULD BE EQUAL TO NULL after the call\n");
+		printf("When call free_on_error() with stack_test and arr as arguments they \nSHOULD BE EQUAL TO NULL after the call\n");
 		free_on_error(&stack_test, &arr);
 		printf("RETURNED VALUE:\nARR IS NULL ? [%s]\nSTACK_LEN IS NULL ? [%s]\n", arr == NULL ? "yes" : "no" , stack_test == NULL ? "yes" : "no");
 		printf("\n");

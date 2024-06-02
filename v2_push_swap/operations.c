@@ -104,7 +104,7 @@ void	rb(t_stack **stack_b, int print)
 void	rr(t_stack **stack_a, t_stack **stack_b, int print)
 {
 	if (print)
-		printf("ss\n");
+		printf("rr\n");
 	ra(stack_a, 0);
 	rb(stack_b, 0);
 }
@@ -112,27 +112,45 @@ void	rr(t_stack **stack_a, t_stack **stack_b, int print)
 void	rra(t_stack **stack_a, int print)
 {
 	t_stack	*last_node;
+	t_stack	*first_node;
 
 	if (print)
 		printf("rra\n");
+	first_node = *stack_a;
 	last_node = get_last_node(*stack_a);
-	(*stack_a) -> prev = last_node;
-	last_node -> next = *stack_a;
-	last_node -> prev -> next = NULL;
+	if (get_stack_len(*stack_a) > 2)
+		last_node -> prev -> next = NULL;
+	else 
+		first_node -> next = NULL;
+	first_node -> prev = last_node;
 	last_node -> prev = NULL;
+	last_node -> next = first_node;
 	*stack_a = last_node;
 }
 
 void	rrb(t_stack **stack_b, int print)
 {
 	t_stack	*last_node;
+	t_stack	*first_node;
 
 	if (print)
-		printf("rrb\n");
+		printf("rra\n");
+	first_node = *stack_b;
 	last_node = get_last_node(*stack_b);
-	(*stack_b) -> prev = last_node;
-	last_node -> next = *stack_b;
-	last_node -> prev -> next = NULL;
+	if (get_stack_len(*stack_b) > 2)
+		last_node -> prev -> next = NULL;
+	else 
+		first_node -> next = NULL;
+	first_node -> prev = last_node;
 	last_node -> prev = NULL;
+	last_node -> next = first_node;
 	*stack_b = last_node;
+}
+
+void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
+{
+	if (print)
+		printf("rrr\n");
+	rra(stack_a, 0);
+	rrb(stack_b, 0);
 }
