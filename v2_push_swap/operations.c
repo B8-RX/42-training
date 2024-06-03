@@ -154,3 +154,31 @@ void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
 	rra(stack_a, 0);
 	rrb(stack_b, 0);
 }
+
+void	pa(t_stack **stack_a, t_stack **stack_b, int print)
+{
+	t_stack	*node_to_move;
+
+	node_to_move = *stack_b;
+	if (print)
+		printf("pa\n");
+	(*stack_b) -> next -> prev = NULL;
+	*stack_b = (*stack_b) -> next;
+	node_to_move -> next = *stack_a;
+	(*stack_a) -> prev = node_to_move;
+	*stack_a = node_to_move;
+}
+
+void	pb(t_stack **stack_a, t_stack **stack_b, int print)
+{
+	t_stack	*node_to_move;
+
+	node_to_move = *stack_a;
+	if (print)
+		printf("pb\n");
+	(*stack_a) -> next -> prev = NULL;
+	*stack_a = (*stack_a) -> next;
+	node_to_move -> next = *stack_b;
+	(*stack_b) -> prev = node_to_move;
+	*stack_b = node_to_move;
+}
