@@ -77,5 +77,4 @@ void	sort_three(t_stack	**stack_a)
 	}
 	if ((*stack_a) -> value > (*stack_a) -> next -> value)
 		sa(stack_a, 1);
-
 }
