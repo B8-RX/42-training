@@ -55,11 +55,10 @@ int	main(int argc, char **argv)
 		free_array_str(args);
 	if (stack_a)
 		free_stack(stack_a);
-	
 
 	// TESTS FUNCTIONS 
-	// tests_stack_utils_functions();
-	tests_operations_functions();
+	tests_stack_utils_functions();
+	// tests_operations_functions();
 	return (0);
 }
 

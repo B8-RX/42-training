@@ -37,20 +37,24 @@ int	get_big_value(t_stack *stack)
 	int big_val;
 
 	big_val = INT_MIN;
-	while(stack -> next && stack -> value > big_val)
+	while(stack)
 	{
-		big_val = stack -> value;
+		if (stack -> value > big_val)
+			big_val = stack -> value;
 		stack = stack -> next;
 	}
-	return (stack -> value);
+	return (big_val);
 }
 
 void	sort_three(t_stack	**stack_a)
 {
 	if ((*stack_a) -> value == get_big_value(*stack_a))
 		ra(stack_a, 1);
+	else if ((*stack_a) -> next -> value == get_big_value(*stack_a))
+	{
+		sa(stack_a, 1);
+		ra(stack_a, 1);
+	}
 	if ((*stack_a) -> value > (*stack_a) -> next -> value)
 		sa(stack_a, 1);
-	if (get_last_node(*stack_a) -> value < (*stack_a) -> value)
-		rra(stack_a, 1);
 }

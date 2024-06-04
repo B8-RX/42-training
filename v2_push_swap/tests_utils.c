@@ -1,5 +1,6 @@
 
-#include "./include/push_swap.h"	
+#include "./include/push_swap.h"
+#include <time.h>
 
 void	free_stack_test(t_stack *stack_test)
 {
@@ -16,14 +17,34 @@ void	free_stack_test(t_stack *stack_test)
 	}
 }
 
+int random_number(int min_num, int max_num)
+{
+	int result = 0;
+	int	floor_num = 0;
+	int	ceil_num = 0;
+
+	if (min_num < max_num)
+	{
+		floor_num = min_num;
+		ceil_num = max_num + 1; // include max_num in output
+	} else {
+		floor_num = max_num + 1; // include max_num in output
+		ceil_num = min_num;
+	}
+	result = (rand() % (ceil_num - floor_num)) + floor_num;
+	return result;
+}
+
 void	init_stack_test(t_stack **stack_test, int nodes)
 {
 	t_stack	*new_node;
 	t_stack	*head;
 	int		i;
+	int		value;
 
 	i = 0;
 	head = NULL;
+	value = random_number(0, 500);
 	while (++i <= nodes)
 	{
 		new_node = malloc (sizeof(t_stack));
@@ -32,11 +53,14 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 			if (head)
 			{
 				free_stack_test(head);
+				head = NULL;
 				*stack_test = NULL;
 			}
 			return ;
 		}
-		new_node -> value = i;
+		while (head && is_duplicate(head, value))
+			value = random_number(0, 500);
+		new_node -> value = value;
 		new_node -> next = NULL;
 		if (!head)
 		{
@@ -52,5 +76,3 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 	}
 	*stack_test = head;
 }
-
-

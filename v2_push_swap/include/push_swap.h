@@ -61,6 +61,7 @@ void		tests_stack_utils_functions(void);
 void		tests_operations_functions(void);
 void		init_stack_test(t_stack **stack_test, int nodes);
 void		free_stack_test(t_stack *stack_test);
+int			random_number(int min_num, int max_num);
 #endif // ! PUSH_SWAP_H
 
 
