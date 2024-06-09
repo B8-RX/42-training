@@ -39,7 +39,7 @@ t_stash		*ft_handle_fd(t_stash **stash, int fd);
 t_stash		*ft_create_fd_node(t_stash **stash, int fd);
 t_stash		*ft_read_file(t_stash **stash, int fd);
 t_fd_node	*ft_update_fd_node(t_fd_node *fd_node,
-			char *buff, int len);
+				char *buff, int len);
 void		ft_release_stash(t_stash **stash, int fd);
 char		*ft_get_line(t_fd_node *fd_node);
 char		*ft_substr(char *s, unsigned int start, size_t len);
