@@ -154,11 +154,12 @@ void	tests_stack_utils_functions(void)
 	{
 		printf("TEST SORT_THREE()\n");
 		t_stack	*head;
-
+	
 		init_stack_test(&stack_test, 3);
+		printf("When call sort_three(stack_test) the list stack_test should be sorted by ascendent order i.e: node 1 < node 2 < node 3\n");
+		printf("OPERATIONS DONE:\n");
 		sort_three(&stack_test);
 		head = stack_test;
-		printf("When call sort_three(stack_test) the list stack_test should be sorted by ascendent order i.e: node 1 < node 2 < node 3\n");
 		printf("RESULT VALUES:\n");
 		printf("node 1 = [%d]\n", stack_test -> value);
 		stack_test = stack_test -> next;
