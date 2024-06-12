@@ -72,5 +72,5 @@ int	count_words(const char *str, const char splitter)
 			words++;
 		}
 	}
-	return words;
+	return (words);
 }

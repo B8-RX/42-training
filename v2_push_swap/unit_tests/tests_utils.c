@@ -1,5 +1,5 @@
 
-#include "./include/push_swap.h"
+#include "../include/push_swap.h"
 #include <time.h>
 
 void	free_stack_test(t_stack *stack_test)

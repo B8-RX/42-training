@@ -1,4 +1,4 @@
-#include "./include/push_swap.h"
+#include "../include/push_swap.h"
 #include <time.h>
 
 void		tests_operations_functions(void)
@@ -235,7 +235,7 @@ void		tests_operations_functions(void)
 		init_stack_test(&stack_b, node_quantity);
 		initial_len_stack_a = get_stack_len(stack_a);
 		initial_len_stack_b = get_stack_len(stack_b);
-		pa(&stack_a, &stack_b, 0);
+		pa(&stack_b, &stack_a, 0);
 
 		printf("STARTING LENGHTS: \n\tSTACK_A => [%zu]\n\tSTACK_B => [%zu]\n\n", initial_len_stack_a, initial_len_stack_b);
 		printf("When call pa(stack_a, stack_b) the \nLEN OF STACK_B SHOULD BE: [%zu]\n", initial_len_stack_b - 1);

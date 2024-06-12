@@ -24,33 +24,36 @@ void	print_values(t_stack *stack)
 
 int	main(int argc, char **argv)
 {
-	t_stack	*stack_a;
+	
 	// t_stack	*stack_b;
-
-	stack_a = NULL;
-	// stack_b = NULL;
+	t_stack	*stack_a;
 	char	**args;
 	int		stack_len;	
 
 	args = NULL;
+	stack_a = NULL;
+	// stack_b = NULL;
 	if (argc == 1 || ( argc == 2 && !argv[1][0]))
 		return (-1);
 	if (argc == 2)
 		args = split(argv[1], ' ');
-	// if (argc == 2 && !ft_is_digit(**args))
-	// 	return (free_array_str(args), -1);
+	if (argc == 2 && !ft_is_digit(**args))
+		return (free_array_str(args), -1);
 	init_stack_a(&stack_a, args, argv + 1);
 	stack_len = get_stack_len(stack_a);
 	print_values(stack_a);
 	printf("////////////\n");
 	printf("STACK LEN: [%d]\n", stack_len);
-	if (stack_len > 1 && stack_len < 3 && stack_a -> value > stack_a -> next -> value)
-		 sa(&stack_a, 1);
-	else if (stack_len == 3)
-		sort_three(&stack_a);
-	// else
-	// 	sort_big(&stack_a, &stack_b);
+	if (!is_sorted(stack_a))
+	{
+		if (stack_len == 2)
+			sa(&stack_a, 1);
+		else if (stack_len == 3)
+			sort_three(&stack_a);
+		// else
+		// 	sort_big(&stack_a, &stack_b);
 	print_values(stack_a);
+	}
 	if (args)
 		free_array_str(args);
 	if (stack_a)
@@ -61,6 +64,8 @@ int	main(int argc, char **argv)
 	// tests_operations_functions();
 	return (0);
 }
+
+
 
 void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 {
@@ -97,25 +102,37 @@ void	append_node(t_stack **stack, int val)
 	t_stack	*new_node;
 	t_stack	*curr;
 
+	if (!stack)
+		return ;
 	new_node = malloc(sizeof(t_stack));
 	if (!new_node)
 		return ;
 	new_node -> value = val;
+	new_node -> next = NULL;
 	if (!(*stack))
 	{
 		new_node -> prev = NULL;
-		new_node -> next = NULL;
 		*stack = new_node;
 	}
 	else
 	{
-		curr = *stack;
-		while (curr -> next)
-			curr = curr -> next;
+		curr = get_last_node(*stack);
 		curr -> next = new_node;
 		new_node -> prev = curr;
-		new_node -> next = NULL;
 	}	
+}
+
+bool	is_sorted(t_stack *stack)
+{
+	if (!stack)
+		return (1);
+	while (stack -> next)
+	{
+		if (stack -> value > stack -> next -> value)
+			return (false);
+		stack = stack -> next;
+	}
+	return (true);
 }
 
 int	is_duplicate(t_stack *stack_a, int val)

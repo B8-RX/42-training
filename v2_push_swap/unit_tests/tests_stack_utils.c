@@ -1,4 +1,4 @@
-#include "./include/push_swap.h"
+#include "../include/push_swap.h"
 #include <time.h>
 
 void	tests_stack_utils_functions(void)
@@ -20,7 +20,7 @@ void	tests_stack_utils_functions(void)
 		// init_stack_test(&stack_test, random_number(0, 500));
 		if (!stack_test)
 			return ; 
-		result = get_big_value(stack_test);
+		result = get_big_node(stack_test) -> value;
 		printf("When call get_big_value() \nIT SHOULD RETURN THE BIGGEST VALUE\n");
 		printf("THE RETURNED VALUE OF GET_BIG_VALUE(stack_test) IS : [%d]\n\n", result);
 		biggest_value = result;

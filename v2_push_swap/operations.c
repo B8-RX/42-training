@@ -155,7 +155,7 @@ void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
 	rrb(stack_b, 0);
 }
 
-void	pa(t_stack **stack_a, t_stack **stack_b, int print)
+void	pa(t_stack **stack_b, t_stack **stack_a, int print)
 {
 	t_stack	*node_to_move;
 
