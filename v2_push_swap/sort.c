@@ -22,12 +22,13 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 		pb(stack_a, stack_b, 1);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
 		pb(stack_a, stack_b, 1);
+	printf("////////////\n");
+	print_values(*stack_b);
 	while (len_a-- > 3 && !is_sorted(*stack_a))
 	{
 		update_nodes_a(*stack_a, *stack_b);
 		// move_a_to_b(stack_a, stack_b);
 	}
-	
 }
 
 void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
@@ -35,35 +36,51 @@ void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
 	update_index(stack_a);
 	update_index(stack_b);
 	init_target_a(stack_a, stack_b);
-	// get_operation_cost(stack_a, stack_b);
-	// set_best_move(stack_a);
+	get_operation_steps(stack_a, stack_b);
+	set_best_move(stack_a);
 }
 
 void	update_index(t_stack *stack)
 {
 	int	i;
-	int	half;
 
 	i = 0;
 	if (!stack)
 		return ;
-	half = get_stack_len(stack) / 2;
 	while (stack)
 	{
 		stack -> index = i;
-		if (i > half)
-			stack -> above_half = true;
-		else
-			stack -> above_half = false;
 		stack = stack -> next;
 		i++;
 	}
 }
 
+void	set_best_move(t_stack *stack_a)
+{
+	t_stack	*best_move_node;
+	long	current_best_move;
+
+	current_best_move = LONG_MAX;
+	if (!stack_a)
+		return ;
+	best_move_node = stack_a;
+	while (stack_a)
+	{
+		if (stack_a -> operation_steps < current_best_move)
+		{
+			current_best_move = stack_a -> operation_steps;
+			best_move_node = stack_a;
+		}
+		stack_a = stack_a -> next;
+	}
+	best_move_node -> is_best_move = true;
+	printf("CHEAPEST NODE IS: %d\nTARGET IS: [%d]\n", best_move_node -> value, best_move_node -> target -> value);
+}
+
 void	init_target_a(t_stack *stack_a, t_stack *stack_b)
 {
 	t_stack	*current_b;
-	t_stack	*target_node;
+	t_stack	*target;
 	long	nearest_value;
 
 	while (stack_a)
@@ -75,19 +92,19 @@ void	init_target_a(t_stack *stack_a, t_stack *stack_b)
 			if (current_b -> value < stack_a -> value && current_b -> value > nearest_value)
 			{
 				nearest_value = current_b -> value;
-				target_node = current_b;
+				target = current_b;
 			}
 			current_b = current_b -> next;
 		}
 		if (nearest_value == LONG_MIN)
-			stack_a -> target_node = get_big_node(stack_b);
+			stack_a -> target = get_big_node(stack_b);
 		else
-			stack_a -> target_node = target_node;
+			stack_a -> target = target;
 		stack_a = stack_a -> next;
 	}
 }
 
-void	get_operations_cost(t_stack *stack_a, t_stack *stack_b)
+void	get_operation_steps(t_stack *stack_a, t_stack *stack_b)
 {
 	int	len_a;
 	int	len_b;
@@ -96,13 +113,16 @@ void	get_operations_cost(t_stack *stack_a, t_stack *stack_b)
 	len_b = get_stack_len(stack_b);
 	while (stack_a)
 	{
-		stack_a -> operations_cost = (stack_a -> index);
-		if (!(stack_a -> above_half))
-			stack_a -> operations_cost = len_a - (stack_a -> index);
-		if (!(stack_a -> target_node -> above_half))
-			(stack_a -> operations_cost) += (len_b - (stack_a -> target_node -> index));
+		printf(" VALUE [%d] INDEX [%d]\n", stack_a -> value, stack_a -> index);
+		stack_a -> operation_steps = (stack_a -> index);
+		if (stack_a -> index > (len_a / 2))
+			stack_a -> operation_steps = len_a - (stack_a -> index);
+		if (stack_a -> target -> index > (len_b / 2))
+			(stack_a -> operation_steps) += (len_b - (stack_a -> target -> index));
 		else
-			(stack_a -> operations_cost) += (stack_a -> target_node -> index);
+			(stack_a -> operation_steps) += (stack_a -> target -> index);
 		stack_a = (stack_a -> next);
 	}
 }
+
+

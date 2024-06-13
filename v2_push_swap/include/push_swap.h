@@ -14,11 +14,10 @@ typedef struct s_stack {
 	char	*stack_name;
 	int		value;
 	int		index;
-	int		operations_cost;
+	int		operation_steps;
 	bool	is_best_move;
-	bool	above_half;
 
-	struct s_stack	*target_node;
+	struct s_stack	*target;
 	struct s_stack	*prev;
 	struct s_stack	*next;
 }	t_stack;
@@ -46,7 +45,8 @@ t_stack		*get_small_node(t_stack *stack);
 void		update_nodes_a(t_stack *stack_a, t_stack *stack_b);
 void		update_index(t_stack *stack);
 void		init_target_a(t_stack *stack_a, t_stack *stack_b);
-void		get_operations_cost(t_stack *stack_a, t_stack *stack_b);
+void		get_operation_steps(t_stack *stack_a, t_stack *stack_b);
+void		set_best_move(t_stack *stack_a);
 
 void		sort_three(t_stack	**stack_a);
 void		sort_big(t_stack **stack_a, t_stack **stack_b);
@@ -69,6 +69,11 @@ void		tests_operations_functions(void);
 void		init_stack_test(t_stack **stack_test, int nodes);
 void		free_stack_test(t_stack *stack_test);
 int			random_number(int min_num, int max_num);
+
+
+
+void	print_values(t_stack *stack);
+
 #endif // ! PUSH_SWAP_H
 
 

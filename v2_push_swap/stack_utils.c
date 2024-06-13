@@ -69,3 +69,16 @@ t_stack	*get_small_node(t_stack *stack)
 	}
 	return (small_node);
 }
+
+bool	is_sorted(t_stack *stack)
+{
+	if (!stack)
+		return (1);
+	while (stack -> next)
+	{
+		if (stack -> value > stack -> next -> value)
+			return (false);
+		stack = stack -> next;
+	}
+	return (true);
+}

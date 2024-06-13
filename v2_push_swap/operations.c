@@ -179,6 +179,7 @@ void	pb(t_stack **stack_a, t_stack **stack_b, int print)
 	(*stack_a) -> next -> prev = NULL;
 	*stack_a = (*stack_a) -> next;
 	node_to_move -> next = *stack_b;
-	(*stack_b) -> prev = node_to_move;
+	if (*stack_b)
+		(*stack_b) -> prev = node_to_move;
 	*stack_b = node_to_move;
 }

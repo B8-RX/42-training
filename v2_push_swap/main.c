@@ -25,14 +25,14 @@ void	print_values(t_stack *stack)
 int	main(int argc, char **argv)
 {
 	
-	// t_stack	*stack_b;
 	t_stack	*stack_a;
+	t_stack	*stack_b;
 	char	**args;
-	int		stack_len;	
+	int		len_a;	
 
 	args = NULL;
 	stack_a = NULL;
-	// stack_b = NULL;
+	stack_b = NULL;
 	if (argc == 1 || ( argc == 2 && !argv[1][0]))
 		return (-1);
 	if (argc == 2)
@@ -40,27 +40,29 @@ int	main(int argc, char **argv)
 	if (argc == 2 && !ft_is_digit(**args))
 		return (free_array_str(args), -1);
 	init_stack_a(&stack_a, args, argv + 1);
-	stack_len = get_stack_len(stack_a);
-	print_values(stack_a);
-	printf("////////////\n");
-	printf("STACK LEN: [%d]\n", stack_len);
-	if (!is_sorted(stack_a))
-	{
-		if (stack_len == 2)
-			sa(&stack_a, 1);
-		else if (stack_len == 3)
-			sort_three(&stack_a);
-		// else
-		// 	sort_big(&stack_a, &stack_b);
-	print_values(stack_a);
-	}
 	if (args)
 		free_array_str(args);
+	len_a = get_stack_len(stack_a);
+	print_values(stack_a);
+	printf("////////////\n");
+	printf("STACK LEN: [%d]\n", len_a);
+	if (!is_sorted(stack_a))
+	{
+		if (len_a == 2)
+			sa(&stack_a, 1);
+		else if (len_a == 3)
+			sort_three(&stack_a);
+		else
+			sort_big(&stack_a, &stack_b);
+		print_values(stack_a);	
+	}
 	if (stack_a)
 		free_stack(stack_a);
+	if (stack_b)
+		free_stack(stack_b);
 
-	// TESTS FUNCTIONS 
-	tests_stack_utils_functions();
+	// UNIT TESTS 
+	// tests_stack_utils_functions();
 	// tests_operations_functions();
 	return (0);
 }
@@ -120,19 +122,6 @@ void	append_node(t_stack **stack, int val)
 		curr -> next = new_node;
 		new_node -> prev = curr;
 	}	
-}
-
-bool	is_sorted(t_stack *stack)
-{
-	if (!stack)
-		return (1);
-	while (stack -> next)
-	{
-		if (stack -> value > stack -> next -> value)
-			return (false);
-		stack = stack -> next;
-	}
-	return (true);
 }
 
 int	is_duplicate(t_stack *stack_a, int val)
