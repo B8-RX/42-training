@@ -16,6 +16,7 @@ typedef struct s_stack {
 	int		index;
 	int		operation_steps;
 	bool	is_best_move;
+	bool	in_upper_half;
 
 	struct s_stack	*target;
 	struct s_stack	*prev;
@@ -44,9 +45,13 @@ t_stack		*get_big_node(t_stack *stack);
 t_stack		*get_small_node(t_stack *stack);
 void		update_nodes_a(t_stack *stack_a, t_stack *stack_b);
 void		update_index(t_stack *stack);
-void		init_target_a(t_stack *stack_a, t_stack *stack_b);
-void		get_operation_steps(t_stack *stack_a, t_stack *stack_b);
+void		find_target_position(t_stack *stack_a, t_stack *stack_b);
+void		count_move_steps(t_stack *stack_a, t_stack *stack_b);
 void		set_best_move(t_stack *stack_a);
+t_stack		*get_best_move(t_stack *stack);
+void		move_to_stack_b(t_stack **stack_a, t_stack **stack_b);
+void		set_up_rr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
+void		set_up_rrr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
 
 void		sort_three(t_stack	**stack_a);
 void		sort_big(t_stack **stack_a, t_stack **stack_b);
@@ -71,8 +76,9 @@ void		free_stack_test(t_stack *stack_test);
 int			random_number(int min_num, int max_num);
 
 
-
-void	print_values(t_stack *stack);
+// REMOVE ALL FUNCTIONS BELLOW !!!
+//
+void	ft_print_all_stacks(t_stack *stack_a, t_stack *stack_b);
 
 #endif // ! PUSH_SWAP_H
 

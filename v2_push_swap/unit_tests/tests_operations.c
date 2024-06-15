@@ -112,6 +112,8 @@ void		tests_operations_functions(void)
 		t_stack	*last_node_a;
 		t_stack	*first_node_b;
 		t_stack	*last_node_b;
+		int		last_node_index_a;
+		int		last_node_index_b;
 
 		stack_a = NULL;
 		stack_b = NULL;
@@ -123,22 +125,31 @@ void		tests_operations_functions(void)
 		first_node_b = stack_b;
 		last_node_a = get_last_node(stack_a);
 		last_node_b = get_last_node(stack_b);
+		last_node_index_a = last_node_a -> index;
+		last_node_index_b = last_node_b -> index;
 		printf("STARTING VALUES STACK_A:\n");
-		printf("\tFIRST NODE VALUE: [%d]\n", first_node_a -> value);
-		printf("\tLAST NODE VALUE: [%d]\n", last_node_a -> value);
+		printf("\tFIRST NODE INDEX:VALUE [%d]:[%d]\n", first_node_a -> index, first_node_a -> value);
+		printf("\tSECOND NODE NEXT INDEX:VALUE [%d]:[%d]\n", first_node_a -> next -> index, first_node_a -> next -> value);
+		printf("\tLAST NODE INDEX:VALUE [%d]:[%d]\n", last_node_a -> index, last_node_a -> value);
 		printf("STARTING VALUES STACK_B:\n");
-		printf("\tFIRST NODE VALUE: [%d]\n", first_node_b -> value);
-		printf("\tLAST NODE VALUE: [%d]\n", last_node_b -> value);
+		printf("\tFIRST NODE INDEX:VALUE [%d]:[%d]\n", first_node_b -> index, first_node_b -> value);
+		printf("\tLAST NODE INDEX:VALUE [%d]:[%d]\n", last_node_b -> index, last_node_b -> value);
 		
+		int	val_next_a;
+
+		val_next_a = first_node_a -> next -> value;
+
 		rr(&stack_a, &stack_b, 0);
 
-		printf("When call the function rr(stack_a, stack_b, 0) the \nLAST NODE VALUE OF STACK_A SHOULD BE EQUAL TO: [%d]\n", first_node_a -> value);
+		printf("When call the function rr(stack_a, stack_b, 0) the \nLAST NODE INDEX:VALUE OF STACK_A SHOULD BE EQUAL TO [%d]:[%d]\n", last_node_index_a, first_node_a -> value);
+		printf("FIRST NODE INDEX:VALUE OF STACK_A SHOULD BE EQUAL TO [0]:[%d]\n", val_next_a);
 		printf("-------------->\n");
-		printf("\tRESULT LAST NODE VALUE STACK_A: [%d] (OLD VALUE: [%d])\n\n", get_last_node(stack_a) -> value, last_node_a -> value);
+		printf("\tRESULT FIRST NODE INDEX:VALUE OF STACK_A [%d]:[%d] \n\n", stack_a -> index, stack_a -> value);
+		printf("\tRESULT LAST NODE INDEX:VALUE OF STACK_A [%d]:[%d] (OLD INDEX:VALUE [%d]:[%d])\n\n", get_last_node(stack_a) -> index, get_last_node(stack_a) -> value, last_node_index_a, last_node_a -> value);
 
-		printf("When call the function rr(stack_a, stack_b, 0) the \nLAST NODE VALUE OF STACK_B SHOULD BE EQUAL TO: [%d]\n", first_node_b -> value);
+		printf("When call the function rr(stack_a, stack_b, 0) the \nLAST NODE INDEX:VALUE OF STACK_B SHOULD BE EQUAL TO [%d]:[%d]\n", last_node_index_b, first_node_b -> value);
 		printf("-------------->\n");
-		printf("\tRESULT LAST NODE VALUE STACK_B: [%d] (OLD VALUE: [%d])\n\n", get_last_node(stack_b) -> value, last_node_b -> value);
+		printf("\tRESULT LAST NODE INDEX:VALUE STACK_B [%d]:[%d] (OLD INDEX:VALUE [%d]:[%d])\n\n", get_last_node(stack_b) -> index, get_last_node(stack_b) -> value, last_node_index_b, last_node_b -> value);
 		printf("\\\\\\\\\\END\\\\\\\\\\\n\n");
 		free_stack_test(stack_a);
 		free_stack_test(stack_b);
@@ -197,21 +208,21 @@ void		tests_operations_functions(void)
 		last_node_a = get_last_node(stack_a);
 		last_node_b = get_last_node(stack_b);
 		printf("STARTING VALUES STACK_A:\n");
-		printf("\tFIRST NODE VALUE: [%d]\n", first_node_a -> value);
-		printf("\tLAST NODE VALUE: [%d]\n", last_node_a -> value);
-		printf("STARTING VALUES STACK_B:\n");
-		printf("\tFIRST NODE VALUE: [%d]\n", first_node_b -> value);
-		printf("\tLAST NODE VALUE: [%d]\n", last_node_b -> value);
+		printf("\tFIRST NODE INDEX:VALUE [%d]:[%d]\n", first_node_a -> index, first_node_a -> value);
+		printf("\tLAST NODE INDEX:VALUE [%d]:[%d]\n", last_node_a -> index, last_node_a -> value);
+		printf("STARTING INDEX:VALUES STACK_B:\n");
+		printf("\tFIRST NODE INDEX:VALUE [%d]:[%d]\n", first_node_b -> index, first_node_b -> value);
+		printf("\tLAST NODE INDEX:VALUE [%d]:[%d]\n", last_node_b -> index, last_node_b -> value);
 		
 		rrr(&stack_a, &stack_b, 0);
 		
-		printf("When call the function rrr(stack_a, stack_b, 0) the \nFIRST NODE VALUE OF STACK_A SHOULD BE EQUAL TO: [%d]\n", last_node_a -> value);
+		printf("When call the function rrr(stack_a, stack_b, 0) the \nFIRST NODE INDEX:VALUE OF STACK_A SHOULD BE EQUAL TO [0]:[%d]\n", last_node_a -> value);
 		printf("-------------->\n");
-		printf("\tRESULT FIRST NODE VALUE STACK_A: [%d] (OLD VALUE: [%d])\n\n", stack_a -> value, first_node_a -> value);
+		printf("\tRESULT FIRST NODE INDEX:VALUE OF STACK_A [%d]:[%d] (OLD INDEX:VALUE [0]:[%d])\n\n", stack_a -> index, stack_a -> value, first_node_a -> value);
 		
-		printf("When call the function rrr(stack_a, stack_b, 0) the \nFIRST NODE VALUE OF STACK_B SHOULD BE EQUAL TO: [%d]\n", last_node_b -> value);
+		printf("When call the function rrr(stack_a, stack_b, 0) the \nFIRST NODE INDEX:VALUE OF STACK_B SHOULD BE EQUAL TO [0]:[%d]\n", last_node_b -> value);
 		printf("-------------->\n");
-		printf("\tRESULT FIRST NODE VALUE STACK_A: [%d] (OLD VALUE: [%d])\n\n", stack_b -> value, first_node_b -> value);
+		printf("\tRESULT FIRST NODE INDEX:VALUE OF STACK_A [%d]:[%d] (OLD INDEX:VALUE [0]:[%d])\n\n", stack_b -> index, stack_b -> value, first_node_b -> value);
 		printf("\\\\\\\\\\END\\\\\\\\\\\n\n");
 		free_stack_test(stack_a);
 		free_stack_test(stack_b);

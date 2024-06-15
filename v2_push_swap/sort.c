@@ -10,7 +10,7 @@ void	sort_three(t_stack	**stack_a)
 	else if ((*stack_a) -> next == big_node)
 		rra(stack_a, 1);
 	if ((*stack_a) -> value > (*stack_a) -> next -> value)
-		sa(stack_a, 1);
+		sa(stack_a, 1); 
 }
 
 void	sort_big(t_stack **stack_a, t_stack **stack_b)
@@ -19,37 +19,100 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 
 	len_a = get_stack_len(*stack_a);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
-		pb(stack_a, stack_b, 1);
+		pb(stack_a, stack_b, 0);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
-		pb(stack_a, stack_b, 1);
-	printf("////////////\n");
-	print_values(*stack_b);
+		pb(stack_a, stack_b, 0);
 	while (len_a-- > 3 && !is_sorted(*stack_a))
 	{
 		update_nodes_a(*stack_a, *stack_b);
-		// move_a_to_b(stack_a, stack_b);
+		move_to_stack_b(stack_a, stack_b);
 	}
+	t_stack	*a;
+
+	a = *stack_a;
+	printf("////////////\n\n");
+	while (a)
+	{
+		if (a -> is_best_move)
+		{
+			printf("BEST CANDIDTATE: INDEX= [%d] VALUE= %d\n", a -> index, a -> value);
+			printf("TARGET: INDEX= [%d] VALUE= %d\n", a -> target -> index, a -> target -> value);
+		}
+		a = a -> next;
+	}
+}
+
+void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
+{
+	t_stack	*best_move_node;
+
+	if (!*stack_a)
+		return ;
+	best_move_node = get_best_move(*stack_a);
+	if (best_move_node)
+	{
+		if ((best_move_node -> in_upper_half)
+			&& (best_move_node -> target -> in_upper_half))
+			set_up_rr(stack_a, stack_b, best_move_node);
+		else if (!(best_move_node -> in_upper_half)
+			&& !(best_move_node -> target -> in_upper_half))
+			set_up_rrr(stack_a, stack_b, best_move_node);
+		// ready_for_move(stack_a, best_move_node, 'a');
+		// ready_for_move(stack_b, best_move_node, 'b');
+		// push to stack b;
+	}
+}
+
+void	set_up_rr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node)
+{
+	while (best_move_node -> index != 0 && best_move_node -> target -> index != 0)
+		rr(stack_a, stack_b, 0);
+}
+
+void	set_up_rrr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node)
+{
+	while (best_move_node -> index != 0 && best_move_node -> target -> index != 0)
+		rrr(stack_a, stack_b, 0);
+}
+
+t_stack	*get_best_move(t_stack *stack)
+{
+	if (!stack)
+		return (NULL);
+	while (stack)
+	{
+		if (stack -> is_best_move)
+			return (stack);
+		stack = stack -> next;
+	}
+	return (NULL);
 }
 
 void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
 {
 	update_index(stack_a);
 	update_index(stack_b);
-	init_target_a(stack_a, stack_b);
-	get_operation_steps(stack_a, stack_b);
+	find_target_position(stack_a, stack_b);
+	count_move_steps(stack_a, stack_b);
 	set_best_move(stack_a);
 }
 
 void	update_index(t_stack *stack)
 {
-	int	i;
+	size_t	i;
+	size_t	len;
 
 	i = 0;
+	len = get_stack_len(stack);
 	if (!stack)
 		return ;
 	while (stack)
 	{
 		stack -> index = i;
+		if (i < len / 2)
+			stack -> in_upper_half = true;
+		else
+			stack -> in_upper_half = false;
 		stack = stack -> next;
 		i++;
 	}
@@ -66,6 +129,7 @@ void	set_best_move(t_stack *stack_a)
 	best_move_node = stack_a;
 	while (stack_a)
 	{
+		stack_a -> is_best_move = false; 
 		if (stack_a -> operation_steps < current_best_move)
 		{
 			current_best_move = stack_a -> operation_steps;
@@ -74,10 +138,9 @@ void	set_best_move(t_stack *stack_a)
 		stack_a = stack_a -> next;
 	}
 	best_move_node -> is_best_move = true;
-	printf("CHEAPEST NODE IS: %d\nTARGET IS: [%d]\n", best_move_node -> value, best_move_node -> target -> value);
 }
 
-void	init_target_a(t_stack *stack_a, t_stack *stack_b)
+void	find_target_position(t_stack *stack_a, t_stack *stack_b)
 {
 	t_stack	*current_b;
 	t_stack	*target;
@@ -104,7 +167,7 @@ void	init_target_a(t_stack *stack_a, t_stack *stack_b)
 	}
 }
 
-void	get_operation_steps(t_stack *stack_a, t_stack *stack_b)
+void	count_move_steps(t_stack *stack_a, t_stack *stack_b)
 {
 	int	len_a;
 	int	len_b;
@@ -113,11 +176,10 @@ void	get_operation_steps(t_stack *stack_a, t_stack *stack_b)
 	len_b = get_stack_len(stack_b);
 	while (stack_a)
 	{
-		printf(" VALUE [%d] INDEX [%d]\n", stack_a -> value, stack_a -> index);
 		stack_a -> operation_steps = (stack_a -> index);
-		if (stack_a -> index > (len_a / 2))
+		if (!(stack_a -> in_upper_half))
 			stack_a -> operation_steps = len_a - (stack_a -> index);
-		if (stack_a -> target -> index > (len_b / 2))
+		if (!(stack_a -> target -> in_upper_half))
 			(stack_a -> operation_steps) += (len_b - (stack_a -> target -> index));
 		else
 			(stack_a -> operation_steps) += (stack_a -> target -> index);

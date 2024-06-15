@@ -13,14 +13,6 @@
 
 #include "./include/push_swap.h"
 
-void	print_values(t_stack *stack)
-{
-	while (stack)
-	{
-		printf("[%d]\n", stack -> value);
-		stack = stack -> next;
-	}
-}
 
 int	main(int argc, char **argv)
 {
@@ -43,18 +35,18 @@ int	main(int argc, char **argv)
 	if (args)
 		free_array_str(args);
 	len_a = get_stack_len(stack_a);
-	print_values(stack_a);
 	printf("////////////\n");
 	printf("STACK LEN: [%d]\n", len_a);
 	if (!is_sorted(stack_a))
 	{
+		ft_print_all_stacks(stack_a, stack_b);
 		if (len_a == 2)
 			sa(&stack_a, 1);
 		else if (len_a == 3)
 			sort_three(&stack_a);
 		else
 			sort_big(&stack_a, &stack_b);
-		print_values(stack_a);	
+		ft_print_all_stacks(stack_a, stack_b);
 	}
 	if (stack_a)
 		free_stack(stack_a);
@@ -66,8 +58,6 @@ int	main(int argc, char **argv)
 	// tests_operations_functions();
 	return (0);
 }
-
-
 
 void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 {

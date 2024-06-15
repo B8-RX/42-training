@@ -45,7 +45,7 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 	i = 0;
 	head = NULL;
 	value = random_number(0, 500);
-	while (++i <= nodes)
+	while (i < nodes)
 	{
 		new_node = malloc (sizeof(t_stack));
 		if (!new_node)
@@ -61,6 +61,7 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 		while (head && is_duplicate(head, value))
 			value = random_number(0, 500);
 		new_node -> value = value;
+		new_node -> index = i;
 		new_node -> next = NULL;
 		if (!head)
 		{
@@ -73,6 +74,7 @@ void	init_stack_test(t_stack **stack_test, int nodes)
 			(*stack_test) -> next = new_node;
 		}
 		*stack_test = new_node;
+		i++;
 	}
 	*stack_test = head;
 }

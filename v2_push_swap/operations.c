@@ -33,6 +33,7 @@ void	sa(t_stack	**stack_a, int print)
 	first_node -> prev = second_node;
 	second_node -> next = first_node;
 	*stack_a = second_node;
+	update_index(*stack_a);
 }
 
 void	sb(t_stack	**stack_b, int print)
@@ -55,6 +56,7 @@ void	sb(t_stack	**stack_b, int print)
 	first_node -> prev = second_node;
 	second_node -> next = first_node;
 	*stack_b = second_node;
+	update_index(*stack_b);
 }
 
 void	ss(t_stack **stack_a, t_stack **stack_b, int print)
@@ -81,6 +83,7 @@ void	ra(t_stack **stack_a, int print)
 	first_node -> next = NULL;
 	second_node -> prev = NULL;
 	*stack_a = second_node;
+	update_index(*stack_a);
 }
 
 void	rb(t_stack **stack_b, int print)
@@ -99,6 +102,7 @@ void	rb(t_stack **stack_b, int print)
 	second_node -> prev = NULL;
 	first_node -> next = NULL;
 	*stack_b = second_node;
+	update_index(*stack_b);
 }
 
 void	rr(t_stack **stack_a, t_stack **stack_b, int print)
@@ -126,6 +130,7 @@ void	rra(t_stack **stack_a, int print)
 	last_node -> prev = NULL;
 	last_node -> next = first_node;
 	*stack_a = last_node;
+	update_index(*stack_a);
 }
 
 void	rrb(t_stack **stack_b, int print)
@@ -145,6 +150,7 @@ void	rrb(t_stack **stack_b, int print)
 	last_node -> prev = NULL;
 	last_node -> next = first_node;
 	*stack_b = last_node;
+	update_index(*stack_b);
 }
 
 void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
@@ -167,6 +173,7 @@ void	pa(t_stack **stack_b, t_stack **stack_a, int print)
 	node_to_move -> next = *stack_a;
 	(*stack_a) -> prev = node_to_move;
 	*stack_a = node_to_move;
+	update_index(*stack_a);
 }
 
 void	pb(t_stack **stack_a, t_stack **stack_b, int print)
@@ -182,4 +189,5 @@ void	pb(t_stack **stack_a, t_stack **stack_b, int print)
 	if (*stack_b)
 		(*stack_b) -> prev = node_to_move;
 	*stack_b = node_to_move;
+	update_index(*stack_b);
 }
