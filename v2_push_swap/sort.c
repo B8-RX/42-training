@@ -16,6 +16,7 @@ void	sort_three(t_stack	**stack_a)
 void	sort_big(t_stack **stack_a, t_stack **stack_b)
 {
 	int	len_a;
+	t_stack	*a;
 
 	len_a = get_stack_len(*stack_a);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
@@ -24,22 +25,23 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 		pb(stack_a, stack_b, 0);
 	while (len_a-- > 3 && !is_sorted(*stack_a))
 	{
+		a = *stack_a;
 		update_nodes_a(*stack_a, *stack_b);
+		printf("////////////\n\n");
+		while (a)
+		{
+			if (a -> is_best_move)
+			{
+				printf("BEST CANDIDTATE: INDEX= [%d] VALUE= %d\n", a -> index, a -> value);
+				printf("TARGET: INDEX= [%d] VALUE= %d\n", a -> target -> index, a -> target -> value);
+			}
+			a = a -> next;
+		}
+		ft_print_all_stacks(*stack_a, *stack_b);
 		move_to_stack_b(stack_a, stack_b);
 	}
-	t_stack	*a;
 
-	a = *stack_a;
-	printf("////////////\n\n");
-	while (a)
-	{
-		if (a -> is_best_move)
-		{
-			printf("BEST CANDIDTATE: INDEX= [%d] VALUE= %d\n", a -> index, a -> value);
-			printf("TARGET: INDEX= [%d] VALUE= %d\n", a -> target -> index, a -> target -> value);
-		}
-		a = a -> next;
-	}
+		ft_print_all_stacks(*stack_a, *stack_b);
 }
 
 void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
@@ -57,9 +59,33 @@ void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
 		else if (!(best_move_node -> in_upper_half)
 			&& !(best_move_node -> target -> in_upper_half))
 			set_up_rrr(stack_a, stack_b, best_move_node);
-		// ready_for_move(stack_a, best_move_node, 'a');
-		// ready_for_move(stack_b, best_move_node, 'b');
-		// push to stack b;
+		ready_for_move(stack_a, best_move_node, 'a');
+		ready_for_move(stack_b, best_move_node, 'b');
+		pb(stack_a, stack_b, 1);
+		// ft_print_all_stacks(*stack_a, *stack_b);
+	}
+}
+
+void	ready_for_move(t_stack **stack, t_stack *candidate, char stack_name)
+{
+	while (*stack && ((stack_name == 'a' && candidate -> index != 0) || (stack_name == 'b' && candidate -> target -> index != 0)))
+	{
+		if (stack_name == 'a')
+		{
+			if ((*stack) -> in_upper_half)
+				rra(stack, 1);
+			else
+				ra(stack, 1);
+		}
+		else
+		{
+			if (get_stack_len(*stack) < 3)
+				sb(stack, 1);
+			else if ((*stack) -> in_upper_half)
+				rrb(stack, 1);
+			else
+				rb(stack, 1);
+		}
 	}
 }
 

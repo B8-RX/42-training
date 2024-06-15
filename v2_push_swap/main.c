@@ -46,7 +46,7 @@ int	main(int argc, char **argv)
 			sort_three(&stack_a);
 		else
 			sort_big(&stack_a, &stack_b);
-		ft_print_all_stacks(stack_a, stack_b);
+		// ft_print_all_stacks(stack_a, stack_b);
 	}
 	if (stack_a)
 		free_stack(stack_a);

@@ -52,6 +52,7 @@ t_stack		*get_best_move(t_stack *stack);
 void		move_to_stack_b(t_stack **stack_a, t_stack **stack_b);
 void		set_up_rr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
 void		set_up_rrr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
+void		ready_for_move(t_stack **stack, t_stack *candidate, char stack_name);
 
 void		sort_three(t_stack	**stack_a);
 void		sort_big(t_stack **stack_a, t_stack **stack_b);
