@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/16 20:57:15 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/06/16 20:57:16 by ssghioua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./include/push_swap.h"
 
 void	sort_three(t_stack	**stack_a)
@@ -16,29 +28,18 @@ void	sort_three(t_stack	**stack_a)
 void	sort_big(t_stack **stack_a, t_stack **stack_b)
 {
 	int	len_a;
-	t_stack	*a;
 
 	len_a = get_stack_len(*stack_a);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
 		pb(stack_a, stack_b, 1);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
 		pb(stack_a, stack_b, 1);
-	ft_print_all_stacks(*stack_a, *stack_b);
+	ft_print_all_stacks(*stack_a, *stack_b);   // REMOVE BEFORE CORRECTION ALL THE PRINTF
 	while (len_a-- > 3 && !is_sorted(*stack_a))
 	{
-		a = *stack_a;
 		update_nodes_a(*stack_a, *stack_b);
-		printf("////////////\n\n");
-		while (a)
-		{
-			if (a -> is_best_move)
-			{
-				printf("BEST CANDIDTATE: INDEX= [%d] VALUE= %d\n", a -> index, a -> value);
-				printf("TARGET: INDEX= [%d] VALUE= %d\n", a -> target -> index, a -> target -> value);
-			}
-			a = a -> next;
-		}
 		ft_print_all_stacks(*stack_a, *stack_b);
+
 		move_to_stack_b(stack_a, stack_b);
 	}
 
@@ -47,12 +48,24 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 	while (*stack_b)
 	{
 		update_nodes_b(*stack_a, *stack_b);
-		printf("////////////\n\n");
-		printf("TARGET: INDEX= [%d] VALUE= %d\n", (*stack_b) -> target -> index, (*stack_b) -> target -> value);
 		ft_print_all_stacks(*stack_a, *stack_b);
 		move_to_stack_a(stack_a, stack_b);		
 	}
-		ft_print_all_stacks(*stack_a, *stack_b);
+	small_chunk_at_top(stack_a);	
+	ft_print_all_stacks(*stack_a, *stack_b);
+}
+
+void	small_chunk_at_top(t_stack **stack_a)
+{
+	t_stack	*smallest;
+
+	smallest = get_small_node(*stack_a);
+	if (smallest -> in_upper_half)
+		while (*stack_a != smallest)
+			rra(stack_a, 1);
+	else
+		while (*stack_a != smallest)
+			ra(stack_a, 1);
 }
 
 void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
@@ -95,7 +108,6 @@ void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
 		ready_for_move(stack_a, best_move_node, 'a');
 		ready_for_move(stack_b, best_move_node, 'b');
 		pb(stack_a, stack_b, 1);
-		// ft_print_all_stacks(*stack_a, *stack_b);
 	}
 }
 
@@ -214,7 +226,6 @@ void	find_target_position_b(t_stack *stack_a, t_stack *stack_b)
 		stack_b = stack_b -> next;
 	}
 }
-
 
 void	find_target_position_a(t_stack *stack_a, t_stack *stack_b)
 {
