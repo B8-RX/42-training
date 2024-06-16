@@ -18,6 +18,8 @@ void	sa(t_stack	**stack_a, int print)
 	t_stack	*first_node;
 	t_stack	*second_node;
 
+	if (!*stack_a)
+		return ;
 	if (print)
 		printf("sa\n");
 	first_node = *stack_a;
@@ -41,6 +43,8 @@ void	sb(t_stack	**stack_b, int print)
 	t_stack	*first_node;
 	t_stack	*second_node;
 	
+	if (!*stack_b)
+		return ;
 	if (print)
 		printf("sb\n");
 	first_node = *stack_b;
@@ -61,6 +65,8 @@ void	sb(t_stack	**stack_b, int print)
 
 void	ss(t_stack **stack_a, t_stack **stack_b, int print)
 {
+	if (!*stack_a || !*stack_b)
+		return ;
 	if (print)
 		printf("ss\n");
 	sa(stack_a, 0);
@@ -73,6 +79,8 @@ void	ra(t_stack **stack_a, int print)
 	t_stack	*last_node;
 	t_stack	*second_node;
 
+	if (!*stack_a)
+		return ;
 	if (print)
 		printf("ra\n");
 	first_node = *stack_a;
@@ -92,6 +100,8 @@ void	rb(t_stack **stack_b, int print)
 	t_stack	*last_node;
 	t_stack	*second_node;
 
+	if (!*stack_b)
+		return ;
 	if (print)
 		printf("rb\n");
 	first_node = *stack_b;
@@ -107,6 +117,8 @@ void	rb(t_stack **stack_b, int print)
 
 void	rr(t_stack **stack_a, t_stack **stack_b, int print)
 {
+	if (!*stack_a || !*stack_b)
+		return ;
 	if (print)
 		printf("rr\n");
 	ra(stack_a, 0);
@@ -118,6 +130,8 @@ void	rra(t_stack **stack_a, int print)
 	t_stack	*last_node;
 	t_stack	*first_node;
 
+	if (!*stack_a)
+		return ;
 	if (print)
 		printf("rra\n");
 	first_node = *stack_a;
@@ -138,8 +152,10 @@ void	rrb(t_stack **stack_b, int print)
 	t_stack	*last_node;
 	t_stack	*first_node;
 
+	if (!*stack_b)
+		return ;
 	if (print)
-		printf("rra\n");
+		printf("rrb\n");
 	first_node = *stack_b;
 	last_node = get_last_node(*stack_b);
 	if (get_stack_len(*stack_b) > 2)
@@ -155,21 +171,30 @@ void	rrb(t_stack **stack_b, int print)
 
 void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
 {
+	if (!*stack_a || !*stack_b)
+		return ;
 	if (print)
 		printf("rrr\n");
 	rra(stack_a, 0);
 	rrb(stack_b, 0);
 }
 
-void	pa(t_stack **stack_b, t_stack **stack_a, int print)
+void	pa(t_stack **stack_a, t_stack **stack_b, int print)
 {
 	t_stack	*node_to_move;
 
 	node_to_move = *stack_b;
+	if (!*stack_a || !*stack_b)
+		return ;
 	if (print)
 		printf("pa\n");
-	(*stack_b) -> next -> prev = NULL;
-	*stack_b = (*stack_b) -> next;
+	if ((*stack_b) -> next)
+	{
+		(*stack_b) -> next -> prev = NULL;
+		*stack_b = (*stack_b) -> next;
+	}
+	else
+		*stack_b = NULL;
 	node_to_move -> next = *stack_a;
 	(*stack_a) -> prev = node_to_move;
 	*stack_a = node_to_move;
@@ -181,6 +206,8 @@ void	pb(t_stack **stack_a, t_stack **stack_b, int print)
 	t_stack	*node_to_move;
 
 	node_to_move = *stack_a;
+	if (!*stack_a)
+		return ;
 	if (print)
 		printf("pb\n");
 	(*stack_a) -> next -> prev = NULL;

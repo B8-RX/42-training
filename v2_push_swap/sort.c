@@ -20,9 +20,10 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 
 	len_a = get_stack_len(*stack_a);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
-		pb(stack_a, stack_b, 0);
+		pb(stack_a, stack_b, 1);
 	if (len_a-- > 3 && !is_sorted(*stack_a))
-		pb(stack_a, stack_b, 0);
+		pb(stack_a, stack_b, 1);
+	ft_print_all_stacks(*stack_a, *stack_b);
 	while (len_a-- > 3 && !is_sorted(*stack_a))
 	{
 		a = *stack_a;
@@ -41,7 +42,39 @@ void	sort_big(t_stack **stack_a, t_stack **stack_b)
 		move_to_stack_b(stack_a, stack_b);
 	}
 
+	ft_print_all_stacks(*stack_a, *stack_b);
+	sort_three(stack_a);
+	while (*stack_b)
+	{
+		update_nodes_b(*stack_a, *stack_b);
+		printf("////////////\n\n");
+		printf("TARGET: INDEX= [%d] VALUE= %d\n", (*stack_b) -> target -> index, (*stack_b) -> target -> value);
 		ft_print_all_stacks(*stack_a, *stack_b);
+		move_to_stack_a(stack_a, stack_b);		
+	}
+		ft_print_all_stacks(*stack_a, *stack_b);
+}
+
+void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
+{
+	update_index(stack_a);
+	update_index(stack_b);
+	find_target_position_a(stack_a, stack_b);
+	count_move_steps(stack_a, stack_b);
+	set_best_move(stack_a);
+}
+
+void	update_nodes_b(t_stack *stack_a, t_stack *stack_b)
+{
+	update_index(stack_a);
+	update_index(stack_b);
+	find_target_position_b(stack_a, stack_b);
+}
+
+void	move_to_stack_a(t_stack **stack_a, t_stack **stack_b)
+{
+	ready_for_move(stack_a, (*stack_b) -> target, 'a');
+	pa(stack_a, stack_b, 1);
 }
 
 void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
@@ -50,7 +83,7 @@ void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
 
 	if (!*stack_a)
 		return ;
-	best_move_node = get_best_move(*stack_a);
+	best_move_node = get_best_move_node(*stack_a);
 	if (best_move_node)
 	{
 		if ((best_move_node -> in_upper_half)
@@ -68,7 +101,7 @@ void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
 
 void	ready_for_move(t_stack **stack, t_stack *candidate, char stack_name)
 {
-	while (*stack && ((stack_name == 'a' && candidate -> index != 0) || (stack_name == 'b' && candidate -> target -> index != 0)))
+	while (*stack != candidate && *stack != candidate -> target)
 	{
 		if (stack_name == 'a')
 		{
@@ -77,11 +110,9 @@ void	ready_for_move(t_stack **stack, t_stack *candidate, char stack_name)
 			else
 				ra(stack, 1);
 		}
-		else
+		else if (stack_name == 'b')
 		{
-			if (get_stack_len(*stack) < 3)
-				sb(stack, 1);
-			else if ((*stack) -> in_upper_half)
+			if ((*stack) -> in_upper_half)
 				rrb(stack, 1);
 			else
 				rb(stack, 1);
@@ -91,17 +122,17 @@ void	ready_for_move(t_stack **stack, t_stack *candidate, char stack_name)
 
 void	set_up_rr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node)
 {
-	while (best_move_node -> index != 0 && best_move_node -> target -> index != 0)
-		rr(stack_a, stack_b, 0);
+	while (*stack_a != best_move_node && *stack_b != best_move_node -> target)
+		rr(stack_a, stack_b, 1);
 }
 
 void	set_up_rrr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node)
 {
-	while (best_move_node -> index != 0 && best_move_node -> target -> index != 0)
-		rrr(stack_a, stack_b, 0);
+	while (*stack_a != best_move_node && *stack_b != best_move_node -> target)
+		rrr(stack_a, stack_b, 1);
 }
 
-t_stack	*get_best_move(t_stack *stack)
+t_stack	*get_best_move_node(t_stack *stack)
 {
 	if (!stack)
 		return (NULL);
@@ -112,15 +143,6 @@ t_stack	*get_best_move(t_stack *stack)
 		stack = stack -> next;
 	}
 	return (NULL);
-}
-
-void	update_nodes_a(t_stack *stack_a, t_stack *stack_b)
-{
-	update_index(stack_a);
-	update_index(stack_b);
-	find_target_position(stack_a, stack_b);
-	count_move_steps(stack_a, stack_b);
-	set_best_move(stack_a);
 }
 
 void	update_index(t_stack *stack)
@@ -166,7 +188,35 @@ void	set_best_move(t_stack *stack_a)
 	best_move_node -> is_best_move = true;
 }
 
-void	find_target_position(t_stack *stack_a, t_stack *stack_b)
+void	find_target_position_b(t_stack *stack_a, t_stack *stack_b)
+{
+	t_stack	*current_a;
+	t_stack	*target;
+	long	nearest_value;
+
+	while (stack_b)
+	{
+		nearest_value = LONG_MAX;
+		current_a = stack_a;
+		while (current_a)
+		{
+			if (current_a -> value > stack_b -> value && current_a -> value < nearest_value)
+			{
+				nearest_value = current_a -> value;
+				target = current_a;
+			}
+			current_a = current_a -> next;
+		}
+		if (nearest_value == LONG_MAX)
+			stack_b -> target = get_small_node(stack_a);
+		else
+			stack_b -> target = target;
+		stack_b = stack_b -> next;
+	}
+}
+
+
+void	find_target_position_a(t_stack *stack_a, t_stack *stack_b)
 {
 	t_stack	*current_b;
 	t_stack	*target;
@@ -212,5 +262,3 @@ void	count_move_steps(t_stack *stack_a, t_stack *stack_b)
 		stack_a = (stack_a -> next);
 	}
 }
-
-
