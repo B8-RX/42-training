@@ -14,13 +14,21 @@ SRC_PATH = ./src/
 
 OBJ_PATH = ./src/obj/
 
-SOURCES = ${wildcard ${SRC_PATH}*.c} 
+SOURCES = ${SRC_PATH}count_moves.c \
+	${SRC_PATH}find_position_utils.c \
+	${SRC_PATH}ft_split.c \
+	${SRC_PATH}ft_split_utils.c \
+	${SRC_PATH}main.c \
+	${SRC_PATH}move.c \
+	${SRC_PATH}move_utils.c \
+	${SRC_PATH}operations.c \
+	${SRC_PATH}sort_utils.c \
+	${SRC_PATH}stack_utils.c \
+	${SRC_PATH}update_utils.c \
 
 SOURCES_BONUS = ${SOURCES}
 
 NAME = push_swap.a
-
-EXE = run_test.out
 
 CCFLAGS = cc -Wall -Werror -Wextra
 
@@ -37,16 +45,16 @@ ${OBJ_PATH}%.o : ${SRC_PATH}%.c
 
 ${NAME} : ${HEADER} ${OBJECTS}
 	ar -rsc ${NAME} ${OBJECTS} 
-	${CCFLAGS} ${NAME} -o ${EXE}
+	${CCFLAGS} ${NAME} -o push_swap
 
 bonus : ${HEADER} ${OBJECTS_BONUS}
 	ar -rsc ${NAME} ${OBJECTS_BONUS} 
-	${CCFLAGS} ${NAME} -o ${EXE}
+	${CCFLAGS} ${NAME} -o ./push_swap
 
 clean : 
 	rm -f ${OBJECTS} 
 
 fclean : clean
-	rm -f ${NAME} ./${EXE}
+	rm -f ${NAME} ./push_swap
 
 re : fclean all

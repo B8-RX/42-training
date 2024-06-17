@@ -35,11 +35,9 @@ int	main(int argc, char **argv)
 	if (args)
 		free_array_str(args);
 	len_a = get_stack_len(stack_a);
-	printf("////////////\n");
-	printf("STACK LEN: [%d]\n", len_a);
 	if (!is_sorted(stack_a))
 	{
-		ft_print_all_stacks(stack_a, stack_b);
+		// ft_print_all_stacks(stack_a, stack_b);
 		if (len_a == 2)
 			sa(&stack_a, 1);
 		else if (len_a == 3)
@@ -86,7 +84,6 @@ void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 		append_node(stack_a, val);
 		array++;
 	}
-	printf("TEST SYNTAX OK\n");
 }
 
 void	append_node(t_stack **stack, int val)
@@ -100,6 +97,12 @@ void	append_node(t_stack **stack, int val)
 	if (!new_node)
 		return ;
 	new_node -> value = val;
+	new_node -> index = 0;
+	new_node -> operation_steps = 0;
+	new_node -> is_best_move = false;
+	new_node -> in_upper_half = false;
+	new_node -> target = NULL;
+	new_node -> prev = NULL;
 	new_node -> next = NULL;
 	if (!(*stack))
 	{
