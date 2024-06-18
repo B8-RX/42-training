@@ -14,13 +14,12 @@
 
 char	**split(char *str, const char splitter)
 {
-
-	char	**array;  
+	char	**array;
 	int		child;
 	int		words;
 
 	words = count_words(str, splitter);
-	array = malloc(words * sizeof(char*) + sizeof(void*));
+	array = malloc (words * sizeof(char *) + sizeof (void *));
 	if (!array)
 		return (NULL);
 	array[words] = NULL;
@@ -58,7 +57,7 @@ int	count_words(const char *str, const char splitter)
 {
 	int		i;
 	int		words;
-	
+
 	i = 0;
 	words = 0;
 	while (str[i] != '\0')

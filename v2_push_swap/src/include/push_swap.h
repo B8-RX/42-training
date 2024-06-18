@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/18 23:31:45 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/06/18 23:31:46 by ssghioua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
@@ -9,14 +19,13 @@
 # include <limits.h>
 # include <stdbool.h>
 
-
 typedef struct s_stack {
-	char	*stack_name;
-	int		value;
-	int		index;
-	int		operation_steps;
-	bool	is_best_move;
-	bool	in_upper_half;
+	char			*stack_name;
+	int				value;
+	int				index;
+	int				operation_steps;
+	bool			is_best_move;
+	bool			in_upper_half;
 
 	struct s_stack	*target;
 	struct s_stack	*prev;
@@ -32,6 +41,7 @@ int			get_len_value(const char *value);
 void		*free_array_str(char **array);
 
 void		init_stack_a(t_stack **stack_a, char **args, char **argv);	
+void		init_new_node(t_stack **new_node, int val);
 void		free_on_error(t_stack **stack, char ***args);
 void		free_stack(t_stack *stack);
 
@@ -60,13 +70,16 @@ t_stack		*get_best_move_node(t_stack *stack);
 void		move_to_stack_b(t_stack **stack_a, t_stack **stack_b);
 void		move_to_stack_a(t_stack **stack_a, t_stack **stack_b);
 
-void		set_up_rr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
-void		set_up_rrr(t_stack **stack_a, t_stack **stack_b, t_stack *best_move_node);
-void		ready_for_move(t_stack **stack, t_stack *candidate, char stack_name);
+void		set_up_rr(t_stack **stack_a, t_stack **stack_b,
+				t_stack *best_move_node);
+void		set_up_rrr(t_stack **stack_a, t_stack **stack_b,
+				t_stack *best_move_node);
+void		ready_for_move(t_stack **stack, t_stack *candidate,
+				char stack_name);
 
 void		small_chunk_at_top(t_stack **stack_a);
 void		sort_three(t_stack	**stack_a);
-void		sort_big(t_stack **stack_a, t_stack **stack_b);
+void		sort_big(t_stack **stack_a);
 
 void		sa(t_stack **stack_a, int print);
 void		sb(t_stack **stack_b, int print);

@@ -21,7 +21,7 @@ t_stack	*get_last_node(t_stack *stack)
 
 int	get_stack_len(t_stack *stack)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (stack)
@@ -39,7 +39,7 @@ t_stack	*get_big_node(t_stack *stack)
 
 	big_value = INT_MIN;
 	big_node = stack;
-	while(stack)
+	while (stack)
 	{
 		if (stack -> value > big_value)
 		{
@@ -58,7 +58,7 @@ t_stack	*get_small_node(t_stack *stack)
 
 	small_val = INT_MAX;
 	small_node = stack;
-	while(stack)
+	while (stack)
 	{
 		if (stack -> value < small_val)
 		{
@@ -68,17 +68,4 @@ t_stack	*get_small_node(t_stack *stack)
 		stack = stack -> next;
 	}
 	return (small_node);
-}
-
-bool	is_sorted(t_stack *stack)
-{
-	if (!stack)
-		return (1);
-	while (stack -> next)
-	{
-		if (stack -> value > stack -> next -> value)
-			return (false);
-		stack = stack -> next;
-	}
-	return (true);
 }

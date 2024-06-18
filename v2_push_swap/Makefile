@@ -21,10 +21,16 @@ SOURCES = ${SRC_PATH}count_moves.c \
 	${SRC_PATH}main.c \
 	${SRC_PATH}move.c \
 	${SRC_PATH}move_utils.c \
-	${SRC_PATH}operations.c \
+	${SRC_PATH}swap.c \
+	${SRC_PATH}rotate.c \
+	${SRC_PATH}reverse_rotate.c \
+	${SRC_PATH}push.c \
 	${SRC_PATH}sort_utils.c \
 	${SRC_PATH}stack_utils.c \
 	${SRC_PATH}update_utils.c \
+	${SRC_PATH}init.c \
+	${SRC_PATH}check.c \
+	${SRC_PATH}free.c \
 
 SOURCES_BONUS = ${SOURCES}
 

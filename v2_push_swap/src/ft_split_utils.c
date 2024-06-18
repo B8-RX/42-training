@@ -22,13 +22,6 @@ int	count_spaces(const char *str)
 	return (i);
 }
 
-int	ft_is_digit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
 long int	ft_atol(const char *str)
 {
 	long	res;
@@ -36,19 +29,18 @@ long int	ft_atol(const char *str)
 
 	parity = 1;
 	res = 0;
-	while (*str == ' ' || *str == '\t' || *str == '\n' || *str == '\r' || *str == '\f' || *str == '\v')
+	while (*str == ' ' || *str == '\t' || *str == '\n'
+		|| *str == '\r' || *str == '\f' || *str == '\v')
 		str++;
-
 	if (*str == '-' || *str == '+')
 	{
 		if (*str == '-')
 			parity = -1;
 		str++;
 	}
-
 	while (ft_is_digit(*str))
 		res = res * 10 + (*str++ - '0');
-	return (res * parity); 
+	return (res * parity);
 }
 
 int	get_len_value(const char *value)
@@ -59,20 +51,4 @@ int	get_len_value(const char *value)
 	while (value[j] && value[j] != ' ')
 		j++;
 	return (j);
-}
-
-void	*free_array_str(char **array)
-{
-
-	int	i;
-
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
-	array = NULL;
-	return (NULL);
 }
