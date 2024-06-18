@@ -17,6 +17,13 @@ void	move_to_stack_a(t_stack **stack_a, t_stack **stack_b)
 	t_stack	*best_move_node;
 
 	best_move_node = get_best_move_node(*stack_b);
+	if (best_move_node->in_upper_half && best_move_node->target->in_upper_half)
+		while (*stack_b != best_move_node && *stack_a != best_move_node->target)
+			rr(stack_a, stack_b, 1);
+	else if (!(best_move_node->in_upper_half)
+		&& !(best_move_node->target->in_upper_half))
+		while (*stack_b != best_move_node && *stack_a != best_move_node->target)
+			rrr(stack_a, stack_b, 1);
 	while (*stack_b != best_move_node)
 	{
 		if (best_move_node-> in_upper_half)
@@ -39,6 +46,13 @@ void	move_to_stack_b(t_stack **stack_a, t_stack **stack_b)
 	t_stack	*best_move_node;
 
 	best_move_node = get_best_move_node(*stack_a);
+	if (best_move_node->in_upper_half && best_move_node->target->in_upper_half)
+		while (*stack_a != best_move_node && *stack_b != best_move_node->target)
+			rr(stack_a, stack_b, 1);
+	else if (!(best_move_node->in_upper_half)
+		&& !(best_move_node->target->in_upper_half))
+		while (*stack_a != best_move_node && *stack_b != best_move_node->target)
+			rrr(stack_a, stack_b, 1);
 	while (*stack_a != best_move_node)
 	{
 		if (best_move_node->in_upper_half)

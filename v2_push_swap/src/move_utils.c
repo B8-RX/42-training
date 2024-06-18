@@ -23,7 +23,6 @@ void	set_best_move(t_stack *stack_a)
 	best_move_node = stack_a;
 	while (stack_a)
 	{
-		stack_a->is_best_move = false;
 		if (stack_a->operation_steps < current_best_move)
 		{
 			current_best_move = stack_a->operation_steps;

@@ -14,18 +14,18 @@
 
 void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 {
-	char	**array;
+	char	**entries;
 	long	val;
 
 	if (!args)
-		array = argv;
+		entries = argv;
 	else
-		array = args;
-	while (*array)
+		entries = args;
+	while (*entries)
 	{
-		if (!is_numeric(*array))
+		if (!is_numeric(*entries))
 			free_on_error(stack_a, &args);
-		val = ft_atol(*array);
+		val = ft_atol(*entries);
 		if (val < INT_MIN || val > INT_MAX)
 		{
 			free_on_error(stack_a, &args);
@@ -37,7 +37,7 @@ void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 			exit(1);
 		}
 		append_node(stack_a, val);
-		array++;
+		entries++;
 	}
 }
 

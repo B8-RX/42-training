@@ -33,6 +33,8 @@ int	is_numeric(char *argv)
 	char	*arg;
 
 	arg = argv;
+	if (!argv)
+		return (0);
 	if (!(*arg >= '0' && *arg <= '9') && (*arg != '-') && (*arg != '+'))
 		return (0);
 	else if ((*arg == '-' || *arg == '+')
