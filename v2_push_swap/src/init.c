@@ -52,3 +52,27 @@ void	init_new_node(t_stack **new_node, int val)
 	(*new_node)-> prev = NULL;
 	(*new_node)-> next = NULL;
 }
+
+void	append_node(t_stack **stack, int val)
+{
+	t_stack	*new_node;
+	t_stack	*curr;
+
+	if (!stack)
+		return ;
+	new_node = malloc(sizeof(t_stack));
+	if (!new_node)
+		return ;
+	init_new_node(&new_node, val);
+	if (!(*stack))
+	{
+		new_node -> prev = NULL;
+		*stack = new_node;
+	}
+	else
+	{
+		curr = get_last_node(*stack);
+		curr -> next = new_node;
+		new_node -> prev = curr;
+	}	
+}

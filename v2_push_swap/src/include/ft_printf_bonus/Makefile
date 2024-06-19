@@ -11,66 +11,48 @@
 # **************************************************************************** #
 
 SRC_PATH = ./src/
-
 OBJ_PATH = ./src/obj/
 
-SOURCES = ${SRC_PATH}count_moves.c \
-	${SRC_PATH}find_position_utils.c \
-	${SRC_PATH}ft_split.c \
-	${SRC_PATH}ft_split_utils.c \
-	${SRC_PATH}main.c \
-	${SRC_PATH}move.c \
-	${SRC_PATH}move_utils.c \
-	${SRC_PATH}swap.c \
-	${SRC_PATH}rotate.c \
-	${SRC_PATH}reverse_rotate.c \
-	${SRC_PATH}push.c \
-	${SRC_PATH}sort_utils.c \
-	${SRC_PATH}stack_utils.c \
-	${SRC_PATH}update_utils.c \
-	${SRC_PATH}init.c \
-	${SRC_PATH}check.c \
-	${SRC_PATH}free.c \
+SOURCES = ${SRC_PATH}ft_printf.c ${SRC_PATH}ft_atoi_free.c ${SRC_PATH}ft_specifier_utils.c ${SRC_PATH}ft_handle_format.c ${SRC_PATH}ft_itoa.c ${SRC_PATH}ft_print_char.c ${SRC_PATH}ft_infill_utils.c ${SRC_PATH}ft_append_utils.c \
+${SRC_PATH}ft_print_str.c ${SRC_PATH}ft_print_str_utils.c ${SRC_PATH}ft_printf_utils.c ${SRC_PATH}ft_uitoa.c ${SRC_PATH}ft_ultoa.c ${SRC_PATH}ft_flags_utils_bonus.c\
 
 SOURCES_BONUS = ${SOURCES}
 
-NAME = push_swap.a
-
-LIB_FTPRINTF_DIR = ./src/include/ft_printf_bonus
-
-LIB_FTPRINTF = ${LIB_FTPRINTF_DIR}/libftprintf.a
+NAME = libftprintf.a
 
 CCFLAGS = cc -Wall -Werror -Wextra
 
-HEADER = ${SRC_PATH}include/push_swap.h
+HEADER = ./src/lib/ft_printf.h
 
 OBJECTS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SOURCES))
 
 OBJECTS_BONUS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SOURCES_BONUS))
+
+LIBFT_DIR = ../libft
+
+LIBFT = ${LIBFT_DIR}/libft.a
 
 all : ${NAME}
 
 ${OBJ_PATH}%.o : ${SRC_PATH}%.c
 	${CCFLAGS} -I ${HEADER} -c $< -o $@
 
-${NAME} : ${LIB_FTPRINTF} ${HEADER} ${OBJECTS}
-	ar -rsc ${NAME} ${OBJECTS} 
-	${CCFLAGS} ${NAME} -o push_swap
+${NAME} : ${LIBFT} ${HEADER} ${OBJECTS}
+	ar -rsc ${NAME} ${OBJECTS}
 
-${LIB_FTPRINTF} :
-	make bonus -C ${LIB_FTPRINTF_DIR}
-	cp ${LIB_FTPRINTF} ${NAME}
+${LIBFT} :
+	make bonus -C ${LIBFT_DIR}
+	cp ${LIBFT} ${NAME}
 
-bonus : ${LIB_FTPRINTF} ${HEADER} ${OBJECTS_BONUS}
-	ar -rsc ${NAME} ${OBJECTS_BONUS} 
-	${CCFLAGS} ${NAME} -o push_swap
+bonus : ${LIBFT} ${HEADER} ${OBJECTS_BONUS}
+	ar -rsc ${NAME} ${OBJECTS_BONUS}
 
 clean : 
 	rm -f ${OBJECTS}
-	cd ${LIB_FTPRINTF_DIR} && make clean
+	cd ${LIBFT_DIR} && make clean
 
 fclean : clean
-	rm -f ${NAME} ./push_swap
-	cd ${LIB_FTPRINTF_DIR} && make fclean
+	rm -f ${NAME}
+	cd ${LIBFT_DIR} && make fclean
 
 re : fclean all

@@ -20,7 +20,7 @@ void	sa(t_stack	**stack_a, int print)
 	if (!*stack_a)
 		return ;
 	if (print)
-		printf("sa\n");
+		ft_printf("sa\n");
 	first_node = *stack_a;
 	second_node = (*stack_a)-> next;
 	second_node -> prev = NULL;
@@ -45,7 +45,7 @@ void	sb(t_stack	**stack_b, int print)
 	if (!*stack_b)
 		return ;
 	if (print)
-		printf("sb\n");
+		ft_printf("sb\n");
 	first_node = *stack_b;
 	second_node = (*stack_b)-> next;
 	second_node -> prev = NULL;
@@ -67,7 +67,7 @@ void	ss(t_stack **stack_a, t_stack **stack_b, int print)
 	if (!*stack_a || !*stack_b)
 		return ;
 	if (print)
-		printf("ss\n");
+		ft_printf("ss\n");
 	sa(stack_a, 0);
 	sb(stack_b, 0);
 }

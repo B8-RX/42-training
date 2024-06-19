@@ -14,10 +14,10 @@
 # define PUSH_SWAP_H
 
 # include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
 # include <limits.h>
 # include <stdbool.h>
+# include "./ft_printf_bonus/src/lib/ft_printf.h"
+# include "./libft/src/include/libft.h"
 
 typedef struct s_stack {
 	char			*stack_name;
@@ -92,9 +92,6 @@ void		rrb(t_stack **stack_b, int print);
 void		rrr(t_stack **stack_a, t_stack **stack_b, int print);
 void		pa(t_stack **stack_a, t_stack **stack_b, int print);
 void		pb(t_stack **stack_a, t_stack **stack_b, int print);
-
-size_t		ft_strlen(const char *str);
-size_t		ft_strlcpy(char *dest, char *src, size_t size);
 
 // TESTS FUNCTIONS
 // void		tests_stack_utils_functions(void);

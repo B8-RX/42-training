@@ -20,7 +20,7 @@ void	rra(t_stack **stack_a, int print)
 	if (!*stack_a)
 		return ;
 	if (print)
-		printf("rra\n");
+		ft_printf("rra\n");
 	first_node = *stack_a;
 	last_node = get_last_node(*stack_a);
 	if (get_stack_len(*stack_a) > 2)
@@ -42,7 +42,7 @@ void	rrb(t_stack **stack_b, int print)
 	if (!*stack_b)
 		return ;
 	if (print)
-		printf("rrb\n");
+		ft_printf("rrb\n");
 	first_node = *stack_b;
 	last_node = get_last_node(*stack_b);
 	if (get_stack_len(*stack_b) > 2)
@@ -61,7 +61,7 @@ void	rrr(t_stack	**stack_a, t_stack **stack_b, int print)
 	if (!*stack_a || !*stack_b)
 		return ;
 	if (print)
-		printf("rrr\n");
+		ft_printf("rrr\n");
 	rra(stack_a, 0);
 	rrb(stack_b, 0);
 }
