@@ -39,6 +39,7 @@ void	free_on_error(t_stack **stack, char ***args)
 			*stack = tmp;
 		}
 	}
+	ft_putendl_fd("Error", 1);
 }
 
 void	free_stack(t_stack *stack)
