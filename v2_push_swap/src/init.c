@@ -24,21 +24,12 @@ void	init_stack_a(t_stack **stack_a, char **args, char **argv)
 	while (*entries)
 	{
 		if (!is_numeric(*entries))
-		{
 			free_on_error(stack_a, &args);
-			exit(1);
-		}
 		val = ft_atol(*entries);
 		if (val < INT_MIN || val > INT_MAX)
-		{
 			free_on_error(stack_a, &args);
-			exit(1);
-		}
 		if (is_duplicate(*stack_a, val))
-		{
 			free_on_error(stack_a, &args);
-			exit(1);
-		}
 		append_node(stack_a, val);
 		entries++;
 	}

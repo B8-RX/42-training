@@ -51,7 +51,7 @@ void	small_chunk_at_top(t_stack **stack_a)
 	t_stack	*smallest;
 
 	smallest = get_small_node(*stack_a);
-	if (smallest->in_upper_half)
+	if (!(smallest->in_upper_half))
 		while (*stack_a != smallest)
 			rra(stack_a, 1);
 	else

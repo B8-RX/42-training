@@ -20,7 +20,7 @@ void	pa(t_stack **stack_a, t_stack **stack_b, int print)
 	if (!*stack_a || !*stack_b)
 		return ;
 	if (print)
-		ft_printf("pa\n");
+		ft_putendl_fd("pa", 1);
 	if ((*stack_b)-> next)
 	{
 		(*stack_b)-> next -> prev = NULL;
@@ -42,7 +42,7 @@ void	pb(t_stack **stack_a, t_stack **stack_b, int print)
 	if (!*stack_a)
 		return ;
 	if (print)
-		ft_printf("pb\n");
+		ft_putendl_fd("pb", 1);
 	(*stack_a)-> next -> prev = NULL;
 	*stack_a = (*stack_a)-> next;
 	node_to_move -> next = *stack_b;

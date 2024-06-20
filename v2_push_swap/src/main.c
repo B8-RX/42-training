@@ -20,7 +20,10 @@ int	main(int argc, char **argv)
 	args = NULL;
 	stack_a = NULL;
 	if (argc == 1 || (argc == 2 && !argv[1][0]))
-		return (-1);
+	{
+		ft_putendl_fd("Error", 2);
+		exit(1);
+	}
 	if (argc == 2)
 		args = split(argv[1], ' ');
 	init_stack_a(&stack_a, args, argv + 1);

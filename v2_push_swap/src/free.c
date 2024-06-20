@@ -39,7 +39,8 @@ void	free_on_error(t_stack **stack, char ***args)
 			*stack = tmp;
 		}
 	}
-	ft_putendl_fd("Error", 1);
+	ft_putendl_fd("Error", 2);
+	exit(1);
 }
 
 void	free_stack(t_stack *stack)
@@ -63,7 +64,7 @@ void	*free_array_str(char **array)
 	int	i;
 
 	i = 0;
-	if (!*array)
+	if (!array || !*array)
 		return (NULL);
 	while (array[i])
 	{

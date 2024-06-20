@@ -41,7 +41,7 @@ void	update_index(t_stack *stack)
 		return ;
 	while (stack)
 	{
-		stack->index = i;
+		stack->index = i + 1;
 		stack->in_upper_half = (i < len / 2);
 		stack = stack->next;
 		i++;
