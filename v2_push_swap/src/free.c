@@ -20,16 +20,7 @@ void	free_on_error(t_stack **stack, char ***args)
 	tmp = *stack;
 	i = 0;
 	if (args && *args)
-	{
-		while ((*args)[i])
-		{
-			free((*args)[i]);
-			(*args)[i] = NULL;
-			i++;
-		}
-		free(*args);
-		*args = NULL;
-	}
+		free_array_str(*args);
 	if (stack && *stack)
 	{
 		while (*stack)
