@@ -51,6 +51,7 @@ OBJECTS_BONUS = $(patsubst $(SRC_PATH)%.c,$(OBJ_PATH)%.o,$(SOURCES_BONUS))
 all : ${NAME}
 
 ${OBJ_PATH}%.o : ${SRC_PATH}%.c
+	@mkdir -p $(@D)
 	${CCFLAGS} -I ${HEADER} -c $< -o $@
 
 ${NAME} : ${LIB_FTPRINTF} ${HEADER} ${OBJECTS}

@@ -42,6 +42,7 @@ OBJ_ALL = ${OBJECTS} ${OBJECTS_BONUS}
 all :		${NAME}
 
 ${OBJ_PATH}%.o : ${SRC_PATH}%.c
+	@mkdir -p $(@D)
 	${CCFLAGS} -I ${HEADER} -c $< -o $@
 	
 ${NAME} :	${OBJECTS}

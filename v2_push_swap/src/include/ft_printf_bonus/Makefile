@@ -35,6 +35,7 @@ LIBFT = ${LIBFT_DIR}/libft.a
 all : ${NAME}
 
 ${OBJ_PATH}%.o : ${SRC_PATH}%.c
+	@mkdir -p $(@D)
 	${CCFLAGS} -I ${HEADER} -c $< -o $@
 
 ${NAME} : ${LIBFT} ${HEADER} ${OBJECTS}
