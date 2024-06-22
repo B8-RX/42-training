@@ -51,13 +51,13 @@ void	count_move_steps_b(t_stack *stack_a, t_stack *stack_b)
 		else if (stack_b->in_upper_half)
 			stack_b->operation_steps = stack_b->index;
 		else
-			stack_b->operation_steps = len_b - stack_b->index;
+			stack_b->operation_steps = len_b - stack_b->index + 1;
 		if (stack_b->target->index == 1)
 			stack_b->operation_steps += 0;
 		else if (stack_b->target->in_upper_half)
 			stack_b->operation_steps += stack_b->target->index;
 		else
-			stack_b->operation_steps += len_a - stack_b->target->index;
+			stack_b->operation_steps += len_a - stack_b->target->index + 1;
 		stack_b = stack_b->next;
 	}
 }
