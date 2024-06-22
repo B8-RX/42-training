@@ -25,14 +25,18 @@ void	count_move_steps_a(t_stack *stack_a, t_stack *stack_b)
 			stack_a->operation_steps = 0;
 		else if (stack_a->in_upper_half)
 			stack_a->operation_steps = stack_a->index;
+		else if (stack_a == get_last_node(stack_a))
+			stack_a->operation_steps = 1;
 		else
-			stack_a->operation_steps = len_a - stack_a->index + 1;
+			stack_a->operation_steps = len_a - stack_a->index;
 		if (stack_a->target->index == 1)
 			stack_a->operation_steps += 0;
 		else if (stack_a->target->in_upper_half)
 			stack_a->operation_steps += stack_a->target->index;
+		else if (stack_a->target == get_last_node(stack_b))
+			stack_a->operation_steps += 1;
 		else
-			stack_a->operation_steps += len_b - stack_a->target->index + 1;
+			stack_a->operation_steps += len_b - stack_a->target->index;
 		stack_a = stack_a->next;
 	}
 }
@@ -50,14 +54,18 @@ void	count_move_steps_b(t_stack *stack_a, t_stack *stack_b)
 			stack_b->operation_steps = 0;
 		else if (stack_b->in_upper_half)
 			stack_b->operation_steps = stack_b->index;
+		else if (stack_b == get_last_node(stack_b))
+			stack_b->operation_steps += 1;
 		else
-			stack_b->operation_steps = len_b - stack_b->index + 1;
+			stack_b->operation_steps = len_b - stack_b->index;
 		if (stack_b->target->index == 1)
 			stack_b->operation_steps += 0;
 		else if (stack_b->target->in_upper_half)
 			stack_b->operation_steps += stack_b->target->index;
+		else if (stack_b->target == get_last_node(stack_a))
+			stack_b->operation_steps += 1;
 		else
-			stack_b->operation_steps += len_a - stack_b->target->index + 1;
+			stack_b->operation_steps += len_a - stack_b->target->index;
 		stack_b = stack_b->next;
 	}
 }
