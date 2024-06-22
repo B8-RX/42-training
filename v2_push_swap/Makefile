@@ -36,7 +36,7 @@ SOURCES_BONUS = ${SOURCES}
 
 NAME = push_swap.a
 
-LIB_FTPRINTF_DIR = ./src/include/ft_printf_bonus
+LIB_FTPRINTF_DIR = ./src/libs/ft_printf_bonus
 
 LIB_FTPRINTF = ${LIB_FTPRINTF_DIR}/libftprintf.a
 

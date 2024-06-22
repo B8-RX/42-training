@@ -16,8 +16,8 @@
 # include <stdlib.h>
 # include <limits.h>
 # include <stdbool.h>
-# include "./ft_printf_bonus/src/lib/ft_printf.h"
-# include "./libft/src/include/libft.h"
+# include "../libs/ft_printf_bonus/src/lib/ft_printf.h"
+# include "../libs/libft/src/include/libft.h"
 
 typedef struct s_stack {
 	char			*stack_name;
