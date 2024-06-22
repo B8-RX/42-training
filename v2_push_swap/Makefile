@@ -15,7 +15,7 @@ SRC_PATH = ./src/
 OBJ_PATH = ./src/obj/
 
 SOURCES = ${SRC_PATH}count_moves.c \
-	${SRC_PATH}find_position_utils.c \
+	${SRC_PATH}find_position.c \
 	${SRC_PATH}ft_split.c \
 	${SRC_PATH}ft_split_utils.c \
 	${SRC_PATH}main.c \
@@ -25,9 +25,9 @@ SOURCES = ${SRC_PATH}count_moves.c \
 	${SRC_PATH}rotate.c \
 	${SRC_PATH}reverse_rotate.c \
 	${SRC_PATH}push.c \
-	${SRC_PATH}sort_utils.c \
+	${SRC_PATH}sort.c \
 	${SRC_PATH}stack_utils.c \
-	${SRC_PATH}update_utils.c \
+	${SRC_PATH}update.c \
 	${SRC_PATH}init.c \
 	${SRC_PATH}check.c \
 	${SRC_PATH}free.c \
