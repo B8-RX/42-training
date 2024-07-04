@@ -45,7 +45,7 @@ char		*ft_get_line(t_fd_node *fd_node);
 char		*ft_substr(char *s, unsigned int start, size_t len);
 char		*ft_strchr(char *s, int c);
 char		*ft_strjoin(char *s1, char *s2);
-size_t		ft_strlen(char *s);
+size_t		ft_strlen(const char *s);
 size_t		ft_strlcpy(char *dst, char *src, size_t size);
 size_t		ft_strlcat(char *dst, char *src, size_t size);
 

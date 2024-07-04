@@ -12,14 +12,14 @@ MLX_LIB = $(MLX_DIR)/libmlx_$(UNAME).a
 
 
 GNL_PATH = ./gnl/
-GNL_LIB = ./gnl/get_next_line.h
+GNL_LIB = ./gnl/get_next_line_bonus.h
 
 OBJS_PATH = ./objs/
 
 vpath %.c ./ $(GNL_PATH)
 
 SOURCE = ./main.c 
-SOURCE_GNL =  ${GNL_PATH}get_next_line.c ${GNL_PATH}get_next_line_utils.c
+SOURCE_GNL =  ${GNL_PATH}get_next_line_bonus.c ${GNL_PATH}get_next_line_utils_bonus.c
 
 OBJS = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE}))
 OBJS_GNL = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE_GNL}))

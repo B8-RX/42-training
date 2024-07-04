@@ -1,91 +1,204 @@
 #include <mlx.h>
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
 
 typedef struct s_map {
-	int player;
-	int	exit;
-	int empty;
-	int wall;
+	char	*map_path;
+	int		player;
+	int		exit;
+	int		empty;
+	int		wall;
+	char	*line;
+	size_t	line_length;
+	int		total_lines;
+	int		collectibles;
 } t_map;
 
-int	check_line(char *line, int line_type)
+size_t	ft_strlen(const char *s)
 {
-	int		i;
-	t_map	map;
+	size_t	i;
 
-	map.player = 0;
-	map.exit = 0;
-	map.empty = 0;
-	map.wall = 0;
-	if (!line)
-		return (0);
 	i = 0;
-	fprintf(stderr, "line = %s\n", line);
-	//printf("line = %s\n", line);
-	while (line[i])
-	{
-		if (line_type == -1 && line[i] != '1' && line[i] != '\n')
-		{
-			printf("WALL ERROR\n");
-			return (0);
-		}
-		if (line_type == 0 && (!ft_strchr("PE10\n", line[i]) || (map.player > 1 || map.exit > 1)))			
-			return (printf("PE10 ERROR \n"), 0);
-		if (line_type == 0 && line[i] == 'P')
-			map.player++;
-		if (line_type == 0 && line[i] == 'E')
-			map.exit++;
-		if (line[0] != '1' || line[ft_strlen(line) - 2] != '1')
-			return (printf("BORDER ERROR\n"), 0);
+	while (s[i])
 		i++;
-	}
-	return (1);
+	return (i);
 }
 
-
-int verify_map(char *map)
+int	get_map_length(int fd)
 {
+	int		len;
 	char	*line;
-	int		fd;
-	int		total_lines;
-	int		first_line;
-	int		last_line;
-	int		i;
-
-	fd = open(map, O_RDONLY);
-	total_lines = 0;
+	
+	len = 0;
 	line = get_next_line(fd);
-	first_line = 0;
 	while (line)
 	{
-		total_lines++;
+		len++;
 		free(line);
 		line = get_next_line(fd);
 	}	
-	free(line);
-	last_line = total_lines;
-	fd = open(map, O_RDONLY);
+	if (line)
+		free(line);
+	return (len);
+}
+
+bool	is_square(char *map_path)
+{
+	size_t	first_row_len;
+	int		fd;
+	char	*line;
+
+	fd = open(map_path, O_RDONLY);
 	line = get_next_line(fd);
-	i = 0;
-	while (line && ++i)
+	if (!line)
+		return (false);
+	first_row_len = ft_strlen(line);
+	while (line)
 	{
-		if (i == 1 && !check_line(line, -1))
-			return (free(line), 0);
-		else if (i == last_line	&& !check_line(line, -1))
-			return (free(line), 0);
-		else if (!check_line(line, 0))
-			return (free(line), 0);
+		if (ft_strlen(line) != first_row_len)
+			return (free(line), false);
 		free(line);
 		line = get_next_line(fd);
 	}
-	free(line);
-	printf("total_lines: %d\n", total_lines);
-	return (1);
+	if (line)
+		free(line);
+	printf("MAP IS A VALID SQUARE\n");
+	return (true);
 }
 
+
+bool	is_valid_walls(char *map_path, int total_rows)
+{
+	int		fd;
+	char	*curr_line;
+	size_t	col;
+	size_t	row;
+	size_t	line_length;
+
+	fd = open(map_path, O_RDONLY);
+	curr_line = get_next_line(fd);
+	if (!curr_line)
+		return (false);
+	col = -1;
+	row = 1;
+	while (curr_line)
+	{
+		line_length = ft_strlen(curr_line);
+		if (row == 1 || row == total_rows)
+			while (col < line_length - 1)
+			{
+				if (curr_line[col] != '1')
+					return (free(curr_line), false);
+				col++;
+			}
+		else
+			if (curr_line[col] != '1' || curr_line[line_length - 2] != '1')
+				return (free(curr_line), false);
+		free(curr_line);
+		curr_line = get_next_line(fd);
+		col = 0;
+		row++;
+	}
+	printf("VALID WALLS\n");
+	return (true);
+}
+
+int	get_total_rows(char *map_path)
+{
+	int		fd;
+	char	*line;
+	size_t	row;
+
+	fd = open(map_path, O_RDONLY);
+	line = get_next_line(fd);
+	if (!line)
+		return (0);
+	row = 0;
+	while (line)
+	{
+		row++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	if (line)
+		free(line);
+	return (row);	
+}
+
+bool	is_valid_fill(char *map_path, int total_rows)
+{
+	int		fd;
+	char	*line;
+	size_t	line_length;
+	size_t	col;
+	size_t	row;
+
+	fd = open(map_path, O_RDONLY);
+	line = get_next_line(fd);
+	if (!line)
+		return (false);
+	col = 1;
+	row = 2;
+	while (line)
+	{
+		if (row > 1 && row < total_rows)
+		free(line);
+		line = get_next_line(fd);
+		row++;
+	}
+
+}
+
+int verify_map(char *map_path)
+{
+	t_map	*map_data;
+	int		total_rows;
+
+	map_data = malloc(sizeof(t_map));
+	if (!map_data)
+		return (0);
+	map_data -> map_path = map_path;
+	map_data -> player = 0;
+	map_data -> exit = 0;
+	map_data -> empty = 0;
+	map_data -> wall = 0;
+
+	// verify all lines same LENGTH
+	// verify first line and last line are only 1 and first char and last char in all rows are also 1
+	// verify in the middle after the first char and the last char there are only /PE1CO/
+	// verify that the Player P can access the collectibles and access the Exit E
+
+	if (!is_square(map_path))
+		return (printf("NOT VALID SQUARE\n"), free(map_data), 0);
+	total_rows = get_total_rows(map_path);
+	if (!is_valid_walls(map_path, total_rows))
+		return (printf("NOT VALID WALLS\n"), free(map_data), 0);
+	if (!is_valid_fill(map_path, total_rows))
+		return (free(map_data), 0);
+	// if (!is_valid_player_path(map_path))
+	// 	return (free(map_data), 0);
+
+	// fd = open(map_path, O_RDONLY);
+	// map_data -> total_lines = get_map_length(fd);
+	// if (map_data -> total_lines < 4)
+	// 	return (free(map_data), 0);
+	// fclose(fd);
+	// fd = open(map_path, O_RDONLY);
+	// map_data -> line = get_next_line(fd);
+	// map_data -> line_length = ft_strlen(map_data -> line);
+	// 
+	// while (map_data -> line)
+	// {
+	//
+	// }
+	//
+	// if (!check_line(map_data, fd))
+	// 	return (free(map_data), 0);
+	printf("total_lines: %d\n", total_rows);
+	return (1);
+}
 
 int	main(int argc, char **argv)
 {
