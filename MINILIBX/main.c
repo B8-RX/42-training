@@ -164,7 +164,6 @@ bool	is_valid_player_path(t_map **map_data)
 	col	= 1;
 	p_x = get_player_pos(matrix, 'x');
 	p_y = get_player_pos(matrix, 'y');
-	
 	return (true);
 }
 
