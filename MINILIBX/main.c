@@ -121,9 +121,51 @@ bool	is_valid_fill(t_map **map_data)
 	return (true);
 }
 
+int	get_player_pos(char **matrix, char target)
+{
+	size_t	col;
+	size_t	row;
+	size_t	line_length;
+
+	col = 1;
+	row = 1;
+	while (matrix[row])
+	{
+		line_length = ft_strlen(matrix[row]);
+		while (col < line_length)
+		{
+			if (matrix[row][col] == 'P')
+			{
+				if (target == 'x')
+					return (col);
+				else if (target == 'y')
+					return (row);
+			}
+			col++;
+		}
+		col = 1;
+		row++;
+	}
+	return (-1);
+}
+
 bool	is_valid_player_path(t_map **map_data)
 {
-		
+	int		reach_c;
+	int		reach_e;
+	int		p_x;
+	int		p_y;
+	int		row;
+	int		col;
+	char	**matrix;
+
+	matrix = (*map_data) -> matrix;
+	row = 1;
+	col	= 1;
+	p_x = get_player_pos(matrix, 'x');
+	p_y = get_player_pos(matrix, 'y');
+	
+	return (true);
 }
 
 
