@@ -1,6 +1,6 @@
 
 ifeq ($(shell uname), Linux)
-	INCLUDES = -I/usr/include -I../../mlx -Iincludes/libft
+	INCLUDES = -I/usr/include -I../../mlx -Iincludes/libft 
 	MLX_FLAGS = -L../../mlx -lmlx -L/usr/lib/X11 -lXext -lX11
 else
 	INCLUDES = -I/opt/X11/include -I../../mlx -Iincludes/libft
@@ -10,6 +10,7 @@ endif
 MLX_DIR = ../../mlx
 MLX_LIB = $(MLX_DIR)/libmlx_$(UNAME).a
 
+HEADER = ./so_long.h
 
 LIBFT_DIR = ./includes/libft/
 LIBFT_LIB = $(LIBFT_DIR)libft.a
@@ -33,7 +34,7 @@ $(NAME): $(OBJS) $(LIBFT_LIB) $(MLX_LIB)
 
 ${OBJS_PATH}%.o : %.c
 	mkdir -p ${OBJS_PATH}
-	$(CC) $(CFLAGS) -c -o $@ $< $(INCLUDES)
+	$(CC) $(CFLAGS) -c -o $@ $< $(INCLUDES) -I$(HEADER)
  
 $(MLX_LIB):
 	@make -C $(MLX_DIR) --no-print-directory

@@ -1,23 +1,41 @@
 #ifndef SO_LONG_H
 # define SO_LONG_H
-# define ERR_WALL "wall error\n"
  
-typedef struct s_errors {
-	char			*error_message;
-	struct s_errors	*next;
-} t_errors;
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <mlx.h>
+#include "libft.h"
+
+typedef struct 
+{
+	int	y;
+	int	x;
+} Pair;
 
 typedef struct s_map {
-	char		*map_path;
+	char		**matrix;
 	int			player;
+	Pair		player_pos;
 	int			exit;
+	Pair		exit_pos;
 	int			empty;
 	int			wall;
-	char		*line;
-	size_t		line_length;
 	size_t		total_rows;
+	size_t		line_length;
 	int			collectibles;
-	t_errors	*errors;
 } t_map;
+
+bool	is_map_square(t_map *map_data);
+bool	is_valid_walls(t_map *map_data);
+int		get_total_rows(t_map *map_data);
+bool	is_duplicate_items(t_map **map_data, char item);
+bool	is_valid_fill(t_map **map_data);
+int		get_player_pos(t_map **map_data, char target);
+bool	is_valid_player_path(t_map **map_data);
+char	*stringify(char *map_path);
+int		init_map(t_map	**map_data, char *map_path);
+void	free_map(t_map	*map_data);
+int		verify_map(char *map_path);
 
 #endif
