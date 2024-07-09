@@ -9,8 +9,9 @@
 
 typedef struct 
 {
-	int	y;
-	int	x;
+	size_t	y;
+	size_t	x;
+	int	visited;
 } Pair;
 
 typedef struct s_map {
