@@ -9,8 +9,8 @@
 
 typedef struct 
 {
-	size_t	y;
 	size_t	x;
+	size_t	y;
 	int	visited;
 } Pair;
 
@@ -24,6 +24,7 @@ typedef struct s_map {
 	int			wall;
 	size_t		total_rows;
 	size_t		line_length;
+	size_t		total_cells;
 	int			collectibles;
 	size_t		reached_items;
 } t_map;
@@ -42,7 +43,7 @@ int		verify_map(char *map_path);
 bool	can_access_items(t_map *map_data, size_t total_items, char target);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
-bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *move, char target);
+bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
 
 
 #endif

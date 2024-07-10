@@ -120,9 +120,9 @@ int	get_position(t_map **map_data, char target)
 			if (((*map_data) -> matrix)[row][col] == target)
 			{
 				if (target == 'P')
-					(*map_data) -> player_pos = (Pair) {row, col, 1};
+					(*map_data) -> player_pos = (Pair) {col, row, 1};
 				else if (target == 'E')
-					(*map_data) -> exit_pos = (Pair) {row, col, 1};
+					(*map_data) -> exit_pos = (Pair) {col, row, 1};
 				if (target == 'P' || target == 'E')
 					return (1);
 			}
@@ -168,7 +168,7 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 }
 
 
-bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *move, char target)
+bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, char target)
 {
 	size_t	pos_y;	
 	size_t	pos_x;
@@ -181,17 +181,17 @@ bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *move, char tar
 	matrix = map_data -> matrix;
 	border_bottom = map_data -> total_rows;
 	border_right = map_data -> line_length;
-	if (ft_strncmp(move, "down", ft_strlen(move)))
+	if (ft_strncmp(direction, "down", ft_strlen(direction)))
 		pos_y++;
-	if (ft_strncmp(move, "up", ft_strlen(move)))
+	if (ft_strncmp(direction, "up", ft_strlen(direction)))
 		pos_y--;
-	if (ft_strncmp(move, "right", ft_strlen(move)))
+	if (ft_strncmp(direction, "right", ft_strlen(direction)))
 		pos_x++;
-	if (ft_strncmp(move, "left", ft_strlen(move)))
+	if (ft_strncmp(direction, "left", ft_strlen(direction)))
 		pos_x--;
 	if (pos_y < border_bottom && pos_y > 0 && pos_x < border_right && pos_x > 0 && is_target_or_path(map_data, pos_x, pos_y, target) && !is_visited_cell(queue, pos_x, pos_y))
 	{
-		queue[tail] = (Pair) {pos_y, pos_x, 1};
+		queue[tail] = (Pair) {pos_x, pos_y, 1};
 		if (matrix[pos_y][pos_x] == target || matrix[pos_y][pos_x] == 'E') 
 			map_data -> reached_items += 1;
 		return (true);
@@ -199,23 +199,28 @@ bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *move, char tar
 	return (false);
 }
 
-bool	can_access_items(t_map *map_data, size_t total_items, char target)
+void	init_queue(t_map *map_data, Pair queue[])
 {
-	Pair	queue[(map_data -> total_rows) * (map_data -> line_length)];
-	size_t	front;
-	size_t	tail;
 	size_t	i;
 
 	i = 0;
-	tail = 0;
-	front = 0;
-	while (i < ((map_data -> total_rows) * (map_data -> line_length)))
+	while (i < map_data -> total_cells)
 		queue[i++].visited = -1;
-	queue[tail++] = (Pair) {map_data -> player_pos.y, map_data -> player_pos.x, 1};
-	while (front < tail && map_data -> reached_items < total_items)
+	queue[0] = (Pair) {map_data -> player_pos.x, map_data -> player_pos.y, 1};	
+}
+
+bool	can_access_items(t_map *map_data, size_t total_items, char target)
+{
+	Pair	queue[map_data -> total_cells];
+	size_t	front;
+	size_t	tail;
+
+	tail = 1;
+	front = -1;
+	init_queue(map_data, queue);
+	while (++front < tail && map_data -> reached_items < total_items)
 	{
-		map_data -> player_pos = (Pair) {queue[front].y, queue[front].x, -1};
-		front++;
+		map_data -> player_pos = (Pair) {queue[front].x, queue[front].y, -1};
 		if (check_move(map_data, queue, tail, "down", target))
 			tail++;
 		if (check_move(map_data, queue, tail, "up", target))
@@ -291,6 +296,7 @@ int	init_map(t_map	**map_data, char *map_path)
 		return (free(*map_data), 0);
 	(*map_data) -> total_rows = get_total_rows(*map_data);
 	(*map_data) -> line_length = ft_strlen((*map_data) -> matrix[0]);
+	(*map_data) -> total_cells = ((*map_data) -> total_rows) * ((*map_data) -> line_length);
 	(*map_data) -> player = 0;
 	(*map_data) -> exit = 0;
 	(*map_data) -> empty = 0;
@@ -333,7 +339,7 @@ int verify_map(char *map_path)
 	else
 		printf("VALID INFILL\n");
 	if (!is_valid_player_path(&map_data))
-		return (printf("INVALID PLAYER PATH\n"), free(map_data), 0);
+		return (printf("INVALID PLAYER PATH\n"), free_map(map_data), 0);
 	else
 		printf("VALID PLAYER PATH\n");
 	printf("total_lines: %zu\n", map_data -> total_rows);
