@@ -101,7 +101,7 @@ bool	is_valid_fill(t_map **map_data)
 		col = 1;
 		row++;
 	}
-	if ((*map_data) -> collectibles == 0)
+	if ((*map_data) -> collectibles == 0 || (*map_data) -> player != 1 || (*map_data) -> exit != 1)
 		return (false);
 	return (true);
 }
@@ -144,25 +144,23 @@ int	get_position(t_map **map_data, char target)
 	return (0);
 }
 
-bool	collectibles_visited(t_map *map_data, Pair collectibles_pos[], size_t pos_x, size_t pos_y)
+bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y)
 {
 	int		i;
-	int		visited;
-	char	**matrix;
+	int		is_visited;
 
 	i = 0;
-	visited = 0;
-	matrix = map_data -> matrix;
-	while (collectibles_pos[i].visited != -1)
+	is_visited = 0;
+	while (queue[i].visited != -1)
 	{
-		if ((collectibles_pos[i].y == pos_y && collectibles_pos[i].x == pos_x) || matrix[pos_y][pos_x] == '0')
+		if ((queue[i].y == pos_y && queue[i].x == pos_x))
 		{
-			visited = 1;
+			is_visited = 1;
 			break;
 		}	
 		i++;
 	}
-	if (visited)
+	if (is_visited)
 		return (true);
 	return (false);
 }
@@ -174,102 +172,62 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 
 	matrix = map_data -> matrix;
 	curr_item = matrix[pos_y][pos_x];
-	printf("is_target_or_path: item = %c\n", curr_item);
-	if (curr_item == target)
-		printf("is_target_or_path: pos_y=%zu, pos_x=%zu\n\n\n", pos_y, pos_x);
 	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> line_length) && (curr_item == '0' || curr_item == target))
 		return (true);
 	return (false);
 }
 
-bool	can_access_collectibles(t_map *map_data, char target)
+bool	can_access_items(t_map *map_data, char target)
 {
 	char	**matrix;
 	Pair	queue[(map_data -> total_rows) * (map_data -> line_length)];
-	Pair	collectibles_pos[(map_data -> total_rows) * (map_data -> line_length)];
-	int		collectibles_index;
-	int		front;
-	int		tail;
+	Pair	curr_pos;
+	size_t	front;
+	size_t	tail;
 	size_t	pos_x;
 	size_t	pos_y;
-	size_t	i = 0;
+	size_t	i;
 	int		case_stop;
-	Pair	curr_pos;
 
-	matrix = map_data -> matrix;
-	front = 0;
-	tail = 0;
-	collectibles_index = 0;
-	queue[tail++] = (Pair) {map_data -> player_pos.y, map_data -> player_pos.x, 1};
-	case_stop = map_data -> collectibles;
-	printf("=================start collectibles===================: %d\n", case_stop);
-	while (i < ((map_data -> total_rows) * (map_data -> line_length)))
-	{
-		collectibles_pos[i].y = -1;
-		collectibles_pos[i].x = -1;
-		collectibles_pos[i].visited = -1;
-		i++;
-	}
 	i = 0;
+	tail = 0;
+	front = 0;
+	matrix = map_data -> matrix;
+	case_stop = map_data -> collectibles;
+	while (i < ((map_data -> total_rows) * (map_data -> line_length)))
+		queue[i++].visited = -1;
+	queue[tail++] = (Pair) {map_data -> player_pos.y, map_data -> player_pos.x, 1};
 	while (front < tail && case_stop)
 	{
 		curr_pos = queue[front++];
 		pos_x = curr_pos.x;
 		pos_y = curr_pos.y;
-		printf("\n\n");
-		printf("y:%zu, x:%zu****i = %zu***************\n", pos_y, pos_x, i++);
-		printf("\n\n");
-		if (is_target_or_path(map_data, pos_x, pos_y + 1, target))
+		if (pos_y + 1 < map_data -> total_rows && is_target_or_path(map_data, pos_x, pos_y + 1, target) && !is_visited_cell(queue, pos_x, pos_y + 1))
 		{
 			queue[tail++] = (Pair) {pos_y + 1, pos_x, 1};
-			if (!collectibles_visited(map_data, collectibles_pos, pos_x, pos_y + 1))
-			{
-				collectibles_pos[collectibles_index++] = (Pair) {pos_y + 1, pos_x, 1};
-				printf("[pos_y + 1], y:%zu, x:%zu\n", pos_y, pos_x);
-				printf("matrix[pos_y][pos_x], %c\n", matrix[pos_y][pos_x]);
-				if (matrix[pos_y + 1][pos_x] == target) 
-					case_stop--;
-			}
+			if (matrix[pos_y + 1][pos_x] == target) 
+				case_stop--;
 		}	
-		if (is_target_or_path(map_data, pos_x, pos_y - 1, target))
+		if (pos_y - 1 > 0 && is_target_or_path(map_data, pos_x, pos_y - 1, target) && !is_visited_cell(queue, pos_x, pos_y - 1))
 		{
 			queue[tail++] = (Pair) {pos_y - 1, pos_x, 1};
-			if (!collectibles_visited(map_data, collectibles_pos, pos_x, pos_y - 1))
-			{
-				collectibles_pos[collectibles_index++] = (Pair) {pos_y - 1, pos_x, 1};
-				printf("[pos_y - 1], y:%zu, x:%zu\n", pos_y, pos_x);
-				printf("matrix[pos_y][pos_x], %c\n", matrix[pos_y][pos_x]);
-				if (matrix[pos_y - 1][pos_x] == target)
-					case_stop--;
-			}
+			if (matrix[pos_y - 1][pos_x] == target)
+				case_stop--;
 		}
-		if (is_target_or_path(map_data, pos_x + 1, pos_y, target))
+		if (pos_x + 1 < map_data -> line_length && is_target_or_path(map_data, pos_x + 1, pos_y, target) && !is_visited_cell(queue, pos_x + 1, pos_y))
 		{
 			queue[tail++] = (Pair) {pos_y, pos_x + 1, 1};
-			if (!collectibles_visited(map_data, collectibles_pos, pos_x + 1, pos_y))
-			{
-				printf("[pos_x + 1], y:%zu, x:%zu\n", pos_y, pos_x);
-				printf("matrix[pos_y][pos_x + 1], %c\n", matrix[pos_y][pos_x + 1]);
-				collectibles_pos[collectibles_index++] = (Pair) {pos_y, pos_x + 1, 1};
-				if (matrix[pos_y][pos_x + 1] == target)
-					case_stop--;
-			}
+			if (matrix[pos_y][pos_x + 1] == target)
+				case_stop--;
 		}
-		if (is_target_or_path(map_data, pos_x - 1, pos_y, target))
+		if (pos_x - 1 > 0 && is_target_or_path(map_data, pos_x - 1, pos_y, target) && !is_visited_cell(queue, pos_x - 1, pos_y))
 		{
 			queue[tail++] = (Pair) {pos_y, pos_x - 1, 1};
-			if (!collectibles_visited(map_data, collectibles_pos, pos_x - 1, pos_y))
-			{
-				printf("[pos_x - 1], y:%zu, x:%zu\n", pos_y, pos_x);
-				printf("matrix[pos_y][pos_x - 1], %c\n", matrix[pos_y][pos_x - 1]);
-				collectibles_pos[collectibles_index++] = (Pair) {pos_y, pos_x - 1, 1};
-				if (matrix[pos_y][pos_x - 1] == target)
-					case_stop--;
-			}
+			if (matrix[pos_y][pos_x - 1] == target)
+				case_stop--;
 		}
-		printf("collectibles===================: %d\n", case_stop);
 	}
-	if (case_stop)
+		if (case_stop)
 		return (false);
 	return (true);
 }
@@ -290,7 +248,7 @@ bool	is_valid_player_path(t_map **map_data)
 		return (false);
 	line_length = (*map_data) -> line_length;
 	total_rows = (*map_data) -> total_rows;
-	if (!can_access_collectibles(*map_data, 'C'))
+	if (!can_access_items(*map_data, 'C'))
 		return (false);
 	return (true);
 }
@@ -374,7 +332,7 @@ int verify_map(char *map_path)
 	else
 		printf("VALID INFILL\n");
 	if (!is_valid_player_path(&map_data))
-		return (printf("INVALID PLAYER PATH"), free(map_data), 0);
+		return (printf("INVALID PLAYER PATH\n"), free(map_data), 0);
 	else
 		printf("VALID PLAYER PATH\n");
 	printf("total_lines: %zu\n", map_data -> total_rows);
@@ -402,8 +360,3 @@ int	main(int argc, char **argv)
 
 	return (0);
 }
-
-// verify all lines same LENGTH
-	// verify first line and last line are only 1 and first char and last char in all rows are also 1
-	// verify in the middle after the first char and the last char there are only /PE1CO/
-	// verify that the Player P can access the collectibles and access the Exit E
