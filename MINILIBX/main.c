@@ -172,62 +172,70 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 
 	matrix = map_data -> matrix;
 	curr_item = matrix[pos_y][pos_x];
-	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> line_length) && (curr_item == '0' || curr_item == target))
+	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> line_length) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
 		return (true);
 	return (false);
 }
 
-bool	can_access_items(t_map *map_data, char target)
+
+bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *move, char target)
 {
+	size_t	pos_y;	
+	size_t	pos_x;
 	char	**matrix;
+	size_t	border_bottom;
+	size_t	border_right;
+
+	pos_y = (map_data -> player_pos).y;
+	pos_x = (map_data -> player_pos).x;
+	matrix = map_data -> matrix;
+	border_bottom = map_data -> total_rows;
+	border_right = map_data -> line_length;
+	if (ft_strncmp(move, "down", ft_strlen(move)))
+		pos_y++;
+	if (ft_strncmp(move, "up", ft_strlen(move)))
+		pos_y--;
+	if (ft_strncmp(move, "right", ft_strlen(move)))
+		pos_x++;
+	if (ft_strncmp(move, "left", ft_strlen(move)))
+		pos_x--;
+	if (pos_y < border_bottom && pos_y > 0 && pos_x < border_right && pos_x > 0 && is_target_or_path(map_data, pos_x, pos_y, target) && !is_visited_cell(queue, pos_x, pos_y))
+	{
+		queue[tail] = (Pair) {pos_y, pos_x, 1};
+		if (matrix[pos_y][pos_x] == target || matrix[pos_y][pos_x] == 'E') 
+			map_data -> reached_items += 1;
+		return (true);
+	}	
+	return (false);
+}
+
+bool	can_access_items(t_map *map_data, size_t total_items, char target)
+{
 	Pair	queue[(map_data -> total_rows) * (map_data -> line_length)];
-	Pair	curr_pos;
 	size_t	front;
 	size_t	tail;
-	size_t	pos_x;
-	size_t	pos_y;
 	size_t	i;
-	int		case_stop;
 
 	i = 0;
 	tail = 0;
 	front = 0;
-	matrix = map_data -> matrix;
-	case_stop = map_data -> collectibles;
 	while (i < ((map_data -> total_rows) * (map_data -> line_length)))
 		queue[i++].visited = -1;
 	queue[tail++] = (Pair) {map_data -> player_pos.y, map_data -> player_pos.x, 1};
-	while (front < tail && case_stop)
+	while (front < tail && map_data -> reached_items < total_items)
 	{
-		curr_pos = queue[front++];
-		pos_x = curr_pos.x;
-		pos_y = curr_pos.y;
-		if (pos_y + 1 < map_data -> total_rows && is_target_or_path(map_data, pos_x, pos_y + 1, target) && !is_visited_cell(queue, pos_x, pos_y + 1))
-		{
-			queue[tail++] = (Pair) {pos_y + 1, pos_x, 1};
-			if (matrix[pos_y + 1][pos_x] == target) 
-				case_stop--;
-		}	
-		if (pos_y - 1 > 0 && is_target_or_path(map_data, pos_x, pos_y - 1, target) && !is_visited_cell(queue, pos_x, pos_y - 1))
-		{
-			queue[tail++] = (Pair) {pos_y - 1, pos_x, 1};
-			if (matrix[pos_y - 1][pos_x] == target)
-				case_stop--;
-		}
-		if (pos_x + 1 < map_data -> line_length && is_target_or_path(map_data, pos_x + 1, pos_y, target) && !is_visited_cell(queue, pos_x + 1, pos_y))
-		{
-			queue[tail++] = (Pair) {pos_y, pos_x + 1, 1};
-			if (matrix[pos_y][pos_x + 1] == target)
-				case_stop--;
-		}
-		if (pos_x - 1 > 0 && is_target_or_path(map_data, pos_x - 1, pos_y, target) && !is_visited_cell(queue, pos_x - 1, pos_y))
-		{
-			queue[tail++] = (Pair) {pos_y, pos_x - 1, 1};
-			if (matrix[pos_y][pos_x - 1] == target)
-				case_stop--;
-		}
+		map_data -> player_pos = (Pair) {queue[front].y, queue[front].x, -1};
+		front++;
+		if (check_move(map_data, queue, tail, "down", target))
+			tail++;
+		if (check_move(map_data, queue, tail, "up", target))
+			tail++;
+		if (check_move(map_data, queue, tail, "right", target))
+			tail++;
+		if (check_move(map_data, queue, tail, "left", target))
+			tail++;
 	}
-		if (case_stop)
+	if (map_data -> reached_items < total_items)
 		return (false);
 	return (true);
 }
@@ -240,6 +248,7 @@ bool	is_valid_player_path(t_map **map_data)
 	char	**matrix;
 	size_t	line_length;
 	size_t	total_rows;
+	size_t	total_items;
 
 	matrix = (*map_data) -> matrix;
 	row = 1;
@@ -248,7 +257,8 @@ bool	is_valid_player_path(t_map **map_data)
 		return (false);
 	line_length = (*map_data) -> line_length;
 	total_rows = (*map_data) -> total_rows;
-	if (!can_access_items(*map_data, 'C'))
+	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
+	if (!can_access_items(*map_data, total_items, 'C'))
 		return (false);
 	return (true);
 }
@@ -296,6 +306,7 @@ int	init_map(t_map	**map_data, char *map_path)
 	(*map_data) -> empty = 0;
 	(*map_data) -> wall = 0;
 	(*map_data) -> collectibles = 0;
+	(*map_data) -> reached_items = 0;
 	return (1);
 }
 
