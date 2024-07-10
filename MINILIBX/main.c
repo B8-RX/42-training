@@ -110,31 +110,21 @@ int	get_position(t_map **map_data, char target)
 {
 	size_t	col;
 	size_t	row;
-	size_t	line_length;
-	char	**matrix;
 
-	matrix = (*map_data) -> matrix;
 	col = 1;
 	row = 1;
-	while (matrix[row])
+	while (((*map_data) -> matrix)[row])
 	{
-		line_length = ft_strlen(matrix[row]);
-		while (col < line_length)
+		while (col < (*map_data) -> line_length)
 		{
-			if (matrix[row][col] == target)
+			if (((*map_data) -> matrix)[row][col] == target)
 			{
 				if (target == 'P')
-				{
-					(*map_data) -> player_pos.x = col;
-					(*map_data) -> player_pos.y = row;
-					return (1);
-				}
+					(*map_data) -> player_pos = (Pair) {row, col, 1};
 				else if (target == 'E')
-				{
-					(*map_data) -> exit_pos.x = col;
-					(*map_data) -> exit_pos.y = row;
+					(*map_data) -> exit_pos = (Pair) {row, col, 1};
+				if (target == 'P' || target == 'E')
 					return (1);
-				}
 			}
 			col++;
 		}
