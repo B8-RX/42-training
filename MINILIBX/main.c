@@ -363,10 +363,12 @@ int verify_map(t_game **game, char *map_path)
 	printf("total_lines: %zu\n", map_data -> total_rows);
 	return (1);
 }
+ 
 
 int	main(int argc, char **argv)
 {
 	t_game	*game;
+	// t_data	img;
 
 	if (argc < 2)
 		return (1);
@@ -382,12 +384,17 @@ int	main(int argc, char **argv)
 		free_game(game);
 		return (1);
 	}
-	game -> mlx_win = mlx_new_window(game -> mlx, 800, 600, "test window");
+	game -> mlx_win = mlx_new_window(game -> mlx, 1920, 1080, "test window");
 	if (!game -> mlx_win)
 	{
 		free_game(game);
 		return (1);
-	}	
+	}
+	// img = game -> img_data;
+	// img.img = mlx_new_image(game -> mlx, 1920, 1080);
+	// img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
+	// my_mlx_pixel_put(&img, 55, 55, 0x00FF0000);
+	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
 	mlx_loop(game -> mlx);
 	return (0);
 }

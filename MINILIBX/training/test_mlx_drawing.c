@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <mlx.h>
+
+typedef struct 
+{
+	size_t	x;
+	size_t	y;
+	int	visited;
+} Pair;
+
+typedef struct s_data {
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+} t_data;
+
+typedef struct s_map {
+	char		**matrix;
+	size_t		player;
+	Pair		player_pos;
+	size_t		exit;
+	Pair		exit_pos;
+	int			empty;
+	int			wall;
+	size_t		total_rows;
+	size_t		line_length;
+	size_t		total_cells;
+	int			collectibles;
+	size_t		reached_items;
+} t_map;
+
+typedef struct s_game {
+	void	*mlx;
+	void	*mlx_win;
+	t_map	*map_data;
+	t_data	img_data;
+
+} t_game;
+
+void	free_game(t_game *game)
+{
+	int	i;
+
+	i = 0;
+	if (!game)
+		return ;
+	if (game -> mlx)
+		free(game -> mlx);
+	if (game -> mlx_win)
+		free(game -> mlx_win);
+	if (game -> map_data)
+	{
+		if (game -> map_data -> matrix)
+		{
+			while(game -> map_data -> matrix[i])
+				free(game -> map_data -> matrix[i++]);
+			free(game -> map_data -> matrix);
+		}
+		free(game -> map_data);	
+	}
+	free(game);
+}
+
+void	draw_square(t_data *data, int x_pos, int y_pos, int color, int width, int height)
+{
+	char	*dst;
+	int		x;
+	int		y;
+	
+	x = x_pos;
+	y = y_pos;
+	while (y < height)
+	{
+		while (x < width)
+		{
+			dst = data -> addr + (y * data -> line_length + x * (data -> bpp / 8));
+			*(unsigned int*)dst = color;
+			x++;
+		}
+		x = x_pos;
+		y++;
+	}
+}
+
+void	my_mlx_pixel_put(t_data *data, int x_pos, int y_pos, int color)
+{
+	draw_square(data, x_pos, y_pos, color, 200, 200);
+}
+
+int	main(int argc, char **argv)
+{
+	t_game	*game;
+	t_data	img;
+
+	game = malloc (sizeof (t_game));
+	if (!game)
+		return (1);
+	game -> mlx = mlx_init();
+	if (!game -> mlx)
+		return (1);
+	game -> mlx_win = mlx_new_window(game -> mlx, 1920, 1080, "test window");
+	if (!game -> mlx_win)
+	{
+		free_game(game);
+		return (1);
+	}
+	img = game -> img_data;
+	img.img = mlx_new_image(game -> mlx, 1920, 1080);
+	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
+	my_mlx_pixel_put(&img, 55, 55, 0x00FF0000);
+	mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
+	mlx_loop(game -> mlx);
+	return (0);
+}

@@ -14,6 +14,14 @@ typedef struct
 	int	visited;
 } Pair;
 
+typedef struct s_data {
+	void	*img;
+	char	*addr;
+	int		bpp;
+	int		line_length;
+	int		endian;
+} t_data;
+
 typedef struct s_map {
 	char		**matrix;
 	size_t		player;
@@ -33,6 +41,8 @@ typedef struct s_game {
 	void	*mlx;
 	void	*mlx_win;
 	t_map	*map_data;
+	t_data	img_data;
+
 } t_game;
 
 bool	is_map_square(t_map *map_data);
