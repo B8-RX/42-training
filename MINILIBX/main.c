@@ -167,6 +167,17 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 	return (false);
 }
 
+void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
+{
+	if (ft_strncmp(direction, "down", ft_strlen(direction)) == 0)
+		(*pos_y)++;
+	else if (ft_strncmp(direction, "up", ft_strlen(direction)) == 0)
+		(*pos_y)--;
+	else if (ft_strncmp(direction, "right", ft_strlen(direction)) == 0)
+		(*pos_x)++;
+	else if (ft_strncmp(direction, "left", ft_strlen(direction)) == 0)
+		(*pos_x)--;
+}
 
 bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, char target)
 {
@@ -181,14 +192,7 @@ bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, cha
 	matrix = map_data -> matrix;
 	border_bottom = map_data -> total_rows;
 	border_right = map_data -> line_length;
-	if (ft_strncmp(direction, "down", ft_strlen(direction)))
-		pos_y++;
-	if (ft_strncmp(direction, "up", ft_strlen(direction)))
-		pos_y--;
-	if (ft_strncmp(direction, "right", ft_strlen(direction)))
-		pos_x++;
-	if (ft_strncmp(direction, "left", ft_strlen(direction)))
-		pos_x--;
+	update_position(&pos_x, &pos_y, direction);
 	if (pos_y < border_bottom && pos_y > 0 && pos_x < border_right && pos_x > 0 && is_target_or_path(map_data, pos_x, pos_y, target) && !is_visited_cell(queue, pos_x, pos_y))
 	{
 		queue[tail] = (Pair) {pos_x, pos_y, 1};

@@ -44,6 +44,7 @@ bool	can_access_items(t_map *map_data, size_t total_items, char target);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
+void	update_position(size_t *pos_x, size_t *pos_y, char *direction);
 
 
 #endif
