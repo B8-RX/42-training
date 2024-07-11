@@ -29,6 +29,12 @@ typedef struct s_map {
 	size_t		reached_items;
 } t_map;
 
+typedef struct s_game {
+	void	*mlx;
+	void	*mlx_win;
+	t_map	*map_data;
+} t_game;
+
 bool	is_map_square(t_map *map_data);
 bool	is_valid_walls(t_map *map_data);
 int		get_total_rows(t_map *map_data);
@@ -37,9 +43,9 @@ bool	is_valid_fill(t_map **map_data);
 int		get_position(t_map **map_data, char target);
 bool	is_valid_player_path(t_map **map_data);
 char	*stringify(char *map_path);
-int		init_map(t_map	**map_data, char *map_path);
-void	free_map(t_map	*map_data);
-int		verify_map(char *map_path);
+int		init_map(t_game **game, char *map_path);
+void	free_game(t_game *game);
+int		verify_map(t_game **game, char *map_path);
 bool	can_access_items(t_map *map_data, size_t total_items, char target);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);

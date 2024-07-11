@@ -290,60 +290,74 @@ char	*stringify(char *map_path)
 	return (map);
 }
 
-int	init_map(t_map	**map_data, char *map_path)
+int	init_map(t_game	**game, char *map_path)
 {
-	*map_data = malloc(sizeof(t_map));
-	if (!*map_data)
+	t_map *map_data;
+
+	(*game) -> map_data = malloc(sizeof(t_map));
+	if (!(*game) -> map_data)
 		return (0);
-	(*map_data) -> matrix = ft_split(stringify(map_path), '\n');
-	if (!(*map_data) -> matrix)
-		return (free(*map_data), 0);
-	(*map_data) -> total_rows = get_total_rows(*map_data);
-	(*map_data) -> line_length = ft_strlen((*map_data) -> matrix[0]);
-	(*map_data) -> total_cells = ((*map_data) -> total_rows) * ((*map_data) -> line_length);
-	(*map_data) -> player = 0;
-	(*map_data) -> exit = 0;
-	(*map_data) -> empty = 0;
-	(*map_data) -> wall = 0;
-	(*map_data) -> collectibles = 0;
-	(*map_data) -> reached_items = 0;
+	map_data = (*game) -> map_data;
+	map_data-> matrix = ft_split(stringify(map_path), '\n');
+	if (!map_data-> matrix)
+		return (free(map_data), 0);
+	map_data-> total_rows = get_total_rows(map_data);
+	map_data-> line_length = ft_strlen(map_data-> matrix[0]);
+	map_data-> total_cells = (map_data-> total_rows) * (map_data-> line_length);
+	map_data-> player = 0;
+	map_data-> exit = 0;
+	map_data-> empty = 0;
+	map_data-> wall = 0;
+	map_data-> collectibles = 0;
+	map_data-> reached_items = 0;
 	return (1);
 }
 
-void	free_map(t_map	*map_data)
+void	free_game(t_game *game)
 {
 	int	i;
 
 	i = 0;
-	if (map_data -> matrix)
+	if (!game)
+		return ;
+	if (game -> mlx)
+		free(game -> mlx);
+	if (game -> mlx_win)
+		free(game -> mlx_win);
+	if (game -> map_data)
 	{
-		while(map_data -> matrix[i])
-			free(map_data -> matrix[i++]);
-		free(map_data -> matrix);
+		if (game -> map_data -> matrix)
+		{
+			while(game -> map_data -> matrix[i])
+				free(game -> map_data -> matrix[i++]);
+			free(game -> map_data -> matrix);
+		}
+		free(game -> map_data);	
 	}
-	free(map_data);	
+	free(game);
 }
 
-int verify_map(char *map_path)
+int verify_map(t_game **game, char *map_path)
 {
 	t_map	*map_data;
 
-	if (!init_map(&map_data, map_path))
+	if (!init_map(game, map_path))
 		return (0);
+	map_data = (*game) -> map_data;
 	if (!is_map_square(map_data))
-		return (printf("INVALID SQUARE\n"), free_map(map_data), 0);
+		return (printf("INVALID SQUARE\n"), 0);
 	else
 		printf("VALID SQUARE\n");
 	if (!is_valid_walls(map_data))
-		return (printf("INVALID WALLS\n"), free_map(map_data), 0);
+		return (printf("INVALID WALLS\n"), 0);
 	else
 		printf("VALID WALLS\n");
 	if (!is_valid_fill(&map_data))
-		return (printf("INVALID INFILL\n"), free_map(map_data), 0);
+		return (printf("INVALID INFILL\n"), 0);
 	else
 		printf("VALID INFILL\n");
 	if (!is_valid_player_path(&map_data))
-		return (printf("INVALID PLAYER PATH\n"), free_map(map_data), 0);
+		return (printf("INVALID PLAYER PATH\n"), 0);
 	else
 		printf("VALID PLAYER PATH\n");
 	printf("total_lines: %zu\n", map_data -> total_rows);
@@ -352,22 +366,28 @@ int verify_map(char *map_path)
 
 int	main(int argc, char **argv)
 {
-	void	*mlx;
-	void	*mlx_win;
+	t_game	*game;
 
 	if (argc < 2)
-		return (0);
-	mlx = mlx_init();
-	if (!mlx)
-		return (0);
-	if (!verify_map(argv[1]))
+		return (1);
+	game = malloc (sizeof (t_game));
+	if (!game)
+		return (1);
+	game -> mlx = mlx_init();
+	if (!game -> mlx)
+		return (1);
+	if (!verify_map(&game, argv[1]))
 	{
 		printf("ERROR VERIFY MAP\n");
-		free(mlx);
-		return (0);
+		free_game(game);
+		return (1);
 	}
-	mlx_win = mlx_new_window(mlx, 800, 600, "test window");
-	mlx_loop(mlx);
-
+	game -> mlx_win = mlx_new_window(game -> mlx, 800, 600, "test window");
+	if (!game -> mlx_win)
+	{
+		free_game(game);
+		return (1);
+	}	
+	mlx_loop(game -> mlx);
 	return (0);
 }
