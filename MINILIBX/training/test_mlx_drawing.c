@@ -86,9 +86,41 @@ void	draw_square(t_data *data, int x_pos, int y_pos, int color, int width, int h
 	}
 }
 
+void	draw_triangle(t_data *data, int x_pos, int y_pos, int color, int width, int height)
+{
+	char	*dst;
+	int		x;
+	int		y;
+	int		row_width;
+	int		left_border;
+	int		right_border;
+
+	y = y_pos;
+	row_width = 1;
+	if (x_pos < width / 2)
+	{
+		x_pos = width;
+	}
+	while (y < y_pos + height)
+	{
+		left_border = x_pos - row_width / 2;
+		right_border = x_pos + row_width / 2;
+		x = left_border;
+		while (x <= right_border)
+		{
+			dst = data -> addr + (y * data -> line_length + x * (data -> bpp / 8));
+			*(unsigned int*)dst = color;
+			x++;
+		}
+		row_width += 2;
+		y++;
+	}
+}
+
 void	my_mlx_pixel_put(t_data *data, int x_pos, int y_pos, int color)
 {
-	draw_square(data, x_pos, y_pos, color, 200, 200);
+	// draw_square(data, x_pos, y_pos, color, 200, 200);
+	draw_triangle(data, x_pos, y_pos, color, 200, 200);
 }
 
 int	main(int argc, char **argv)
