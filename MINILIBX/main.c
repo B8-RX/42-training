@@ -365,6 +365,71 @@ int verify_map(t_game **game, char *map_path)
 }
  
 
+// int	main(int argc, char **argv)
+// {
+// 	t_game	*game;
+// 	// t_data	img;
+//
+// 	if (argc < 2)
+// 		return (1);
+// 	game = malloc (sizeof (t_game));
+// 	if (!game)
+// 		return (1);
+// 	game -> mlx = mlx_init();
+// 	if (!game -> mlx)
+// 		return (1);
+// 	if (!verify_map(&game, argv[1]))
+// 	{
+// 		printf("ERROR VERIFY MAP\n");
+// 		free_game(game);
+// 		return (1);
+// 	}
+// 	game -> mlx_win = mlx_new_window(game -> mlx, 1920, 1080, "test window");
+// 	if (!game -> mlx_win)
+// 	{
+// 		free_game(game);
+// 		return (1);
+// 	}
+// 	// img = game -> img_data;
+// 	// img.img = mlx_new_image(game -> mlx, 1920, 1080);
+// 	// img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
+// 	// my_mlx_pixel_put(&img, 55, 55, 0x00FF0000);
+// 	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
+// 	mlx_loop(game -> mlx);
+// 	return (0);
+// }
+//
+
+void	draw_walls(t_game **game)
+{
+	t_data	img;
+	t_map	*map_data;
+	char	**matrix;
+	size_t		x;
+	size_t		y;
+
+	map_data = (*game) -> map_data;
+	matrix = map_data -> matrix;
+	img = (*game) -> img_data;
+	x = 0;
+	y = 0;
+	
+// check if the map is <= the window . (img size * img in one line) must be <= mlx_new_window
+	
+	img.img = mlx_xpm_file_to_image((*game) -> mlx, WALL_X, &img.img_width, &img.img_height);
+	while(y >= 0 && y < map_data -> total_rows)
+	{
+		while (x >= 0 && x < map_data -> line_length)
+		{
+			if (matrix[y][x] == '1')
+				mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, (x * 64), (y * 64));
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	*game;
@@ -375,25 +440,34 @@ int	main(int argc, char **argv)
 	game = malloc (sizeof (t_game));
 	if (!game)
 		return (1);
+
 	game -> mlx = mlx_init();
 	if (!game -> mlx)
 		return (1);
+	game -> win_width = 1920;
+	game -> win_height = 1080;
+	game -> mlx_win = mlx_new_window(game -> mlx, game -> win_width, game -> win_height, "test window");
+	if (!game -> mlx_win)
+	{
+		free_game(game);
+		return (1);
+	}
 	if (!verify_map(&game, argv[1]))
 	{
 		printf("ERROR VERIFY MAP\n");
 		free_game(game);
 		return (1);
 	}
-	game -> mlx_win = mlx_new_window(game -> mlx, 1920, 1080, "test window");
-	if (!game -> mlx_win)
-	{
-		free_game(game);
-		return (1);
-	}
-	// img = game -> img_data;
-	// img.img = mlx_new_image(game -> mlx, 1920, 1080);
-	// img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
-	// my_mlx_pixel_put(&img, 55, 55, 0x00FF0000);
+ 	// img = game -> img_data;
+	// img.img = mlx_new_image(game -> mlx, game -> win_width, game -> win_height);
+	// img.img_addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
+	//
+	// img.img = mlx_xpm_file_to_image(game -> mlx, WALL_X, &img.img_width, &img.img_height);	
+	
+	// my_mlx_pixel_put(&img, game -> width, game -> height, 0x00FF0000);
+	// draw_square(&img, 55, 55, 0x00FF0000, 200, 200);
+	// draw_triangle(&img, 55, 55, 0x00FF0000, 200, 200);
+	draw_walls(&game);
 	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
 	mlx_loop(game -> mlx);
 	return (0);

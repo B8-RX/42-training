@@ -7,6 +7,8 @@
 #include <mlx.h>
 #include "libft.h"
 
+# define WALL_X "./ASSETS/TILES/xpm/horizontal_tiles_pacman_v1.xpm"
+
 typedef struct 
 {
 	size_t	x;
@@ -20,6 +22,8 @@ typedef struct s_data {
 	int		bpp;
 	int		line_length;
 	int		endian;
+	int		img_width;
+	int		img_height;
 } t_data;
 
 typedef struct s_map {
@@ -40,6 +44,8 @@ typedef struct s_map {
 typedef struct s_game {
 	void	*mlx;
 	void	*mlx_win;
+	int		win_width;
+	int		win_height;
 	t_map	*map_data;
 	t_data	img_data;
 
