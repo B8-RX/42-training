@@ -168,6 +168,22 @@ int	add_shade(double distance, int color)
 	return ((r << 16) | (g << 8) | b);
 }
 
+int	get_oposite_color(int color)
+{
+	int r;
+	int g;
+	int b;
+
+	r = (color >> 16) &0xFF;
+	g = (color >> 8) &0xFF;
+	b = (color & 0xFF);
+
+	r = (255 - r);
+	g = (255 - g);
+	b = (255 - b);
+	return ((r << 16) | (g << 8) | b);
+}
+
 int	main(void)
 {
 	t_game	*game;
@@ -196,7 +212,9 @@ int	main(void)
 	// my_mlx_pixel_put(&img, game -> win_width, game -> win_height, 0x00FF0000);
 	draw_square(&img, 55, 55, color, 200, 200);
 	color = add_shade(.7, color); // add shade to color red
-	draw_square(&img, 55 + 200, 55 + 200, color, 200, 200);
+	draw_square(&img, 300, 300, color, 200, 200);
+	color = get_oposite_color(color); // get the opposite color (based on the color wheel)
+	draw_square(&img, 600, 600, color, 300, 300);
 	mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
 	mlx_loop(game -> mlx);
 	return (0);
