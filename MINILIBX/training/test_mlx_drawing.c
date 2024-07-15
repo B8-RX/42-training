@@ -71,24 +71,31 @@ void	free_game(t_game *game)
 	free(game);
 }
 
-void	draw_square(t_data *data, int x_pos, int y_pos, int color, int width, int height)
+void	draw_square(t_data *data, int x_pos, int y_pos, int color, int img_width, int img_height)
 {
 	char	*dst;
 	int		x;
 	int		y;
+	int		width;
+	int		height;
 	
 	x = x_pos;
 	y = y_pos;
-	while (y < height)
+	width = img_width;
+	height = img_height;
+	while (height)
 	{
-		while (x < width)
+		while (width)
 		{
 			dst = data -> img_addr + (y * data -> line_length + x * (data -> bpp / 8));
 			*(unsigned int*)dst = color;
 			x++;
+			width--;
 		}
+		width = img_width;
 		x = x_pos;
 		y++;
+		height--;
 	}
 }
 
@@ -133,40 +140,41 @@ void	my_mlx_pixel_put(t_data *data, int x_pos, int y_pos, int color)
 	}	
 }
 
-void	draw_walls(t_game **game)
+int	add_shade(double distance, int color)
 {
-	t_data	img;
-	t_map	*map_data;
-	char	**matrix;
-	// int		x;
-	// int		y;
+	int	r;
+	int g;
+	int b;
 
-	map_data = (*game) -> map_data;
-	matrix = map_data -> matrix;
-	img = (*game) -> img_data;
-	// x = 0;
-	// y = 0;
-	
-// check if the map is <= the window . (img size * img in one line) must be <= mlx_new_window
-	
-	// while(y >= 0 && y <= map_data -> total_rows)
-	// {
-	// 	while (x >= 0 && x <= map_data -> line_length)
-	// 	{
-	img.img = mlx_xpm_file_to_image((*game) -> mlx, WALL_X, &img.img_width, &img.img_height);
-	mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, 0, 0);
-	// 		x++;
-	// 	}
-	// 	x = 0;
-	// 	y++;
-	// }
+	r = (color >> 16) &0xFF;
+	g = (color >> 8) &0xFF;
+	b = color &0xFF;
+
+	r = (int)(r * (1 - distance));
+	g = (int)(g * (1 - distance));
+	b = (int)(b * (1 - distance));
+	if (r < 0)
+		r = 0;
+	else if (r > 255)
+		r = 255;
+	if (g < 0)
+		g = 0;
+	else if (g > 255)
+		g = 255;
+	if (b < 0)
+		b = 0;
+	else if (b > 255)
+		b = 255;
+	return ((r << 16) | (g << 8) | b);
 }
 
-int	main(int argc, char **argv)
+int	main(void)
 {
 	t_game	*game;
-	// t_data	img;
+	t_data	img;
+	int		color;
 
+	color = 0x00FF0000; // red
 	game = malloc (sizeof (t_game));
 	if (!game)
 		return (1);
@@ -182,23 +190,14 @@ int	main(int argc, char **argv)
 		free_game(game);
 		return (1);
 	}
-	if (!verify_map(&game, argv[1]))
-	{
-		printf("ERROR VERIFY MAP\n");
-		free_game(game);
-		return (1);
-	}
- 	// img = game -> img_data;
-	// img.img = mlx_new_image(game -> mlx, game -> win_width, game -> win_height);
-	// img.img_addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
-	//
-	// img.img = mlx_xpm_file_to_image(game -> mlx, WALL_X, &img.img_width, &img.img_height);	
-	
-	// my_mlx_pixel_put(&img, game -> width, game -> height, 0x00FF0000);
-	// draw_square(&img, 55, 55, 0x00FF0000, 200, 200);
-	// draw_triangle(&img, 55, 55, 0x00FF0000, 200, 200);
-	draw_walls(&game);
-	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
+ 	img = game -> img_data;
+	img.img = mlx_new_image(game -> mlx, game -> win_width, game -> win_height);
+	img.img_addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
+	// my_mlx_pixel_put(&img, game -> win_width, game -> win_height, 0x00FF0000);
+	draw_square(&img, 55, 55, color, 200, 200);
+	color = add_shade(.7, color); // add shade to color red
+	draw_square(&img, 55 + 200, 55 + 200, color, 200, 200);
+	mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
 	mlx_loop(game -> mlx);
 	return (0);
 }

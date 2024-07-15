@@ -7,7 +7,9 @@
 #include <mlx.h>
 #include "libft.h"
 
-# define WALL_X "./ASSETS/TILES/xpm/horizontal_tiles_pacman_v1.xpm"
+# define WALL_X "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-horizontal-128x128px.xpm"
+# define WALL_Y "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-vertical-128x128px.xpm"
+# define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v1.xpm"
 
 typedef struct 
 {

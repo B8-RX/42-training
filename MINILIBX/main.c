@@ -422,7 +422,7 @@ void	draw_walls(t_game **game)
 		while (x >= 0 && x < map_data -> line_length)
 		{
 			if (matrix[y][x] == '1')
-				mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, (x * 64), (y * 64));
+				mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, (x * img.img_width), (y * img.img_height));
 			x++;
 		}
 		x = 0;
