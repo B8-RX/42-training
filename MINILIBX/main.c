@@ -18,7 +18,6 @@ bool	is_map_square(t_map *map_data)
 	return (true);
 }
 
-
 bool	is_valid_walls(t_map *map_data)
 {
 	size_t	col;
@@ -272,10 +271,12 @@ char	*stringify(char *map_path)
 
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
-		return (0);
+		return (printf("ERROR OPEN FILE\n"), NULL);
+	else
+		printf("FILE OPENED SUCCESSFULLY\n");
 	line = get_next_line(fd);
 	if (!line)
-		return (0);
+		return (NULL);
 	map = ft_strjoin("", "");
 	while (line)
 	{
@@ -287,6 +288,10 @@ char	*stringify(char *map_path)
 		line = get_next_line(fd);
 	}
 	printf("%s", map);
+	if (close(fd) == -1)
+		return (printf("ERROR CLOSE FILE\n"), NULL);
+	else
+		printf("FILE CLOSED SUCCESSFULLY\n");
 	return (map);
 }
 
@@ -365,41 +370,6 @@ int verify_map(t_game **game, char *map_path)
 }
  
 
-// int	main(int argc, char **argv)
-// {
-// 	t_game	*game;
-// 	// t_data	img;
-//
-// 	if (argc < 2)
-// 		return (1);
-// 	game = malloc (sizeof (t_game));
-// 	if (!game)
-// 		return (1);
-// 	game -> mlx = mlx_init();
-// 	if (!game -> mlx)
-// 		return (1);
-// 	if (!verify_map(&game, argv[1]))
-// 	{
-// 		printf("ERROR VERIFY MAP\n");
-// 		free_game(game);
-// 		return (1);
-// 	}
-// 	game -> mlx_win = mlx_new_window(game -> mlx, 1920, 1080, "test window");
-// 	if (!game -> mlx_win)
-// 	{
-// 		free_game(game);
-// 		return (1);
-// 	}
-// 	// img = game -> img_data;
-// 	// img.img = mlx_new_image(game -> mlx, 1920, 1080);
-// 	// img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
-// 	// my_mlx_pixel_put(&img, 55, 55, 0x00FF0000);
-// 	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
-// 	mlx_loop(game -> mlx);
-// 	return (0);
-// }
-//
-
 void	draw_walls(t_game **game)
 {
 	t_data	img;
@@ -430,22 +400,91 @@ void	draw_walls(t_game **game)
 	}
 }
 
+int	check_extension(char *file_name)
+{
+	int		i;
+	int		dot;
+	char	*ext;
+	
+	i = 0;
+	dot = 0;
+	while (file_name[i])
+	{
+		if (file_name[i] == '.' && file_name[i + 1] != '/')
+			dot++;
+		i++;
+	}
+	ext = ft_split(file_name, '.')[dot];
+	if (ft_strncmp(EXT, ext, ft_strlen(EXT)) == 0)
+		return (1);
+	else
+		printf("ERROR EXTENSION\n");
+	return (0);
+}
+
+int	on_key_up(int keycode, t_game *game)
+{
+	printf("key released. KEYCODE: %d\n", keycode);
+	if (keycode == 65307)
+		mlx_destroy_window(game -> mlx, game -> mlx_win);
+	return (0);
+}
+
+int	on_key_down(int keycode, t_game *game)
+{
+	printf("key pressed. KEYCODE: %d\n", keycode);
+	(void)game;
+	return (0);
+}
+
+int	on_click_down(int button, int x, int y, t_game *game)
+{
+	printf("click pressed. button: %d\n", button);
+	printf("x: %d\n", x);
+	printf("y: %d\n", y);
+	(void)game;
+	return (0);
+}
+
+int	on_click_up(int button, int x, int y, t_game *game)
+{
+	printf("click release button: %d\n", button);
+	printf("x: %d\n", x);
+	printf("y: %d\n", y);
+	(void)game;
+	return (0);
+}
+
+int	on_mouse_move(int x, int y, t_game *game)
+{
+	printf("x: %d\n", x);
+	printf("y: %d\n", y);
+	(void)game;
+	return (0);
+}
+
+int	on_destroy(t_game *game)
+{
+	mlx_destroy_window(game -> mlx, game -> mlx_win);
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	*game;
-	// t_data	img;
 
 	if (argc < 2)
+		return (1);
+	if (!check_extension(argv[1]))
 		return (1);
 	game = malloc (sizeof (t_game));
 	if (!game)
 		return (1);
-
 	game -> mlx = mlx_init();
 	if (!game -> mlx)
 		return (1);
-	game -> win_width = 1920;
-	game -> win_height = 1080;
+	game -> win_width = WINDOW_WIDTH;
+	game -> win_height = WINDOW_HEIGHT;
 	game -> mlx_win = mlx_new_window(game -> mlx, game -> win_width, game -> win_height, "test window");
 	if (!game -> mlx_win)
 	{
@@ -458,17 +497,13 @@ int	main(int argc, char **argv)
 		free_game(game);
 		return (1);
 	}
- 	// img = game -> img_data;
-	// img.img = mlx_new_image(game -> mlx, game -> win_width, game -> win_height);
-	// img.img_addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
-	//
-	// img.img = mlx_xpm_file_to_image(game -> mlx, WALL_X, &img.img_width, &img.img_height);	
-	
-	// my_mlx_pixel_put(&img, game -> width, game -> height, 0x00FF0000);
-	// draw_square(&img, 55, 55, 0x00FF0000, 200, 200);
-	// draw_triangle(&img, 55, 55, 0x00FF0000, 200, 200);
 	draw_walls(&game);
-	// mlx_put_image_to_window(game -> mlx, game -> mlx_win, img.img, 0, 0);
+	mlx_hook(game -> mlx_win, 2, 1L<<0, on_key_down, game);
+	mlx_hook(game -> mlx_win, 3, 1L<<1, on_key_up, game);
+	mlx_hook(game -> mlx_win, 4, 1L<<2, on_click_down, game);
+	mlx_hook(game -> mlx_win, 5, 1L<<3, on_click_up, game);
+	mlx_hook(game -> mlx_win, 6, 1L<<6, on_mouse_move, game);
+	mlx_hook(game -> mlx_win, 17, 0, on_destroy, game);
 	mlx_loop(game -> mlx);
 	return (0);
 }

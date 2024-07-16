@@ -211,7 +211,7 @@ int	main(void)
 	img.img_addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_length, &img.endian);
 	// my_mlx_pixel_put(&img, game -> win_width, game -> win_height, 0x00FF0000);
 	draw_square(&img, 55, 55, color, 200, 200);
-	color = add_shade(.7, color); // add shade to color red
+	color = add_shade(.5, color); // add shade to color red
 	draw_square(&img, 300, 300, color, 200, 200);
 	color = get_oposite_color(color); // get the opposite color (based on the color wheel)
 	draw_square(&img, 600, 600, color, 300, 300);

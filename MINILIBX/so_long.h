@@ -7,9 +7,17 @@
 #include <mlx.h>
 #include "libft.h"
 
+# define ESC 65307
+# define W 119 
+# define A 97
+# define S 115
+# define D 100
+# define EXT "ber"
 # define WALL_X "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-horizontal-128x128px.xpm"
 # define WALL_Y "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-vertical-128x128px.xpm"
 # define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v1.xpm"
+# define WINDOW_WIDTH 1920
+# define WINDOW_HEIGHT 1080
 
 typedef struct 
 {
