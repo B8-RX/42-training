@@ -1,0 +1,96 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_checking_utils.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/17 09:26:52 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/07/17 09:26:54 by ssghioua         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "./so_long.h"
+
+bool	is_duplicate_items(t_map **map_data, char item)
+{
+	t_map	*data;
+
+	data = *map_data;
+	if (item == 'P')
+		data -> player += 1;
+	if (item == 'E')
+		data -> exit += 1;
+	if (item == 'C')
+		data -> collectibles += 1;
+	if (data -> player > 1 || data -> exit > 1)
+		return (true);
+	return (false);
+}
+
+bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y)
+{
+	int		i;
+	int		is_visited;
+
+	i = 0;
+	is_visited = 0;
+	while (queue[i].visited != -1)
+	{
+		if ((queue[i].y == pos_y && queue[i].x == pos_x))
+		{
+			is_visited = 1;
+			break;
+		}	
+		i++;
+	}
+	if (is_visited)
+		return (true);
+	return (false);
+}
+
+bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
+{
+	char	**matrix;
+	char	curr_item;
+
+	matrix = map_data -> matrix;
+	curr_item = matrix[pos_y][pos_x];
+	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> line_length) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
+		return (true);
+	return (false);
+}
+
+void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
+{
+	if (ft_strncmp(direction, "down", ft_strlen(direction)) == 0)
+		(*pos_y)++;
+	else if (ft_strncmp(direction, "up", ft_strlen(direction)) == 0)
+		(*pos_y)--;
+	else if (ft_strncmp(direction, "right", ft_strlen(direction)) == 0)
+		(*pos_x)++;
+	else if (ft_strncmp(direction, "left", ft_strlen(direction)) == 0)
+		(*pos_x)--;
+}
+
+int	check_extension(char *file_name)
+{
+	int		i;
+	int		dot;
+	char	*ext;
+	
+	i = 0;
+	dot = 0;
+	while (file_name[i])
+	{
+		if (file_name[i] == '.' && file_name[i + 1] != '/')
+			dot++;
+		i++;
+	}
+	ext = ft_split(file_name, '.')[dot];
+	if (ft_strncmp(EXT, ext, ft_strlen(EXT)) == 0)
+		return (0);
+	else
+		printf("ERROR EXTENSION\n");
+	return (-1);
+}

@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/07/17 09:46:57 by ssghioua          #+#    #+#              #
+#    Updated: 2024/07/17 09:46:58 by ssghioua         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 
 ifeq ($(shell uname), Linux)
 	INCLUDES = -I/usr/include -I../../mlx -Iincludes/libft 
@@ -17,7 +29,7 @@ LIBFT_LIB = $(LIBFT_DIR)libft.a
 
 OBJS_PATH = ./objs/
 
-SOURCE = ./main.c 
+SOURCE = ./main.c ./display.c ./events.c ./free_utils.c ./init.c ./map_checking.c ./map_checking_utils.c ./map_utils.c ./path_checking.c 
 
 OBJS = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE}))
 
