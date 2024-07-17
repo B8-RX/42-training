@@ -14,8 +14,13 @@
 # define D 100
 # define EXT "ber"
 # define WALL_X "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-horizontal-128x128px.xpm"
+# define WALL_X_INDEX 0
 # define WALL_Y "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-vertical-128x128px.xpm"
+# define WALL_Y_INDEX 1
 # define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v1.xpm"
+# define WATER_1_INDEX 2
+# define WATER_2 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v2.xpm"
+# define WATER_2_INDEX 3
 # define WINDOW_WIDTH 1920
 # define WINDOW_HEIGHT 1080
 
@@ -58,7 +63,8 @@ typedef struct s_game {
 	int		win_height;
 	t_map	*map_data;
 	t_data	img_data;
-
+	int		screen_width;
+	int		screen_height;
 } t_game;
 
 bool	is_map_square(t_map *map_data);

@@ -342,6 +342,23 @@ void	free_game(t_game *game)
 	free(game);
 }
 
+int	check_map_size(t_game *game)
+{
+	if (game -> map_data -> line_length * 128 > (unsigned int)game -> win_width ||
+		game -> map_data -> total_rows * 128 > (unsigned int)game -> win_height)
+	{
+		ft_putendl_fd("ERROR MAP TOO BIG", 2);
+		return (-1);
+	}
+	if (game -> map_data -> line_length  < 3 ||
+		game -> map_data -> total_rows  < 3)
+	{
+		ft_putendl_fd("ERROR MAP TOO SMALL", 2);
+		return (-1);
+	}
+	return (0);
+}
+
 int verify_map(t_game **game, char *map_path)
 {
 	t_map	*map_data;
@@ -349,32 +366,47 @@ int verify_map(t_game **game, char *map_path)
 	if (!init_map(game, map_path))
 		return (0);
 	map_data = (*game) -> map_data;
+	if (check_map_size(*game) == -1)
+		return (-1);
 	if (!is_map_square(map_data))
-		return (printf("INVALID SQUARE\n"), 0);
+	{
+		ft_putendl_fd("ERROR MAP NOT SQUARE", 2);
+		return (-1);
+	}
 	else
 		printf("VALID SQUARE\n");
 	if (!is_valid_walls(map_data))
-		return (printf("INVALID WALLS\n"), 0);
+	{
+		ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
+		return (-1);
+	}
 	else
 		printf("VALID WALLS\n");
 	if (!is_valid_fill(&map_data))
-		return (printf("INVALID INFILL\n"), 0);
+	{
+		ft_putendl_fd("ERROR MAP HAVE NOT VALID FIELD (PE01C)", 2);
+		return (-1);
+	}
 	else
 		printf("VALID INFILL\n");
 	if (!is_valid_player_path(&map_data))
-		return (printf("INVALID PLAYER PATH\n"), 0);
+	{
+		ft_putendl_fd("ERROR PLAYER HAVE NOT ACCESS TO EVERY ITEMS", 2);
+		return (-1);
+	}
 	else
 		printf("VALID PLAYER PATH\n");
-	printf("total_lines: %zu\n", map_data -> total_rows);
 	return (1);
 }
  
 
-void	draw_walls(t_game **game)
+int	draw_walls(t_game **game)
 {
 	t_data	img;
 	t_map	*map_data;
 	char	**matrix;
+	size_t	offset_x;
+	size_t	offset_y;
 	size_t		x;
 	size_t		y;
 
@@ -383,21 +415,23 @@ void	draw_walls(t_game **game)
 	img = (*game) -> img_data;
 	x = 0;
 	y = 0;
-	
-// check if the map is <= the window . (img size * img in one line) must be <= mlx_new_window
-	
-	img.img = mlx_xpm_file_to_image((*game) -> mlx, WALL_X, &img.img_width, &img.img_height);
-	while(y >= 0 && y < map_data -> total_rows)
+	img.img = mlx_xpm_file_to_image((*game) -> mlx, WALL_X, &(img.img_width), &(img.img_height));
+	// printf("line length * img_width = %zu\n", (*game) -> map_data ->line_length * img.img_width);
+	// printf("total_rows * img_height = %zu\n", (*game) -> map_data -> total_rows * img.img_height);
+	offset_x = ((*game) -> win_width - ((*game) -> map_data -> line_length * img.img_width)) / 2;
+	offset_y = ((*game) -> win_height - ((*game) -> map_data -> total_rows * img.img_height)) / 2;
+	while(((y * img.img_height) + offset_y) >= 0 && ((y * img.img_height) + offset_y) < ((map_data -> total_rows * img.img_height) + offset_y))
 	{
-		while (x >= 0 && x < map_data -> line_length)
+		while (((x * img.img_width) + offset_x) >= 0 && ((x * img.img_width) + offset_x) < ((map_data -> line_length * img.img_width) + offset_x))
 		{
 			if (matrix[y][x] == '1')
-				mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, (x * img.img_width), (y * img.img_height));
+				mlx_put_image_to_window((*game) -> mlx, (*game) -> mlx_win, img.img, offset_x + (x * img.img_width), offset_y + (y * img.img_height));
 			x++;
 		}
 		x = 0;
 		y++;
 	}
+	return (0);
 }
 
 int	check_extension(char *file_name)
@@ -416,10 +450,10 @@ int	check_extension(char *file_name)
 	}
 	ext = ft_split(file_name, '.')[dot];
 	if (ft_strncmp(EXT, ext, ft_strlen(EXT)) == 0)
-		return (1);
+		return (0);
 	else
 		printf("ERROR EXTENSION\n");
-	return (0);
+	return (-1);
 }
 
 int	on_key_up(int keycode, t_game *game)
@@ -469,35 +503,63 @@ int	on_destroy(t_game *game)
 	return (0);
 }
 
+int	init_game(t_game **game)
+{
+	*game = malloc (sizeof (t_game));
+	if (!*game)
+		return (-1);
+	(*game) -> mlx = NULL;
+	(*game) -> mlx_win = NULL;
+	(*game) -> win_width = 0;
+	(*game) -> win_height = 0;
+	(*game) -> screen_width = 0;
+	(*game) -> screen_height = 0;
+	return (0);
+}
 int	main(int argc, char **argv)
 {
 	t_game	*game;
 
 	if (argc < 2)
 		return (1);
-	if (!check_extension(argv[1]))
-		return (1);
-	game = malloc (sizeof (t_game));
-	if (!game)
-		return (1);
+	if (check_extension(argv[1])== -1)
+	{
+		ft_putendl_fd("ERROR EXTENSION", 2);
+		exit(1);
+	}
+	if (init_game(&game) == -1)
+	{
+		ft_putendl_fd("ERROR GAME INITIALIZATION", 2);
+		exit (1);
+	}
 	game -> mlx = mlx_init();
 	if (!game -> mlx)
-		return (1);
-	game -> win_width = WINDOW_WIDTH;
-	game -> win_height = WINDOW_HEIGHT;
+	{
+		free_game(game);
+		ft_putendl_fd("ERROR SERVER INITIALIZATION", 2);
+		exit(1);
+	}
+	mlx_get_screen_size(game -> mlx, &(game -> screen_width), &(game -> screen_height));
+	// printf("SCREEN WIDTH = %d\nSCREEN HEIGHT = %d\n", game -> screen_width, game -> screen_height);
+	game -> win_width = game -> screen_width;
+	game -> win_height = game -> screen_height;
+	if (verify_map(&game, argv[1]) == -1)
+	{
+		free_game(game);
+		exit(1);
+	}
 	game -> mlx_win = mlx_new_window(game -> mlx, game -> win_width, game -> win_height, "test window");
 	if (!game -> mlx_win)
 	{
+		ft_putendl_fd("ERROR WINDOW INITIALIZATION", 2);
 		free_game(game);
-		return (1);
+		exit(1);
 	}
-	if (!verify_map(&game, argv[1]))
+	if (draw_walls(&game) == -1)
 	{
-		printf("ERROR VERIFY MAP\n");
 		free_game(game);
-		return (1);
+		exit(1);
 	}
-	draw_walls(&game);
 	mlx_hook(game -> mlx_win, 2, 1L<<0, on_key_down, game);
 	mlx_hook(game -> mlx_win, 3, 1L<<1, on_key_up, game);
 	mlx_hook(game -> mlx_win, 4, 1L<<2, on_click_down, game);
