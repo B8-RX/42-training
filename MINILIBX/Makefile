@@ -12,14 +12,14 @@
 
 
 ifeq ($(shell uname), Linux)
-	INCLUDES = -I/usr/include -I../../mlx -Iincludes/libft 
-	MLX_FLAGS = -L../../mlx -lmlx -L/usr/lib/X11 -lXext -lX11
+	INCLUDES = -I/usr/include -I./mlx -Iincludes/libft 
+	MLX_FLAGS = -L./mlx -lmlx -L/usr/lib/X11 -lXext -lX11
 else
-	INCLUDES = -I/opt/X11/include -I../../mlx -Iincludes/libft
-	MLX_FLAGS = -L../../mlx -lmlx -L/usr/X11/lib -lXext -lX11 -framework OpenGL -framework AppKit
+	INCLUDES = -I/opt/X11/include -I./mlx -Iincludes/libft
+	MLX_FLAGS = -L./mlx -lmlx -L/usr/X11/lib -lXext -lX11 -framework OpenGL -framework AppKit
 endif
  
-MLX_DIR = ../../mlx
+MLX_DIR = ./mlx
 MLX_LIB = $(MLX_DIR)/libmlx_$(UNAME).a
 
 HEADER = ./so_long.h
