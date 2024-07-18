@@ -19,8 +19,6 @@ int	init_game(t_game **game)
 		return (-1);
 	(*game) -> mlx = NULL;
 	(*game) -> mlx_win = NULL;
-	(*game) -> win_width = 0;
-	(*game) -> win_height = 0;
 	(*game) -> screen_width = 0;
 	(*game) -> screen_height = 0;
 	return (0);
@@ -38,8 +36,8 @@ int	init_map(t_game	**game, char *map_path)
 	if (!map_data-> matrix)
 		return (free(map_data), 0);
 	map_data-> total_rows = get_total_rows(map_data);
-	map_data-> line_length = ft_strlen(map_data-> matrix[0]);
-	map_data-> total_cells = (map_data-> total_rows) * (map_data-> line_length);
+	map_data-> total_cols = ft_strlen(map_data-> matrix[0]);
+	map_data-> total_cells = (map_data-> total_rows) * (map_data-> total_cols);
 	map_data-> player = 0;
 	map_data-> exit = 0;
 	map_data-> empty = 0;

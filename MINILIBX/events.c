@@ -12,6 +12,15 @@
 
 #include "./so_long.h"
 
+
+int	key_events(int keycode, t_game *game)
+{
+	printf("KEY PRESS: CODE: %d\n", keycode);
+	if (keycode == 65307)
+		free_game(game);
+	return (0);
+}
+
 int	on_key_up(int keycode, t_game *game)
 {
 	printf("key released. KEYCODE: %d\n", keycode);

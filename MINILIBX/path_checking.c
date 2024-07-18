@@ -17,7 +17,7 @@ bool	is_valid_player_path(t_map **map_data)
 	int		row;
 	int		col;
 	char	**matrix;
-	size_t	line_length;
+	size_t	total_cols;
 	size_t	total_rows;
 	size_t	total_items;
 
@@ -26,7 +26,7 @@ bool	is_valid_player_path(t_map **map_data)
 	col	= 1;
 	if (!get_position(map_data, 'P'))
 		return (false);
-	line_length = (*map_data) -> line_length;
+	total_cols = (*map_data) -> total_cols;
 	total_rows = (*map_data) -> total_rows;
 	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
 	if (!can_access_items(*map_data, total_items, 'C'))
@@ -43,7 +43,7 @@ int	get_position(t_map **map_data, char target)
 	row = 1;
 	while (((*map_data) -> matrix)[row])
 	{
-		while (col < (*map_data) -> line_length)
+		while (col < (*map_data) -> total_cols)
 		{
 			if (((*map_data) -> matrix)[row][col] == target)
 			{
@@ -100,7 +100,7 @@ bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, cha
 	pos_x = (map_data -> player_pos).x;
 	matrix = map_data -> matrix;
 	border_bottom = map_data -> total_rows;
-	border_right = map_data -> line_length;
+	border_right = map_data -> total_cols;
 	update_position(&pos_x, &pos_y, direction);
 	if (pos_y < border_bottom && pos_y > 0 && pos_x < border_right && pos_x > 0 && is_target_or_path(map_data, pos_x, pos_y, target) && !is_visited_cell(queue, pos_x, pos_y))
 	{

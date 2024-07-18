@@ -56,7 +56,7 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 
 	matrix = map_data -> matrix;
 	curr_item = matrix[pos_y][pos_x];
-	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> line_length) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
+	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> total_cols) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
 		return (true);
 	return (false);
 }

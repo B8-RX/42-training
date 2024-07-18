@@ -12,26 +12,28 @@
 
 #include "./so_long.h"
 
-void	free_game(t_game *game)
+void	free_map(t_map *map_data)
 {
 	int	i;
 
 	i = 0;
-	if (!game)
-		return ;
-	if (game -> mlx)
-		free(game -> mlx);
-	if (game -> mlx_win)
-		free(game -> mlx_win);
-	if (game -> map_data)
+	if (map_data)
 	{
-		if (game -> map_data -> matrix)
+		if (map_data -> matrix)
 		{
-			while(game -> map_data -> matrix[i])
-				free(game -> map_data -> matrix[i++]);
-			free(game -> map_data -> matrix);
+			while(map_data -> matrix[i])
+				free(map_data -> matrix[i++]);
+			free(map_data -> matrix);
 		}
-		free(game -> map_data);	
+		free(map_data);	
 	}
-	free(game);
+}
+
+void	free_game(t_game *game)
+{
+	mlx_destroy_window(game -> mlx, game -> mlx_win);
+	mlx_destroy_image(game, game -> img_data.img);
+	mlx_destroy_display(game -> mlx);
+	free_map(game -> map_data);
+	free(game -> mlx);
 }

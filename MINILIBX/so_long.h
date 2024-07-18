@@ -33,8 +33,6 @@
 # define WATER_1_INDEX 2
 # define WATER_2 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v2.xpm"
 # define WATER_2_INDEX 3
-# define WINDOW_WIDTH 1920
-# define WINDOW_HEIGHT 1080
 
 typedef struct 
 {
@@ -45,10 +43,6 @@ typedef struct
 
 typedef struct s_data {
 	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_length;
-	int		endian;
 	int		img_width;
 	int		img_height;
 } t_data;
@@ -56,13 +50,13 @@ typedef struct s_data {
 typedef struct s_map {
 	char		**matrix;
 	size_t		player;
-	Pair		player_pos;
 	size_t		exit;
+	Pair		player_pos;
 	Pair		exit_pos;
 	int			empty;
 	int			wall;
 	size_t		total_rows;
-	size_t		line_length;
+	size_t		total_cols;
 	size_t		total_cells;
 	int			collectibles;
 	size_t		reached_items;
@@ -71,8 +65,6 @@ typedef struct s_map {
 typedef struct s_game {
 	void	*mlx;
 	void	*mlx_win;
-	int		win_width;
-	int		win_height;
 	t_map	*map_data;
 	t_data	img_data;
 	int		screen_width;
@@ -105,10 +97,12 @@ int		init_map(t_game **game, char *map_path);
 int		init_game(t_game **game);
 void	init_queue(t_map *map_data, Pair queue[]);
 
-int		draw_walls(t_game **game);
+int		display_game(t_game *game);
 
+void	free_map(t_map *map);
 void	free_game(t_game *game);
 
+int		key_events(int keycode, t_game *game);
 int		on_key_up(int keycode, t_game *game);
 int		on_key_down(int keycode, t_game *game);
 int		on_click_down(int button, int x, int y, t_game *game);

@@ -17,7 +17,7 @@ int verify_map(t_game **game, char *map_path)
 	t_map	*map_data;
 
 	if (!init_map(game, map_path))
-		return (0);
+		return (-1);
 	map_data = (*game) -> map_data;
 	if (check_map_size(*game) == -1)
 		return (-1);
@@ -54,13 +54,15 @@ int verify_map(t_game **game, char *map_path)
 
 int	check_map_size(t_game *game)
 {
-	if (game -> map_data -> line_length * 128 > (unsigned int)game -> win_width ||
-		game -> map_data -> total_rows * 128 > (unsigned int)game -> win_height)
+	if (game -> map_data -> total_cols * 128 > (unsigned int)game -> screen_width ||
+		game -> map_data -> total_rows * 128 > (unsigned int)game -> screen_height)
 	{
 		ft_putendl_fd("ERROR MAP TOO BIG", 2);
 		return (-1);
 	}
-	if (game -> map_data -> line_length  < 3 ||
+	printf("TOTAL SIZE IMG x_axe: %zu\n", game -> map_data-> total_cols * 128);
+	printf("TOTAL SIZE IMG y_axe: %zu\n", game -> map_data-> total_rows * 128);
+	if (game -> map_data -> total_cols  < 3 ||
 		game -> map_data -> total_rows  < 3)
 	{
 		ft_putendl_fd("ERROR MAP TOO SMALL", 2);
@@ -91,7 +93,7 @@ bool	is_valid_walls(t_map *map_data)
 {
 	size_t	col;
 	size_t	row;
-	size_t	line_length;
+	size_t	total_cols;
 	char	**matrix;
 
 	matrix = map_data -> matrix;
@@ -99,16 +101,16 @@ bool	is_valid_walls(t_map *map_data)
 	row = 0;
 	while (matrix[row])
 	{
-		line_length = ft_strlen(matrix[row]);
+		total_cols = ft_strlen(matrix[row]);
 		if (row == 0 || row == ((map_data -> total_rows) - 1))
-			while (col < line_length)
+			while (col < total_cols)
 			{
 				if (matrix[row][col] != '1')
 					return (false);
 				col++;
 			}
 		else
-			if (matrix[row][col] != '1' || matrix[row][line_length - 1] != '1')
+			if (matrix[row][col] != '1' || matrix[row][total_cols - 1] != '1')
 				return (false);
 		col = 0;
 		row++;
@@ -120,7 +122,7 @@ bool	is_valid_fill(t_map **map_data)
 {
 	size_t	col;
 	size_t	row;
-	size_t	line_length;
+	size_t	total_cols;
 	char	**matrix;
 
 	col = 1;
@@ -128,9 +130,9 @@ bool	is_valid_fill(t_map **map_data)
 	matrix = (*map_data) -> matrix;
 	while (matrix[row])
 	{
-		line_length = ft_strlen(matrix[row]);
+		total_cols = ft_strlen(matrix[row]);
 		if (row > 0 && row < ((*map_data) -> total_rows - 1))
-			while (col < line_length - 1)
+			while (col < total_cols - 1)
 			{
 				if (!ft_strchr("0PCE1", matrix[row][col]))
 					return (false);
