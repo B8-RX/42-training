@@ -40,6 +40,7 @@ int	main(int argc, char **argv)
 	if (verify_map(&game, argv[1]) == -1)
 	{
 		mlx_destroy_display(game -> mlx);
+		free(game -> mlx);
 		free_map(game -> map_data);
 		free(game);
 		exit(1);
@@ -49,18 +50,16 @@ int	main(int argc, char **argv)
 	{
 		ft_putendl_fd("ERROR WINDOW INITIALIZATION", 2);
 		mlx_destroy_display(game -> mlx);
+		free(game -> mlx);
 		free_map(game -> map_data);
 		free(game);
 		exit(1);
 	}
-	mlx_loop_hook(game -> mlx, display_game, game);
-	mlx_key_hook(game -> mlx_win, key_events, game);
-	// mlx_hook(game -> mlx_win, 2, 1L<<0, on_key_down, game);
-	// mlx_hook(game -> mlx_win, 3, 1L<<1, on_key_up, game);
-	// mlx_hook(game -> mlx_win, 4, 1L<<2, on_click_down, game);
-	// mlx_hook(game -> mlx_win, 5, 1L<<3, on_click_up, game);
-	mlx_hook(game -> mlx_win, 6, 1L<<6, on_mouse_move, game);
-	mlx_hook(game -> mlx_win, 17, 0, on_destroy, game);
+	init_images(game);
+	mlx_loop_hook(game -> mlx, &display_game, game);
+	mlx_key_hook(game -> mlx_win, &key_events, game);
+	mlx_hook(game -> mlx_win, 17, 0, &on_destroy, game);
 	mlx_loop(game -> mlx);
+	on_destroy(game);
 	return (0);
 }

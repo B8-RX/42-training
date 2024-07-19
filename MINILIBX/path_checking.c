@@ -14,20 +14,10 @@
 
 bool	is_valid_player_path(t_map **map_data)
 {
-	int		row;
-	int		col;
-	char	**matrix;
-	size_t	total_cols;
-	size_t	total_rows;
 	size_t	total_items;
 
-	matrix = (*map_data) -> matrix;
-	row = 1;
-	col	= 1;
 	if (!get_position(map_data, 'P'))
 		return (false);
-	total_cols = (*map_data) -> total_cols;
-	total_rows = (*map_data) -> total_rows;
 	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
 	if (!can_access_items(*map_data, total_items, 'C'))
 		return (false);
@@ -74,13 +64,13 @@ bool	can_access_items(t_map *map_data, size_t total_items, char target)
 	while (++front < tail && map_data -> reached_items < total_items)
 	{
 		map_data -> player_pos = (Pair) {queue[front].x, queue[front].y, -1};
-		if (check_move(map_data, queue, tail, "down", target))
+		if (check_path(map_data, queue, tail, "down", target))
 			tail++;
-		if (check_move(map_data, queue, tail, "up", target))
+		if (check_path(map_data, queue, tail, "up", target))
 			tail++;
-		if (check_move(map_data, queue, tail, "right", target))
+		if (check_path(map_data, queue, tail, "right", target))
 			tail++;
-		if (check_move(map_data, queue, tail, "left", target))
+		if (check_path(map_data, queue, tail, "left", target))
 			tail++;
 	}
 	if (map_data -> reached_items < total_items)
@@ -88,7 +78,7 @@ bool	can_access_items(t_map *map_data, size_t total_items, char target)
 	return (true);
 }
 
-bool	check_move(t_map *map_data, Pair queue[], size_t tail, char *direction, char target)
+bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target)
 {
 	size_t	pos_y;	
 	size_t	pos_x;

@@ -31,9 +31,7 @@ void	free_map(t_map *map_data)
 
 void	free_game(t_game *game)
 {
-	mlx_destroy_window(game -> mlx, game -> mlx_win);
-	mlx_destroy_image(game, game -> img_data.img);
-	mlx_destroy_display(game -> mlx);
 	free_map(game -> map_data);
 	free(game -> mlx);
+	free(game);
 }

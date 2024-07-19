@@ -17,7 +17,7 @@ int	key_events(int keycode, t_game *game)
 {
 	printf("KEY PRESS: CODE: %d\n", keycode);
 	if (keycode == 65307)
-		free_game(game);
+		on_destroy(game);
 	return (0);
 }
 
@@ -64,6 +64,11 @@ int	on_mouse_move(int x, int y, t_game *game)
 
 int	on_destroy(t_game *game)
 {
+	mlx_destroy_image(game, game -> img_data.wall);
 	mlx_destroy_window(game -> mlx, game -> mlx_win);
+	mlx_destroy_display(game -> mlx);
+	free_map(game -> map_data);
+	free(game -> mlx);
+	free(game);
 	return (0);
 }

@@ -43,7 +43,6 @@ all: $(NAME)
  
 $(NAME): $(OBJS) $(LIBFT_LIB) $(MLX_LIB)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX_FLAGS) $(LIBFT_LIB)
-
 ${OBJS_PATH}%.o : %.c
 	mkdir -p ${OBJS_PATH}
 	$(CC) $(CFLAGS) -c -o $@ $< $(INCLUDES) -I$(HEADER)

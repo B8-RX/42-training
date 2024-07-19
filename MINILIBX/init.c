@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./so_long.h"
+#include <stdio.h>
 
 int	init_game(t_game **game)
 {
@@ -39,12 +40,26 @@ int	init_map(t_game	**game, char *map_path)
 	map_data-> total_cols = ft_strlen(map_data-> matrix[0]);
 	map_data-> total_cells = (map_data-> total_rows) * (map_data-> total_cols);
 	map_data-> player = 0;
+	map_data-> collectibles = 0;
+	map_data-> collected = 0; 
 	map_data-> exit = 0;
 	map_data-> empty = 0;
 	map_data-> wall = 0;
-	map_data-> collectibles = 0;
+	map_data-> can_exit = 0;
 	map_data-> reached_items = 0;
 	return (1);
+}
+
+void	init_images(t_game *game)
+{
+	game -> img_data.wall = mlx_xpm_file_to_image(game -> mlx, WALL_X, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	if (game -> img_data.wall == NULL || game -> img_data.img_width != IMG_SIZE || game -> img_data.img_height != IMG_SIZE)
+	{
+		on_destroy(game);
+		ft_putendl_fd("IMAGE CORRUPTED OR NOT CREATED SUCCESSFULLY\n", 2);
+		exit (1);
+	}
+	printf("img ptr: %p\n", game-> img_data.wall);
 }
 
 void	init_queue(t_map *map_data, Pair queue[])
