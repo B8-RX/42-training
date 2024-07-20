@@ -15,28 +15,44 @@
 
 int	display_game(t_game *game)
 {
-	t_img	img_data;
 	char	**matrix;
 	size_t		x;
 	size_t		y;
 
-	x = 0;
-	y = 0;
-	if (!game -> mlx_win)
+	if (!game || !game -> mlx_win)
 		return (1);
 	matrix = game -> map_data -> matrix;
-	img_data = game -> img_data;
-	while(matrix[y])
+	y = 0;
+	while(y < game -> map_data -> total_rows)
 	{
-		while (matrix[y][x])
+		x = 0;
+		while (x < game -> map_data -> total_cols)
 		{
 			if (matrix[y][x] == '1')
 			{
-				mlx_put_image_to_window(game -> mlx, game -> mlx_win, img_data.wall, (x * img_data.img_width), (y * img_data.img_height));
+				if (game -> img_data.wall_x && (y == 0 || y == game -> map_data -> total_rows))
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.wall_x, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+				else if (game -> img_data.wall_y)	
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.wall_y, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+			}
+			else if (matrix[y][x] == '0')
+			{
+				if (game -> img_data.sea)
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.sea, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+			}
+			else if (matrix[y][x] == 'P')
+			{
+				if (game -> img_data.direction == 'u' && game -> img_data.boat_up)
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_up, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+				else if (game -> img_data.direction == 'd' && game -> img_data.boat_down)
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_down, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+				else if (game -> img_data.direction == 'l' && game -> img_data.boat_left)
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_left, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+				else if (game -> img_data.direction == 'r' && game -> img_data.boat_right)
+					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_right, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			}
 			x++;
 		}
-		x = 0;
 		y++;
 	}
 	return (0);

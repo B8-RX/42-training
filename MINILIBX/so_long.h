@@ -27,13 +27,13 @@
 # define KEY_D 100
 # define EXT "ber"
 # define WALL_X "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-horizontal-128x128px.xpm"
-# define WALL_X_INDEX 0
 # define WALL_Y "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-vertical-128x128px.xpm"
-# define WALL_Y_INDEX 1
 # define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v1.xpm"
-# define WATER_1_INDEX 2
 # define WATER_2 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v2.xpm"
-# define WATER_2_INDEX 3
+# define BOAT_UP "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_up.xpm"
+# define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_down.xpm"
+# define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_left.xpm"
+# define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_right.xpm"
 
 typedef struct 
 {
@@ -46,9 +46,14 @@ typedef struct s_img {
 	void	*img;
 	int		img_width;
 	int		img_height;
-	void	*wall;
+	void	*wall_x;
+	void	*wall_y;
 	void	*sea;
-	void	*fisher;
+	void	*boat_up;
+	void	*boat_down;
+	void	*boat_left;
+	void	*boat_right;
+	char	direction;
 	void	*fish;
 	void	*exit;
 } t_img;

@@ -16,7 +16,7 @@ int verify_map(t_game **game, char *map_path)
 {
 	t_map	*map_data;
 
-	if (!init_map(game, map_path))
+	if (init_map(game, map_path) == -1)
 		return (-1);
 	map_data = (*game) -> map_data;
 	if (check_map_size(*game) == -1)

@@ -31,7 +31,8 @@ void	free_map(t_map *map_data)
 
 void	free_game(t_game *game)
 {
-	free_map(game -> map_data);
+	if (game -> map_data)
+		free_map(game -> map_data);
 	free(game -> mlx);
 	free(game);
 }

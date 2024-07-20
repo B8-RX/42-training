@@ -18,8 +18,25 @@ int	init_game(t_game **game)
 	*game = malloc (sizeof (t_game));
 	if (!*game)
 		return (-1);
+	ft_memset(*game, 0, sizeof(t_game));
 	(*game) -> mlx = NULL;
 	(*game) -> mlx_win = NULL;
+	(*game) -> screen_width = 0;
+	(*game) -> screen_height = 0;
+	(*game) -> map_data = NULL;
+	(*game) -> img_data.img = NULL;
+	(*game) -> img_data.wall_x = NULL;
+	(*game) -> img_data.wall_y = NULL;
+	(*game) -> img_data.sea = NULL;
+	(*game) -> img_data.boat_up = NULL;
+	(*game) -> img_data.boat_down = NULL;
+	(*game) -> img_data.boat_left = NULL;
+	(*game) -> img_data.boat_right = NULL;
+	(*game) -> img_data.direction = 'd';
+	(*game) -> img_data.fish = NULL;
+	(*game) -> img_data.exit = NULL;
+	(*game) -> img_data.img_width = 0;
+	(*game) -> img_data.img_height = 0;
 	(*game) -> screen_width = 0;
 	(*game) -> screen_height = 0;
 	return (0);
@@ -31,7 +48,8 @@ int	init_map(t_game	**game, char *map_path)
 
 	(*game) -> map_data = malloc(sizeof(t_map));
 	if (!(*game) -> map_data)
-		return (0);
+		return (-1);
+	ft_memset((*game) -> map_data, 0, sizeof(t_map));
 	map_data = (*game) -> map_data;
 	map_data-> matrix = ft_split(stringify(map_path), '\n');
 	if (!map_data-> matrix)
@@ -39,27 +57,31 @@ int	init_map(t_game	**game, char *map_path)
 	map_data-> total_rows = get_total_rows(map_data);
 	map_data-> total_cols = ft_strlen(map_data-> matrix[0]);
 	map_data-> total_cells = (map_data-> total_rows) * (map_data-> total_cols);
-	map_data-> player = 0;
-	map_data-> collectibles = 0;
-	map_data-> collected = 0; 
-	map_data-> exit = 0;
-	map_data-> empty = 0;
-	map_data-> wall = 0;
-	map_data-> can_exit = 0;
-	map_data-> reached_items = 0;
-	return (1);
+	return (0);
+}
+
+int	check_img(void *image, int width, int height)
+{
+	if (image == NULL || width != IMG_SIZE || height != IMG_SIZE)
+	{
+		ft_putendl_fd("IMAGE CORRUPTED OR NOT CREATED SUCCESSFULLY\n", 2);
+		return (-1);
+	}
+	return (0);
 }
 
 void	init_images(t_game *game)
 {
-	game -> img_data.wall = mlx_xpm_file_to_image(game -> mlx, WALL_X, &(game -> img_data.img_width), &(game -> img_data.img_height));
-	if (game -> img_data.wall == NULL || game -> img_data.img_width != IMG_SIZE || game -> img_data.img_height != IMG_SIZE)
-	{
-		on_destroy(game);
-		ft_putendl_fd("IMAGE CORRUPTED OR NOT CREATED SUCCESSFULLY\n", 2);
-		exit (1);
-	}
-	printf("img ptr: %p\n", game-> img_data.wall);
+
+	// maybe need to check the extentions of the images ??
+	//
+	game -> img_data.wall_x = mlx_xpm_file_to_image(game -> mlx, WALL_X, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.wall_y = mlx_xpm_file_to_image(game -> mlx, WALL_Y, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.sea = mlx_xpm_file_to_image(game -> mlx, WATER_1, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.boat_up = mlx_xpm_file_to_image(game -> mlx, BOAT_UP, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.boat_down = mlx_xpm_file_to_image(game -> mlx, BOAT_DOWN, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.boat_left = mlx_xpm_file_to_image(game -> mlx, BOAT_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.boat_right = mlx_xpm_file_to_image(game -> mlx, BOAT_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 }
 
 void	init_queue(t_map *map_data, Pair queue[])
