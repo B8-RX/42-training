@@ -24,22 +24,36 @@ int	init_game(t_game **game)
 	(*game) -> screen_width = 0;
 	(*game) -> screen_height = 0;
 	(*game) -> map_data = NULL;
-	(*game) -> img_data.img = NULL;
-	(*game) -> img_data.wall_x = NULL;
-	(*game) -> img_data.wall_y = NULL;
+	(*game) -> img_data.wall = NULL;
 	(*game) -> img_data.sea = NULL;
 	(*game) -> img_data.boat_up = NULL;
 	(*game) -> img_data.boat_down = NULL;
 	(*game) -> img_data.boat_left = NULL;
 	(*game) -> img_data.boat_right = NULL;
 	(*game) -> img_data.direction = 'd';
-	(*game) -> img_data.fish = NULL;
 	(*game) -> img_data.exit = NULL;
 	(*game) -> img_data.img_width = 0;
 	(*game) -> img_data.img_height = 0;
+	init_fish_collection(game);
 	(*game) -> screen_width = 0;
 	(*game) -> screen_height = 0;
 	return (0);
+}
+
+void	init_fish_collection(t_game **game)
+{
+	int		i;
+
+	(*game ) -> img_data.fish_collection[0] = "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Squid.xpm";
+	(*game ) -> img_data.fish_collection[1] = "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Salmon.xpm";
+	(*game ) -> img_data.fish_collection[2] = "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Solarfish.xpm";
+	(*game ) -> img_data.fish_collection[3] = "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Clownfish.xpm";
+	i = 0;
+	while (i < 4)
+	{
+		(*game ) -> img_data.fish[i] = NULL;
+		i++;
+	}
 }
 
 int	init_map(t_game	**game, char *map_path)
@@ -72,16 +86,23 @@ int	check_img(void *image, int width, int height)
 
 void	init_images(t_game *game)
 {
+	int	i;
 
 	// maybe need to check the extentions of the images ??
-	//
-	game -> img_data.wall_x = mlx_xpm_file_to_image(game -> mlx, WALL_X, &(game -> img_data.img_width), &(game -> img_data.img_height));
-	game -> img_data.wall_y = mlx_xpm_file_to_image(game -> mlx, WALL_Y, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	
+	game -> img_data.wall = mlx_xpm_file_to_image(game -> mlx, WALL, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.sea = mlx_xpm_file_to_image(game -> mlx, WATER_1, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_up = mlx_xpm_file_to_image(game -> mlx, BOAT_UP, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_down = mlx_xpm_file_to_image(game -> mlx, BOAT_DOWN, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_left = mlx_xpm_file_to_image(game -> mlx, BOAT_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_right = mlx_xpm_file_to_image(game -> mlx, BOAT_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock = mlx_xpm_file_to_image(game -> mlx, ROCK, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	i = 0;
+	while (i < 4)	
+	{
+		game -> img_data.fish[i] = mlx_xpm_file_to_image(game -> mlx, game -> img_data.fish_collection[i], &(game -> img_data.img_width), &(game -> img_data.img_height));
+		i++;
+	}
 }
 
 void	init_queue(t_map *map_data, Pair queue[])

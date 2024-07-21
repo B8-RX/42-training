@@ -64,10 +64,10 @@ int	on_mouse_move(int x, int y, t_game *game)
 
 int	on_destroy(t_game *game)
 {
-	if (game -> img_data.wall_x)
-		mlx_destroy_image(game, game -> img_data.wall_x);
-	if (game -> img_data.wall_y)
-		mlx_destroy_image(game, game -> img_data.wall_y);
+	int	i;
+
+	if (game -> img_data.wall)
+		mlx_destroy_image(game, game -> img_data.wall);
 	if (game->img_data.sea)
 		mlx_destroy_image(game->mlx, game->img_data.sea);
 	if (game->img_data.boat_up)
@@ -78,8 +78,12 @@ int	on_destroy(t_game *game)
 		mlx_destroy_image(game->mlx, game->img_data.boat_left);
 	if (game->img_data.boat_right)
 		mlx_destroy_image(game->mlx, game->img_data.boat_right);
-	if (game->img_data.fish)
-		mlx_destroy_image(game->mlx, game->img_data.fish);
+	if (*(game->img_data.fish))
+	{
+		i = 0;
+		while (game -> img_data.fish[i])
+			mlx_destroy_image(game->mlx, game->img_data.fish[i++]);
+	}
 	if (game->img_data.exit)
 		mlx_destroy_image(game->mlx, game->img_data.exit);
 	if (game -> mlx_win)

@@ -26,14 +26,13 @@
 # define KEY_S 115
 # define KEY_D 100
 # define EXT "ber"
-# define WALL_X "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-horizontal-128x128px.xpm"
-# define WALL_Y "./ASSETS/fishing_game/tiles/sand/xpm/vertopal.com_Sand tiles-vertical-128x128px.xpm"
-# define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v1.xpm"
-# define WATER_2 "./ASSETS/fishing_game/tiles/sea/xpm/vertopal.com_water-v2.xpm"
-# define BOAT_UP "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_up.xpm"
-# define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_down.xpm"
-# define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_left.xpm"
-# define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat/xpm/vertopal.com_boat_right.xpm"
+# define WALL "./ASSETS/fishing_game/tiles/sand/xpm/Sand tiles-base 128x128px.xpm"
+# define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/water-v1.xpm"
+# define ROCK "./ASSETS/fishing_game/tiles/rock/xpm/rocks.xpm"
+# define BOAT_UP "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_up.xpm"
+# define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down.xpm"
+# define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left.xpm"
+# define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
 
 typedef struct 
 {
@@ -43,18 +42,18 @@ typedef struct
 } Pair;
 
 typedef struct s_img {
-	void	*img;
 	int		img_width;
 	int		img_height;
-	void	*wall_x;
-	void	*wall_y;
+	void	*wall;
 	void	*sea;
+	void	*rock;
 	void	*boat_up;
 	void	*boat_down;
 	void	*boat_left;
 	void	*boat_right;
 	char	direction;
-	void	*fish;
+	char	*fish_collection[4];
+	void	*fish[4];
 	void	*exit;
 } t_img;
 
@@ -110,6 +109,7 @@ void	init_queue(t_map *map_data, Pair queue[]);
 int		init_map(t_game **game, char *map_path);
 void	init_images(t_game *game);
 int		init_game(t_game **game);
+void	init_fish_collection(t_game **game);
 
 int		display_game(t_game *game);
 
