@@ -16,11 +16,18 @@ bool	is_valid_player_path(t_map **map_data)
 {
 	size_t	total_items;
 
-	if (!get_position(map_data, 'P'))
+	if (get_position(map_data, 'P') == ERROR)
+	{
+		ft_putendl_fd("ERROR CAN GET PLAYER POSITION", 2);
 		return (false);
+	}
 	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
-	if (!can_access_items(*map_data, total_items, 'C'))
+	if (!can_access_items(*map_data, (*map_data) -> total_cells, total_items, 'C'))
+	{
+		ft_putendl_fd("ERROR PLAYER HAVE NOT ACCESS TO EVERY ITEMS", 2);
 		return (false);
+	}
+	printf("VALID PLAYER PATH\n");
 	return (true);
 }
 
@@ -42,19 +49,19 @@ int	get_position(t_map **map_data, char target)
 				else if (target == 'E')
 					(*map_data) -> exit_pos = (Pair) {col, row, 1};
 				if (target == 'P' || target == 'E')
-					return (1);
+					return (SUCCESS);
 			}
 			col++;
 		}
 		col = 1;
 		row++;
 	}
-	return (0);
+	return (ERROR);
 }
 
-bool	can_access_items(t_map *map_data, size_t total_items, char target)
+bool	can_access_items(t_map *map_data,size_t total_cells, size_t total_items, char target)
 {
-	Pair	queue[map_data -> total_cells];
+	Pair	queue[total_cells];
 	size_t	front;
 	size_t	tail;
 

@@ -19,6 +19,8 @@
 #include <mlx.h>
 #include "libft.h"
 
+# define SUCCESS 0
+# define ERROR 1
 # define IMG_SIZE 128
 # define ESC 65307
 # define KEY_W 119 
@@ -59,6 +61,7 @@ typedef struct s_img {
 
 typedef struct s_map {
 	char	**matrix;
+	char	*str_map;
 	size_t	player;
 	size_t	collectibles;
 	size_t	exit;
@@ -91,7 +94,7 @@ bool	is_valid_fill(t_map **map_data);
 
 bool	is_valid_player_path(t_map **map_data);
 int		get_position(t_map **map_data, char target);
-bool	can_access_items(t_map *map_data, size_t total_items, char target);
+bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, char target);
 bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 
@@ -103,7 +106,7 @@ int		check_extension(char *file_name);
 
 
 int		get_total_rows(t_map *map_data);
-char	*stringify(char *map_path);
+char	*stringify(t_game *game, char *map_path);
 
 void	init_queue(t_map *map_data, Pair queue[]);
 int		init_map(t_game **game, char *map_path);
@@ -115,6 +118,7 @@ int		display_game(t_game *game);
 
 void	free_map(t_map *map);
 void	free_game(t_game *game);
+void	free_double_array(char **array);
 
 int		key_events(int keycode, t_game *game);
 int		on_key_up(int keycode, t_game *game);

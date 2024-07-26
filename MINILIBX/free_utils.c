@@ -25,14 +25,34 @@ void	free_map(t_map *map_data)
 				free(map_data -> matrix[i++]);
 			free(map_data -> matrix);
 		}
+		if (map_data -> str_map)
+			free(map_data -> str_map);
 		free(map_data);	
 	}
 }
 
 void	free_game(t_game *game)
 {
-	if (game -> map_data)
-		free_map(game -> map_data);
-	free(game -> mlx);
-	free(game);
+	if (game)
+	{
+		if (game -> map_data)
+			free_map(game -> map_data);
+		free(game);
+	}
+}
+
+void	free_double_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	if (array && *array)
+	{
+		while (array[i])
+		{
+			free(array[i]);
+			i++;
+		}
+		free(array);
+	}
 }

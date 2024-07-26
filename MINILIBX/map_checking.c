@@ -16,40 +16,16 @@ int verify_map(t_game **game, char *map_path)
 {
 	t_map	*map_data;
 
-	if (init_map(game, map_path) == -1)
-		return (-1);
+	if (init_map(game, map_path) == ERROR)
+		return (ERROR);
 	map_data = (*game) -> map_data;
-	if (check_map_size(*game) == -1)
-		return (-1);
-	if (!is_map_square(map_data))
-	{
-		ft_putendl_fd("ERROR MAP NOT SQUARE", 2);
-		return (-1);
-	}
-	else
-		printf("VALID SQUARE\n");
-	if (!is_valid_walls(map_data))
-	{
-		ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
-		return (-1);
-	}
-	else
-		printf("VALID WALLS\n");
-	if (!is_valid_fill(&map_data))
-	{
-		ft_putendl_fd("ERROR MAP HAVE NOT VALID FIELD (PE01C)", 2);
-		return (-1);
-	}
-	else
-		printf("VALID INFILL\n");
-	if (!is_valid_player_path(&map_data))
-	{
-		ft_putendl_fd("ERROR PLAYER HAVE NOT ACCESS TO EVERY ITEMS", 2);
-		return (-1);
-	}
-	else
-		printf("VALID PLAYER PATH\n");
-	return (1);
+	if (check_map_size(*game) == ERROR
+		|| is_map_square(map_data) == false
+		|| is_valid_walls(map_data) == false
+		|| is_valid_fill(&map_data) == false
+		|| is_valid_player_path(&map_data) == false)
+		return (ERROR);
+	return (SUCCESS);
 }
 
 int	check_map_size(t_game *game)
@@ -58,7 +34,7 @@ int	check_map_size(t_game *game)
 		game -> map_data -> total_rows * 128 > (unsigned int)game -> screen_height)
 	{
 		ft_putendl_fd("ERROR MAP TOO BIG", 2);
-		return (-1);
+		return (ERROR);
 	}
 	printf("TOTAL SIZE IMG x_axe: %zu\n", game -> map_data-> total_cols * 128);
 	printf("TOTAL SIZE IMG y_axe: %zu\n", game -> map_data-> total_rows * 128);
@@ -66,9 +42,9 @@ int	check_map_size(t_game *game)
 		game -> map_data -> total_rows  < 3)
 	{
 		ft_putendl_fd("ERROR MAP TOO SMALL", 2);
-		return (-1);
+		return (ERROR);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 bool	is_map_square(t_map *map_data)
@@ -83,9 +59,13 @@ bool	is_map_square(t_map *map_data)
 	while (matrix[i])
 	{
 		if (ft_strlen(matrix[i]) != first_row_len)
+		{
+			ft_putendl_fd("ERROR MAP NOT SQUARE", 2);
 			return (false);
+		}
 		i++;
 	}
+	printf("VALID SQUARE\n");
 	return (true);
 }
 
@@ -106,15 +86,22 @@ bool	is_valid_walls(t_map *map_data)
 			while (col < total_cols)
 			{
 				if (matrix[row][col] != '1')
+				{
+					ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
 					return (false);
+				}
 				col++;
 			}
 		else
 			if (matrix[row][col] != '1' || matrix[row][total_cols - 1] != '1')
-				return (false);
+			{
+					ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
+					return (false);
+			}
 		col = 0;
 		row++;
 	}
+	printf("VALID WALLS\n");
 	return (true);
 }
 
@@ -134,10 +121,11 @@ bool	is_valid_fill(t_map **map_data)
 		if (row > 0 && row < ((*map_data) -> total_rows - 1))
 			while (col < total_cols - 1)
 			{
-				if (!ft_strchr("0PCE1", matrix[row][col]))
+				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate_items(map_data, matrix[row][col]))
+				{
+					ft_putendl_fd("ERROR MAP HAVE NOT VALID FIELD (PE01C) or duplicate items", 2);
 					return (false);
-				if (is_duplicate_items(map_data, matrix[row][col]))
-					return (false);
+				}
 				col++;
 			}
 		col = 1;
@@ -145,5 +133,6 @@ bool	is_valid_fill(t_map **map_data)
 	}
 	if ((*map_data) -> collectibles == 0 || (*map_data) -> player != 1 || (*map_data) -> exit != 1)
 		return (false);
+	printf("VALID INFILL\n");
 	return (true);
 }

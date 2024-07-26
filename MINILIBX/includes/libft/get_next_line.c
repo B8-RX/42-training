@@ -33,6 +33,11 @@ char	*ft_read_file(int fd, char *stash)
 		}
 		buff[read_bytes] = '\0';
 		stash = ft_update_stash(stash, buff, 0);
+		if (!stash)
+		{
+			free(buff);
+			return (NULL);
+		}
 	}
 	free(buff);
 	return (stash);
@@ -43,7 +48,8 @@ char	*ft_update_stash(char *stash, char *buff, size_t size)
 	char	*new;
 
 	new = ft_strjoin(stash + size, buff);
-	free(stash);
+	if (stash)
+		free(stash);
 	stash = NULL;
 	return (new);
 }
@@ -58,6 +64,11 @@ char	*ft_get_line(char *stash)
 	else
 		len = ft_strlen(stash);
 	new = ft_substr(stash, 0, len);
+	if (!new)
+	{
+		free(stash);
+		return (NULL);
+	}
 	return (new);
 }
 
@@ -74,6 +85,11 @@ char	*get_next_line(int fd)
 	if (!stash)
 		return (NULL);
 	line = ft_get_line(stash);
+	if (!line)
+	{
+		free(stash);
+		return (NULL);
+	}
 	stash = ft_update_stash(stash, "", ft_strlen(line));
 	return (line);
 }

@@ -53,7 +53,9 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 {
 	char	**matrix;
 	char	curr_item;
-
+	
+	if (!map_data)
+		return (false);
 	matrix = map_data -> matrix;
 	curr_item = matrix[pos_y][pos_x];
 	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> total_cols) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
@@ -63,6 +65,8 @@ bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
 
 void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
 {
+	if (!pos_x || !pos_y || !direction)
+		return ;
 	if (ft_strncmp(direction, "down", ft_strlen(direction)) == 0)
 		(*pos_y)++;
 	else if (ft_strncmp(direction, "up", ft_strlen(direction)) == 0)
@@ -77,20 +81,28 @@ int	check_extension(char *file_name)
 {
 	int		i;
 	int		dot;
-	char	*ext;
-	
+	char	**ext;
+	int		valid_ext;
+
 	i = 0;
 	dot = 0;
+	valid_ext = 0;
 	while (file_name[i])
 	{
 		if (file_name[i] == '.' && file_name[i + 1] != '/')
 			dot++;
 		i++;
 	}
-	ext = ft_split(file_name, '.')[dot];
-	if (ft_strncmp(EXT, ext, ft_strlen(EXT)) == 0)
-		return (0);
-	else
-		printf("ERROR EXTENSION\n");
-	return (-1);
+	ext = ft_split(file_name, '.');
+	if (ext && ft_strncmp(EXT, ext[dot], ft_strlen(EXT)) == 0)
+	{
+		valid_ext = 1;
+		free_double_array(ext);
+	}
+	if (!valid_ext)
+	{
+		ft_putendl_fd("ERROR EXTENSION", 2);
+		return (ERROR);
+	}	
+	return (SUCCESS);
 }
