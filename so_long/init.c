@@ -65,35 +65,43 @@ int	init_map(t_game	**game, char *map_path)
 	return (SUCCESS);
 }
 
-int	check_img(void *image, int width, int height)
+int	check_img(char *img, char *extension)
 {
-	if (image == NULL || width != IMG_SIZE || height != IMG_SIZE)
+	if (ft_strncmp(img + (ft_strlen(img) - 3), extension, 3))
 	{
-		ft_putendl_fd("IMAGE CORRUPTED OR NOT CREATED SUCCESSFULLY\n", 2);
-		return (-1);
+		ft_putendl_fd("ERROR EXTENSION SUPPORT ONLY XPM \n", 2);
+		return (ERROR);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 void	init_images(t_game *game)
 {
 	int	i;
 
-	// maybe need to check the extentions of the images ??
-	
-	game -> img_data.wall = mlx_xpm_file_to_image(game -> mlx, WALL, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	// check_img("xpm");	
+	game -> img_data.rock_y_top = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_TOP, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_y_top_left = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_TOP_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_y_top_right = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_TOP_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_y_bottom = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_BOTTOM, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_y_bottom_left = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_BOTTOM_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_y_bottom_right = mlx_xpm_file_to_image(game -> mlx, ROCK_Y_BOTTOM_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_x_left = mlx_xpm_file_to_image(game -> mlx, ROCK_X_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_x_right = mlx_xpm_file_to_image(game -> mlx, ROCK_X_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.rock_obstacles = mlx_xpm_file_to_image(game -> mlx, ROCK_OBSTACLES, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.sea = mlx_xpm_file_to_image(game -> mlx, WATER_1, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_up = mlx_xpm_file_to_image(game -> mlx, BOAT_UP, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_down = mlx_xpm_file_to_image(game -> mlx, BOAT_DOWN, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_left = mlx_xpm_file_to_image(game -> mlx, BOAT_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_right = mlx_xpm_file_to_image(game -> mlx, BOAT_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
-	game -> img_data.rock = mlx_xpm_file_to_image(game -> mlx, ROCK, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	i = 0;
 	while (i < 4)	
 	{
 		game -> img_data.fish[i] = mlx_xpm_file_to_image(game -> mlx, game -> img_data.fish_collection[i], &(game -> img_data.img_width), &(game -> img_data.img_height));
 		i++;
 	}
+	game -> img_data.placeholder = mlx_xpm_file_to_image(game -> mlx, PLACEHOLDER, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.exit = mlx_xpm_file_to_image(game -> mlx, EXIT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 }
 
 void	init_queue(t_map *map_data, Pair queue[])

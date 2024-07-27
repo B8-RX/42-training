@@ -30,8 +30,8 @@ int verify_map(t_game **game, char *map_path)
 
 int	check_map_size(t_game *game)
 {
-	if (game -> map_data -> total_cols * 128 > (unsigned int)game -> screen_width ||
-		game -> map_data -> total_rows * 128 > (unsigned int)game -> screen_height)
+	if (game -> map_data -> total_cols * 128 >= (unsigned int)game -> screen_width - 128 ||
+		game -> map_data -> total_rows * 128 >= (unsigned int)game -> screen_height - 128)
 	{
 		ft_putendl_fd("ERROR MAP TOO BIG", 2);
 		return (ERROR);

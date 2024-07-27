@@ -28,13 +28,22 @@
 # define KEY_S 115
 # define KEY_D 100
 # define EXT "ber"
-# define WALL "./ASSETS/fishing_game/tiles/sand/xpm/Sand tiles-base 128x128px.xpm"
+# define ROCK_Y_TOP "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top.xpm"
+# define ROCK_Y_TOP_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_left.xpm"
+# define ROCK_Y_TOP_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_right.xpm"
+# define ROCK_Y_BOTTOM "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom.xpm"
+# define ROCK_Y_BOTTOM_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom_left.xpm"
+# define ROCK_Y_BOTTOM_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom_right.xpm"
+# define ROCK_X_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_x_left.xpm"
+# define ROCK_X_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_x_right.xpm"
+# define ROCK_OBSTACLES "./ASSETS/fishing_game/tiles/rock/xpm/rock_obstacles.xpm"
 # define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/water-v1.xpm"
-# define ROCK "./ASSETS/fishing_game/tiles/rock/xpm/rocks.xpm"
 # define BOAT_UP "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_up.xpm"
 # define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down.xpm"
 # define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left.xpm"
 # define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
+# define PLACEHOLDER "./ASSETS/fishing_game/placeholder.xpm"
+# define EXIT "./ASSETS/fishing_game/tiles/exit/exit.xpm"
 
 typedef struct 
 {
@@ -46,7 +55,15 @@ typedef struct
 typedef struct s_img {
 	int		img_width;
 	int		img_height;
-	void	*wall;
+	void	*rock_y_top;
+	void	*rock_y_top_left;
+	void	*rock_y_top_right;
+	void	*rock_y_bottom;
+	void	*rock_y_bottom_left;
+	void	*rock_y_bottom_right;
+	void	*rock_x_left;
+	void	*rock_x_right;
+	void	*rock_obstacles;
 	void	*sea;
 	void	*rock;
 	void	*boat_up;
@@ -57,6 +74,7 @@ typedef struct s_img {
 	char	*fish_collection[4];
 	void	*fish[4];
 	void	*exit;
+	void	*placeholder;
 } t_img;
 
 typedef struct s_map {

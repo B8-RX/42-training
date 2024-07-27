@@ -66,8 +66,24 @@ int	on_destroy(t_game *game)
 {
 	int	i;
 
-	if (game -> img_data.wall)
-		mlx_destroy_image(game, game -> img_data.wall);
+	if (game -> img_data.rock_y_top)
+		mlx_destroy_image(game, game -> img_data.rock_y_top);
+	if (game -> img_data.rock_y_top_left)
+		mlx_destroy_image(game, game -> img_data.rock_y_top_left);
+	if (game -> img_data.rock_y_top_right)
+		mlx_destroy_image(game, game -> img_data.rock_y_top_right);
+	if (game -> img_data.rock_y_bottom)
+		mlx_destroy_image(game, game -> img_data.rock_y_bottom);
+	if (game -> img_data.rock_y_bottom_left)
+		mlx_destroy_image(game, game -> img_data.rock_y_bottom_left);
+	if (game -> img_data.rock_y_bottom_right)
+		mlx_destroy_image(game, game -> img_data.rock_y_bottom_right);
+	if (game -> img_data.rock_x_left)
+		mlx_destroy_image(game, game -> img_data.rock_x_left);
+	if (game -> img_data.rock_x_right)
+		mlx_destroy_image(game, game -> img_data.rock_x_right);
+	if (game -> img_data.rock_obstacles)
+		mlx_destroy_image(game, game -> img_data.rock_obstacles);
 	if (game->img_data.sea)
 		mlx_destroy_image(game->mlx, game->img_data.sea);
 	if (game->img_data.boat_up)
@@ -78,6 +94,10 @@ int	on_destroy(t_game *game)
 		mlx_destroy_image(game->mlx, game->img_data.boat_left);
 	if (game->img_data.boat_right)
 		mlx_destroy_image(game->mlx, game->img_data.boat_right);
+	if (game->img_data.placeholder)
+		mlx_destroy_image(game->mlx, game->img_data.placeholder);
+	if (game->img_data.exit)
+		mlx_destroy_image(game->mlx, game->img_data.exit);
 	if (*(game->img_data.fish))
 	{
 		i = 0;

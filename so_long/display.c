@@ -13,6 +13,33 @@
 #include "./so_long.h"
 #include <stdio.h>
 
+
+char *select_img(t_game *game, size_t x, size_t y, char target)
+{
+	if (target == '1')
+	{
+		if (y == 0 && x == 0)
+			return (game -> img_data.rock_y_top_left);
+		else if (y == 0 && x == game -> map_data -> total_cols - 1)
+			return (game -> img_data.rock_y_top_right);
+		else if (y == 0)
+			return (game -> img_data.rock_y_top);
+		else if (y == game -> map_data -> total_rows - 1 && x == 0)
+			return (game -> img_data.rock_y_bottom_left);
+		else if (y == game -> map_data -> total_rows - 1 && x == game -> map_data -> total_cols - 1)
+			return (game -> img_data.rock_y_bottom_right);
+		else if (y == game -> map_data -> total_rows - 1)
+			return (game -> img_data.rock_y_bottom);
+		else if (x == 0)
+			return (game -> img_data.rock_x_left);
+		else if (x == game -> map_data -> total_cols - 1)
+			return (game -> img_data.rock_x_right);
+		else if (x > 0 && x < game -> map_data -> total_cols && y > 0 && y < game -> map_data -> total_rows)
+			return (game -> img_data.rock_obstacles);
+	}
+	return (game -> img_data.placeholder);
+}
+
 int	display_game(t_game *game)
 {
 	char	**matrix;
@@ -29,13 +56,7 @@ int	display_game(t_game *game)
 		while (x < game -> map_data -> total_cols)
 		{
 			if (matrix[y][x] == '1')
-			{
-				if (game -> img_data.wall && ((y == 0 || y == game -> map_data -> total_rows -1)|| (x == 0 || x == game -> map_data -> total_cols - 1)))
-					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.wall, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-				else
-					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.rock, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-					
-			}
+				mlx_put_image_to_window(game -> mlx, game -> mlx_win, select_img(game, x, y, '1'), (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			else if (matrix[y][x] == '0')
 			{
 				if (game -> img_data.sea)
@@ -63,6 +84,9 @@ int	display_game(t_game *game)
 					else if (y > 6)
 						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[3], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			}
+			else if (matrix[y][x] == 'E')
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.exit, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+
 			x++;
 		}
 		y++;
