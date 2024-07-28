@@ -15,12 +15,15 @@
 bool	is_valid_player_path(t_map **map_data)
 {
 	size_t	total_items;
+	Pair	pos;
 
-	if (get_position(map_data, 'P') == ERROR)
+	pos = get_position(map_data, 'P');
+	if (pos.y == 0)
 	{
 		ft_putendl_fd("ERROR CAN GET PLAYER POSITION", 2);
 		return (false);
 	}
+	(*map_data) -> player_pos = (Pair) {pos.x, pos.y, -1};
 	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
 	if (!can_access_items(*map_data, (*map_data) -> total_cells, total_items, 'C'))
 	{
@@ -31,32 +34,27 @@ bool	is_valid_player_path(t_map **map_data)
 	return (true);
 }
 
-int	get_position(t_map **map_data, char target)
+Pair	get_position(t_map **map_data, char target)
 {
 	size_t	col;
 	size_t	row;
+	Pair	position;
 
 	col = 1;
 	row = 1;
+	position = (Pair) {0, 0, -1};
 	while (((*map_data) -> matrix)[row])
 	{
 		while (col < (*map_data) -> total_cols)
 		{
 			if (((*map_data) -> matrix)[row][col] == target)
-			{
-				if (target == 'P')
-					(*map_data) -> player_pos = (Pair) {col, row, 1};
-				else if (target == 'E')
-					(*map_data) -> exit_pos = (Pair) {col, row, 1};
-				if (target == 'P' || target == 'E')
-					return (SUCCESS);
-			}
+				position = (Pair) {col, row, -1};
 			col++;
 		}
 		col = 1;
 		row++;
 	}
-	return (ERROR);
+	return (position);
 }
 
 bool	can_access_items(t_map *map_data,size_t total_cells, size_t total_items, char target)

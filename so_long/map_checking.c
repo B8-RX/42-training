@@ -15,6 +15,7 @@
 int verify_map(t_game **game, char *map_path)
 {
 	t_map	*map_data;
+	Pair	player_position;
 
 	if (init_map(game, map_path) == ERROR)
 		return (ERROR);
@@ -25,6 +26,8 @@ int verify_map(t_game **game, char *map_path)
 		|| is_valid_fill(&map_data) == false
 		|| is_valid_player_path(&map_data) == false)
 		return (ERROR);
+	player_position = get_position(&map_data, 'P');
+	(*game) -> map_data -> player_pos = (Pair) {player_position.x, player_position.y, -1};
 	return (SUCCESS);
 }
 

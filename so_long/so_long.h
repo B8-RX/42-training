@@ -22,11 +22,11 @@
 # define SUCCESS 0
 # define ERROR 1
 # define IMG_SIZE 128
-# define ESC 65307
-# define KEY_W 119 
-# define KEY_A 97
-# define KEY_S 115
-# define KEY_D 100
+# define KEY_ESC 65307
+# define KEY_UP 119 
+# define KEY_LEFT 97
+# define KEY_DOWN 115
+# define KEY_RIGHT 100
 # define EXT "ber"
 # define ROCK_Y_TOP "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top.xpm"
 # define ROCK_Y_TOP_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_left.xpm"
@@ -43,7 +43,7 @@
 # define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left.xpm"
 # define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
 # define PLACEHOLDER "./ASSETS/fishing_game/placeholder.xpm"
-# define EXIT "./ASSETS/fishing_game/tiles/exit/exit.xpm"
+# define EXIT "./ASSETS/fishing_game/tiles/exit/xpm/island_exit.xpm"
 
 typedef struct 
 {
@@ -82,12 +82,12 @@ typedef struct s_map {
 	char	*str_map;
 	size_t	player;
 	size_t	collectibles;
+	size_t	collected;
 	size_t	exit;
 	size_t	empty;
 	size_t	wall;
 	Pair	player_pos;
 	Pair	exit_pos;
-	int		collected;
 	int		can_exit;
 	size_t	total_rows;
 	size_t	total_cols;
@@ -111,7 +111,7 @@ bool	is_valid_walls(t_map *map_data);
 bool	is_valid_fill(t_map **map_data);
 
 bool	is_valid_player_path(t_map **map_data);
-int		get_position(t_map **map_data, char target);
+Pair	get_position(t_map **map_data, char target);
 bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, char target);
 bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
