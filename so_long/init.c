@@ -22,7 +22,7 @@ int	init_game(t_game **game)
 		return (ERROR);
 	}
 	ft_memset(*game, 0, sizeof(t_game));
-	(*game) -> img_data.direction = 'd';
+	(*game) -> img_data.direction = KEY_UP;
 	init_fish_collection(game);
 	return (SUCCESS);
 }
@@ -40,7 +40,7 @@ void	init_fish_collection(t_game **game)
 	while (i < 4)
 	{
 		(*game) -> img_data.fish_collection[i] = (char *)fish_paths[i];
-		(*game ) -> img_data.fish[i] = NULL;
+		(*game ) -> img_data.fish_img[i] = NULL;
 		i++;
 	}
 }
@@ -97,11 +97,11 @@ void	init_images(t_game *game)
 	i = 0;
 	while (i < 4)	
 	{
-		game -> img_data.fish[i] = mlx_xpm_file_to_image(game -> mlx, game -> img_data.fish_collection[i], &(game -> img_data.img_width), &(game -> img_data.img_height));
+		game -> img_data.fish_img[i] = mlx_xpm_file_to_image(game -> mlx, game -> img_data.fish_collection[i], &(game -> img_data.img_width), &(game -> img_data.img_height));
 		i++;
 	}
 	game -> img_data.placeholder = mlx_xpm_file_to_image(game -> mlx, PLACEHOLDER, &(game -> img_data.img_width), &(game -> img_data.img_height));
-	game -> img_data.exit = mlx_xpm_file_to_image(game -> mlx, EXIT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	game -> img_data.exit_img = mlx_xpm_file_to_image(game -> mlx, EXIT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 }
 
 void	init_queue(t_map *map_data, Pair queue[])

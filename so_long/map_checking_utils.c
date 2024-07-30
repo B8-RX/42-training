@@ -12,7 +12,7 @@
 
 #include "./so_long.h"
 
-bool	is_duplicate_items(t_map **map_data, char item)
+bool	is_duplicate(t_map **map_data, char item)
 {
 	t_map	*data;
 

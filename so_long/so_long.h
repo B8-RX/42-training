@@ -70,10 +70,10 @@ typedef struct s_img {
 	void	*boat_down;
 	void	*boat_left;
 	void	*boat_right;
-	char	direction;
+	int		boat_direction;
 	char	*fish_collection[4];
-	void	*fish[4];
-	void	*exit;
+	void	*fish_img[4];
+	void	*exit_img;
 	void	*placeholder;
 } t_img;
 
@@ -88,7 +88,6 @@ typedef struct s_map {
 	size_t	wall;
 	Pair	player_pos;
 	Pair	exit_pos;
-	int		can_exit;
 	size_t	total_rows;
 	size_t	total_cols;
 	size_t	total_cells;
@@ -116,7 +115,7 @@ bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, c
 bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 
-bool	is_duplicate_items(t_map **map_data, char item);
+bool	is_duplicate(t_map **map_data, char item);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 void	update_position(size_t *pos_x, size_t *pos_y, char *direction);

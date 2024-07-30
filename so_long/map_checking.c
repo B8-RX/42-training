@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./so_long.h"
+#include <stdio.h>
 
 int verify_map(t_game **game, char *map_path)
 {
@@ -130,7 +131,7 @@ bool	is_valid_fill(t_map **map_data)
 		if (row > 0 && row < ((*map_data) -> total_rows - 1))
 			while (col < total_cols - 1)
 			{
-				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate_items(map_data, matrix[row][col]))
+				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate(map_data, matrix[row][col]))
 				{
 					ft_putendl_fd("ERROR MAP HAVE NOT VALID FIELD (PE01C) or duplicate items", 2);
 					return (false);

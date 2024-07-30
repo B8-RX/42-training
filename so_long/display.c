@@ -50,6 +50,11 @@ int	display_game(t_game *game)
 		return (1);
 	matrix = game -> map_data -> matrix;
 	y = 0;
+	printf("PLAYER POS X: %zu\n", get_position(&(game -> map_data), 'P').x);
+	printf("PLAYER POS Y: %zu\n", get_position(&(game -> map_data), 'P').y);
+	printf("COLLECTIBLES: %zu\n", game -> map_data -> collectibles);
+	printf("COLLECTED: %zu\n", game -> map_data -> collected);
+	printf("HANDLE EXIT: %zu\n", game -> map_data -> exit);
 	while(y < game -> map_data -> total_rows)
 	{
 		x = 0;
@@ -64,28 +69,28 @@ int	display_game(t_game *game)
 			}
 			else if (matrix[y][x] == 'P')
 			{
-				if (game -> img_data.direction == 'u' && game -> img_data.boat_up)
+				if (game -> img_data.direction == KEY_UP && game -> img_data.boat_up)
 					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_up, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-				else if (game -> img_data.direction == 'd' && game -> img_data.boat_down)
+				else if (game -> img_data.direction == KEY_DOWN && game -> img_data.boat_down)
 					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_down, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-				else if (game -> img_data.direction == 'l' && game -> img_data.boat_left)
+				else if (game -> img_data.direction == KEY_LEFT && game -> img_data.boat_left)
 					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_left, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-				else if (game -> img_data.direction == 'r' && game -> img_data.boat_right)
+				else if (game -> img_data.direction == KEY_RIGHT && game -> img_data.boat_right)
 					mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.boat_right, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			}
 			else if (matrix[y][x] == 'C')
 			{
 					if (y < 3 || (y > 6 && x > 10))
-						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[0], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish_img[0], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 					else if (y < 6 && x > 8)
-						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[1], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish_img[1], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 					else if (y < 6)
-						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[2], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish_img[2], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 					else
-						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[3], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish_img[3], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			}
 			else if (matrix[y][x] == 'E')
-						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.exit, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.exit_img, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 
 			x++;
 		}
