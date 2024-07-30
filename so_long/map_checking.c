@@ -33,14 +33,20 @@ int verify_map(t_game **game, char *map_path)
 
 int	check_map_size(t_game *game)
 {
-	if (game -> map_data -> total_cols * 128 >= (unsigned int)game -> screen_width - 128 ||
-		game -> map_data -> total_rows * 128 >= (unsigned int)game -> screen_height - 128)
+	size_t	map_width;
+	size_t	map_height;
+
+	map_width = game -> map_data -> total_cols * 128;
+	map_height = game -> map_data -> total_rows * 128;
+	if (map_width >= (unsigned int)game -> screen_width ||
+		map_height >= (unsigned int)game -> screen_height)
 	{
 		ft_putendl_fd("ERROR MAP TOO BIG", 2);
+		fprintf(stderr, "WIDTH:%zu\nHEIGHT:%zu\n", map_width, map_height);
 		return (ERROR);
 	}
-	printf("TOTAL SIZE IMG x_axe: %zu\n", game -> map_data-> total_cols * 128);
-	printf("TOTAL SIZE IMG y_axe: %zu\n", game -> map_data-> total_rows * 128);
+	printf("TOTAL SIZE IMG x_axe: %zu\n", map_width);
+	printf("TOTAL SIZE IMG y_axe: %zu\n", map_height);
 	if (game -> map_data -> total_cols  < 3 ||
 		game -> map_data -> total_rows  < 3)
 	{

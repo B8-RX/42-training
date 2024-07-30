@@ -81,7 +81,7 @@ int	display_game(t_game *game)
 						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[1], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 					else if (y < 6)
 						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[2], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-					else if (y > 6)
+					else
 						mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish[3], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			}
 			else if (matrix[y][x] == 'E')

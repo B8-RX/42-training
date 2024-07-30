@@ -13,7 +13,7 @@
 #include "./so_long.h"
 
 
-bool	can_move(t_game *game, char *direction)
+bool	can_move(t_game *game, int keycode)
 {
 	char	**matrix;
 	Pair	pos;
@@ -28,22 +28,22 @@ bool	can_move(t_game *game, char *direction)
 	pos = game -> map_data -> player_pos; 
 	matrix = game -> map_data -> matrix;
 	can_move = false;
-	if (ft_strncmp(direction, "up", 2) == 0)
+	if (keycode == KEY_UP)
 	{
 		if (pos.y > 0 && (ft_strchr("0C", matrix[pos.y - 1][pos.x]) || (catch_all_fish && matrix[pos.y - 1][pos.x] == 'E')))
 			can_move = true;
 	}
-	else if (ft_strncmp(direction, "down", 4) == 0)
+	else if (keycode == KEY_DOWN)
 	{
 		if (pos.y < game -> map_data -> total_rows - 1 && (ft_strchr("0C", matrix[pos.y + 1][pos.x]) || (catch_all_fish && matrix[pos.y + 1][pos.x] == 'E')))
 			can_move = true;
 	}
-	else if (ft_strncmp(direction, "left", 4) == 0)
+	else if (keycode == KEY_LEFT)
 	{
 		if (pos.x > 0 && (ft_strchr("0C", matrix[pos.y][pos.x - 1]) || (catch_all_fish && matrix[pos.y][pos.x - 1] == 'E')))
 			can_move = true;
 	}
-	else if (ft_strncmp(direction, "right", 5) == 0)
+	else if (keycode == KEY_RIGHT)
 	{	
 		if (pos.x < game -> map_data -> total_cols - 1 && (ft_strchr("0C", matrix[pos.y][pos.x + 1]) || (catch_all_fish && matrix[pos.y][pos.x + 1] == 'E')))
 			can_move = true;
@@ -51,7 +51,7 @@ bool	can_move(t_game *game, char *direction)
 	return (can_move);
 }
 
-void	execute_action(t_game *game, char *direction)
+void	execute_action(t_game *game, int keycode)
 {
 	(void)game;
 	printf("CAN HANDLE DIRECTION : %s\n", direction);
@@ -62,14 +62,8 @@ int	key_events(int keycode, t_game *game)
 	printf("KEY PRESS: CODE: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		on_destroy(game);
-	else if (keycode == KEY_UP && can_move(game, "up"))
-		execute_action(game, "up");
-	else if (keycode == KEY_DOWN && can_move(game, "down"))
-		execute_action(game, "down");
-	else if (keycode == KEY_LEFT && can_move(game, "left"))
-		execute_action(game, "left");
-	else if (keycode == KEY_RIGHT && can_move(game, "right"))
-		execute_action(game, "right");
+	if (can_move(game, keycode))
+		execute_action(game, keycode);
 	return (0);
 }
 
