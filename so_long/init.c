@@ -22,7 +22,7 @@ int	init_game(t_game **game)
 		return (ERROR);
 	}
 	ft_memset(*game, 0, sizeof(t_game));
-	(*game) -> img_data.direction = KEY_UP;
+	(*game) -> img_data.boat_direction = KEY_UP;
 	init_fish_collection(game);
 	return (SUCCESS);
 }
