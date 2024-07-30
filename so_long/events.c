@@ -107,57 +107,57 @@ int	key_events(int keycode, t_game *game)
 	return (0);
 }
 
-int	on_destroy(t_game *game)
+void	on_destroy(t_game *game)
 {
-	int	i;
-
-	if (game -> img_data.rock_y_top)
-		mlx_destroy_image(game, game -> img_data.rock_y_top);
-	if (game -> img_data.rock_y_top_left)
-		mlx_destroy_image(game, game -> img_data.rock_y_top_left);
-	if (game -> img_data.rock_y_top_right)
-		mlx_destroy_image(game, game -> img_data.rock_y_top_right);
-	if (game -> img_data.rock_y_bottom)
-		mlx_destroy_image(game, game -> img_data.rock_y_bottom);
-	if (game -> img_data.rock_y_bottom_left)
-		mlx_destroy_image(game, game -> img_data.rock_y_bottom_left);
-	if (game -> img_data.rock_y_bottom_right)
-		mlx_destroy_image(game, game -> img_data.rock_y_bottom_right);
-	if (game -> img_data.rock_x_left)
-		mlx_destroy_image(game, game -> img_data.rock_x_left);
-	if (game -> img_data.rock_x_right)
-		mlx_destroy_image(game, game -> img_data.rock_x_right);
-	if (game -> img_data.rock_obstacles)
-		mlx_destroy_image(game, game -> img_data.rock_obstacles);
-	if (game->img_data.sea)
-		mlx_destroy_image(game->mlx, game->img_data.sea);
-	if (game->img_data.boat_up)
-		mlx_destroy_image(game->mlx, game->img_data.boat_up);
-	if (game->img_data.boat_down)
-		mlx_destroy_image(game->mlx, game->img_data.boat_down);
-	if (game->img_data.boat_left)
-		mlx_destroy_image(game->mlx, game->img_data.boat_left);
-	if (game->img_data.boat_right)
-		mlx_destroy_image(game->mlx, game->img_data.boat_right);
-	if (game->img_data.placeholder)
-		mlx_destroy_image(game->mlx, game->img_data.placeholder);
-	if (*(game->img_data.fish_img))
+	// int	i;
+	//
+	// if (game -> img_data.rock_y_top)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_top);
+	// if (game -> img_data.rock_y_top_left)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_top_left);
+	// if (game -> img_data.rock_y_top_right)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_top_right);
+	// if (game -> img_data.rock_y_bottom)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom);
+	// if (game -> img_data.rock_y_bottom_left)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom_left);
+	// if (game -> img_data.rock_y_bottom_right)
+	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom_right);
+	// if (game -> img_data.rock_x_left)
+	// 	mlx_destroy_image(game, game -> img_data.rock_x_left);
+	// if (game -> img_data.rock_x_right)
+	// 	mlx_destroy_image(game, game -> img_data.rock_x_right);
+	// if (game -> img_data.rock_obstacles)
+	// 	mlx_destroy_image(game, game -> img_data.rock_obstacles);
+	// if (game->img_data.sea)
+	// 	mlx_destroy_image(game->mlx, game->img_data.sea);
+	// if (game->img_data.boat_up)
+	// 	mlx_destroy_image(game->mlx, game->img_data.boat_up);
+	// if (game->img_data.boat_down)
+	// 	mlx_destroy_image(game->mlx, game->img_data.boat_down);
+	// if (game->img_data.boat_left)
+	// 	mlx_destroy_image(game->mlx, game->img_data.boat_left);
+	// if (game->img_data.boat_right)
+	// 	mlx_destroy_image(game->mlx, game->img_data.boat_right);
+	// if (game->img_data.placeholder)
+	// 	mlx_destroy_image(game->mlx, game->img_data.placeholder);
+	// if (*(game->img_data.fish_img))
+	// {
+	// 	i = 0;
+	// 	while (game -> img_data.fish_img[i])
+	// 		mlx_destroy_image(game->mlx, game->img_data.fish_img[i++]);
+	// }
+	// if (game->img_data.exit_img)
+	// 	mlx_destroy_image(game->mlx, game->img_data.exit_img);
+	if (game -> mlx_win && game)
 	{
-		i = 0;
-		while (game -> img_data.fish_img[i])
-			mlx_destroy_image(game->mlx, game->img_data.fish_img[i++]);
-	}
-	if (game->img_data.exit_img)
-		mlx_destroy_image(game->mlx, game->img_data.exit_img);
-	if (game -> mlx_win)
+		mlx_clear_window(game -> mlx, game -> mlx_win);
 		mlx_destroy_window(game -> mlx, game -> mlx_win);
-	if (game -> mlx)
-	{
-		mlx_destroy_display(game -> mlx);
-		free(game -> mlx);
+		// free(game -> mlx);
 	}
-	free_game(game);
-	return (0);
+	// free_game(game);
+	// return (0);
+	exit(0);
 }
 
 // int	on_key_up(int keycode, t_game *game)

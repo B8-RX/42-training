@@ -143,7 +143,7 @@ int		on_key_down(int keycode, t_game *game);
 int		on_click_down(int button, int x, int y, t_game *game);
 int		on_click_up(int button, int x, int y, t_game *game);
 int		on_mouse_move(int x, int y, t_game *game);
-int		on_destroy(t_game *game);
+void	on_destroy(t_game *game);
 
 
 
