@@ -31,6 +31,7 @@ int	main(int argc, char **argv)
 	printf("SCREEN WIDTH = %d\nSCREEN HEIGHT = %d\n", game -> screen_width, game -> screen_height);
 	if (verify_map(&game, argv[1]) == ERROR)
 	{
+		// call on destroy or some function who free all allocated memories
 		free_game(game);
 		exit(ERROR);
 	}

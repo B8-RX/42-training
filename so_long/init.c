@@ -23,11 +23,16 @@ int	init_game(t_game **game)
 	}
 	ft_memset(*game, 0, sizeof(t_game));
 	(*game) -> img_data.boat_direction = KEY_UP;
-	init_fish_collection(game);
+	if (init_fish_collection(game) == ERROR)
+	{
+		free(*game);
+		ft_putendl_fd("ERROR FISH INITIALIZATION", 2);
+		return (ERROR);
+	}
 	return (SUCCESS);
 }
 
-void	init_fish_collection(t_game **game)
+int	init_fish_collection(t_game **game)
 {
 	int		i;
 	const static char *fish_paths[4] = {
@@ -36,13 +41,19 @@ void	init_fish_collection(t_game **game)
 		"./ASSETS/fishing_game/sprites/fish_sprites/xpm/Solarfish.xpm",
 		"./ASSETS/fishing_game/sprites/fish_sprites/xpm/Clownfish.xpm"
 	};
+	if (!*game)
+		return (ERROR);
 	i = 0;
+	// chante value of i with len of fish_paths (i = array_len(fish_paths)) 
 	while (i < 4)
 	{
 		(*game) -> img_data.fish_collection[i] = (char *)fish_paths[i];
 		(*game ) -> img_data.fish_img[i] = NULL;
 		i++;
 	}
+	if ((*game) -> img_data.fish_collection[0] == NULL)
+		return (ERROR);
+	return (SUCCESS);
 }
 
 int	init_map(t_game	**game, char *map_path)
@@ -54,7 +65,10 @@ int	init_map(t_game	**game, char *map_path)
 		return (ERROR);
 	ft_memset((*game) -> map_data, 0, sizeof(t_map));
 	map_data = (*game) -> map_data;
-	map_data-> matrix = ft_split(stringify(*game, map_path), '\n');
+	map_data -> str_map = to_string(*game, map_path);
+	if (map_data -> str_map == NULL)
+		return (ERROR);
+	map_data-> matrix = ft_split( map_data -> str_map,'\n');
 	if (map_data -> str_map)
 		free(map_data -> str_map);
 	if (!map_data-> matrix)

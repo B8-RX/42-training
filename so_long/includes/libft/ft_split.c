@@ -29,7 +29,7 @@ int	ft_count_childs(const char *s, char c)
 		}
 		else
 			while (s[i] == c)
-		i++;
+				i++;
 	}
 	return (j);
 }

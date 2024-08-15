@@ -109,46 +109,7 @@ int	key_events(int keycode, t_game *game)
 
 void	on_destroy(t_game *game)
 {
-	// int	i;
-	//
-	// if (game -> img_data.rock_y_top)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_top);
-	// if (game -> img_data.rock_y_top_left)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_top_left);
-	// if (game -> img_data.rock_y_top_right)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_top_right);
-	// if (game -> img_data.rock_y_bottom)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom);
-	// if (game -> img_data.rock_y_bottom_left)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom_left);
-	// if (game -> img_data.rock_y_bottom_right)
-	// 	mlx_destroy_image(game, game -> img_data.rock_y_bottom_right);
-	// if (game -> img_data.rock_x_left)
-	// 	mlx_destroy_image(game, game -> img_data.rock_x_left);
-	// if (game -> img_data.rock_x_right)
-	// 	mlx_destroy_image(game, game -> img_data.rock_x_right);
-	// if (game -> img_data.rock_obstacles)
-	// 	mlx_destroy_image(game, game -> img_data.rock_obstacles);
-	// if (game->img_data.sea)
-	// 	mlx_destroy_image(game->mlx, game->img_data.sea);
-	// if (game->img_data.boat_up)
-	// 	mlx_destroy_image(game->mlx, game->img_data.boat_up);
-	// if (game->img_data.boat_down)
-	// 	mlx_destroy_image(game->mlx, game->img_data.boat_down);
-	// if (game->img_data.boat_left)
-	// 	mlx_destroy_image(game->mlx, game->img_data.boat_left);
-	// if (game->img_data.boat_right)
-	// 	mlx_destroy_image(game->mlx, game->img_data.boat_right);
-	// if (game->img_data.placeholder)
-	// 	mlx_destroy_image(game->mlx, game->img_data.placeholder);
-	// if (*(game->img_data.fish_img))
-	// {
-	// 	i = 0;
-	// 	while (game -> img_data.fish_img[i])
-	// 		mlx_destroy_image(game->mlx, game->img_data.fish_img[i++]);
-	// }
-	// if (game->img_data.exit_img)
-	// 	mlx_destroy_image(game->mlx, game->img_data.exit_img);
+	free_map(game -> map_data);
 	if (game -> mlx_win && game)
 	{
 		mlx_clear_window(game -> mlx, game -> mlx_win);
@@ -156,47 +117,5 @@ void	on_destroy(t_game *game)
 		// free(game -> mlx);
 	}
 	// free_game(game);
-	// return (0);
-	exit(0);
+	exit(SUCCESS);
 }
-
-// int	on_key_up(int keycode, t_game *game)
-// {
-// 	printf("key released. KEYCODE: %d\n", keycode);
-// 	if (keycode == 65307)
-// 		mlx_destroy_window(game -> mlx, game -> mlx_win);
-// 	return (0);
-// }
-//
-// int	on_key_down(int keycode, t_game *game)
-// {
-// 	printf("key pressed. KEYCODE: %d\n", keycode);
-// 	(void)game;
-// 	return (0);
-// }
-
-// int	on_click_down(int button, int x, int y, t_game *game)
-// {
-// 	printf("click pressed. button: %d\n", button);
-// 	printf("x: %d\n", x);
-// 	printf("y: %d\n", y);
-// 	(void)game;
-// 	return (0);
-// }
-//
-// int	on_click_up(int button, int x, int y, t_game *game)
-// {
-// 	printf("click release button: %d\n", button);
-// 	printf("x: %d\n", x);
-// 	printf("y: %d\n", y);
-// 	(void)game;
-// 	return (0);
-// }
-//
-// int	on_mouse_move(int x, int y, t_game *game)
-// {
-// 	printf("x: %d\n", x);
-// 	printf("y: %d\n", y);
-// 	(void)game;
-// 	return (0);
-// }

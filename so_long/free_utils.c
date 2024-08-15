@@ -33,12 +33,14 @@ void	free_map(t_map *map_data)
 
 void	free_game(t_game *game)
 {
-	if (game)
-	{
-		if (game -> map_data)
-			free_map(game -> map_data);
-		free(game);
-	}
+	free_map(game -> map_data);
+	on_destroy(game);
+	// if (game)
+	// {
+	// 	if (game -> map_data)
+	// 		free_map(game -> map_data);
+	// 	free(game);
+	// }
 }
 
 void	free_double_array(char **array)

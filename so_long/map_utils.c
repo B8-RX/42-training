@@ -12,7 +12,7 @@
 
 #include "./so_long.h"
 
-char	*stringify(t_game *game, char *map_path)
+char	*to_string(t_game *game, char *map_path)
 {
 	char	*temp;
 	char	*line;
@@ -33,8 +33,6 @@ char	*stringify(t_game *game, char *map_path)
 		temp = ft_strjoin(game -> map_data -> str_map, line);
 		if (!temp)
 		{
-			if (game -> map_data -> str_map)
-				free(game -> map_data -> str_map);
 			if (line)
 				free(line);
 			return (close(fd), NULL);
@@ -46,7 +44,6 @@ char	*stringify(t_game *game, char *map_path)
 	}
 	if (!*(game -> map_data -> str_map))
 		return (close(fd), NULL);
-	printf("%s", game -> map_data -> str_map);
 	if (close(fd) == -1)
 		return (printf("ERROR CLOSE FILE\n"), free(game -> map_data -> str_map), NULL);
 	printf("FILE CLOSED SUCCESSFULLY\n");

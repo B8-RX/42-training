@@ -123,13 +123,13 @@ int		check_extension(char *file_name);
 
 
 int		get_total_rows(t_map *map_data);
-char	*stringify(t_game *game, char *map_path);
+char	*to_string(t_game *game, char *map_path);
 
 void	init_queue(t_map *map_data, Pair queue[]);
 int		init_map(t_game **game, char *map_path);
 void	init_images(t_game *game);
 int		init_game(t_game **game);
-void	init_fish_collection(t_game **game);
+int		init_fish_collection(t_game **game);
 
 int		display_game(t_game *game);
 
