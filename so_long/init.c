@@ -44,7 +44,7 @@ int	init_fish_collection(t_game **game)
 	if (!*game)
 		return (ERROR);
 	i = 0;
-	// chante value of i with len of fish_paths (i = array_len(fish_paths)) 
+	// change value of i with len of fish_paths (i = array_len(fish_paths)) 
 	while (i < 4)
 	{
 		(*game) -> img_data.fish_collection[i] = (char *)fish_paths[i];
@@ -108,6 +108,14 @@ void	init_images(t_game *game)
 	game -> img_data.boat_down = mlx_xpm_file_to_image(game -> mlx, BOAT_DOWN, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_left = mlx_xpm_file_to_image(game -> mlx, BOAT_LEFT, &(game -> img_data.img_width), &(game -> img_data.img_height));
 	game -> img_data.boat_right = mlx_xpm_file_to_image(game -> mlx, BOAT_RIGHT, &(game -> img_data.img_width), &(game -> img_data.img_height));
+	
+
+	for (int i = 0; i < 4; i++)
+	{
+	    game->img_data.fish_img[i] = NULL;
+	}
+	
+
 	i = 0;
 	while (i < 4)	
 	{

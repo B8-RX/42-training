@@ -67,7 +67,7 @@ void	update_matrix(t_game *game, Pair previous_pos)
 	else if (matrix[pos_y][pos_x] == 'E' && game -> map_data -> collected == collectibles)
 	{
 		game -> map_data -> exit = 1;
-		on_destroy(game);
+		free_game(game);
 	}
 	if (matrix[pos_y][pos_x] != 'P')
 	{
@@ -100,22 +100,10 @@ void	execute_move(t_game *game, int keycode)
 int	key_events(int keycode, t_game *game)
 {
 	if (keycode == KEY_ESC)
-		on_destroy(game);
+		free_game(game);
 	game -> img_data.boat_direction = keycode;
 	if (can_move(game, keycode))
 		execute_move(game, keycode);
 	return (0);
 }
 
-void	on_destroy(t_game *game)
-{
-	free_map(game -> map_data);
-	if (game -> mlx_win && game)
-	{
-		mlx_clear_window(game -> mlx, game -> mlx_win);
-		mlx_destroy_window(game -> mlx, game -> mlx_win);
-		// free(game -> mlx);
-	}
-	// free_game(game);
-	exit(SUCCESS);
-}

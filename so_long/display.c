@@ -50,11 +50,6 @@ int	display_game(t_game *game)
 		return (1);
 	matrix = game -> map_data -> matrix;
 	y = 0;
-	// printf("PLAYER POS X: %zu\n", get_position(&(game -> map_data), 'P').x);
-	// printf("PLAYER POS Y: %zu\n", get_position(&(game -> map_data), 'P').y);
-	// printf("COLLECTIBLES: %zu\n", game -> map_data -> collectibles);
-	// printf("COLLECTED: %zu\n", game -> map_data -> collected);
-	// printf("HANDLE EXIT: %zu\n", game -> map_data -> exit);
 	while(y < game -> map_data -> total_rows)
 	{
 		x = 0;

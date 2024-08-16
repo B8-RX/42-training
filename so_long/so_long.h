@@ -65,7 +65,6 @@ typedef struct s_img {
 	void	*rock_x_right;
 	void	*rock_obstacles;
 	void	*sea;
-	void	*rock;
 	void	*boat_up;
 	void	*boat_down;
 	void	*boat_left;

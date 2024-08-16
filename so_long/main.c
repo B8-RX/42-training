@@ -31,7 +31,6 @@ int	main(int argc, char **argv)
 	printf("SCREEN WIDTH = %d\nSCREEN HEIGHT = %d\n", game -> screen_width, game -> screen_height);
 	if (verify_map(&game, argv[1]) == ERROR)
 	{
-		// call on destroy or some function who free all allocated memories
 		free_game(game);
 		exit(ERROR);
 	}
@@ -45,9 +44,8 @@ int	main(int argc, char **argv)
 	init_images(game);
 	mlx_loop_hook(game -> mlx, &display_game, game);
 	mlx_hook(game -> mlx_win, 2, 1L<<0, &key_events, game);
-	// mlx_hook(game -> mlx_win, 17, 0, &on_destroy, game);
 	mlx_loop(game -> mlx);
-	// if (game)
-	// 	on_destroy(game);
+	if (game)
+		free_game(game);
 	return (SUCCESS);
 }
