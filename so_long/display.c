@@ -79,7 +79,6 @@ int	display_game(t_game *game)
 			}
 			else if (matrix[y][x] == 'E')
 				mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.exit_img, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-
 			x++;
 		}
 		y++;

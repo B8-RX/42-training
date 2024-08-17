@@ -37,94 +37,44 @@ void	free_img_ptr(t_game	*game)
 	int	i;
 
 	if (game -> img_data.rock_y_top)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_top);
-		game -> img_data.rock_y_top = NULL;
-	}
 	if (game -> img_data.rock_y_top_left)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_top_left);
-		game -> img_data.rock_y_top_left = NULL;
-	}
 	if (game -> img_data.rock_y_top_right)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_top_right);
-		game -> img_data.rock_y_top_right = NULL;
-	}
 	if (game -> img_data.rock_y_bottom)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_bottom);
-		game -> img_data.rock_y_bottom = NULL;
-	}
 	if (game -> img_data.rock_y_bottom_left)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_bottom_left);
-		game -> img_data.rock_y_top_left = NULL;
-	}
 	if (game -> img_data.rock_y_bottom_right)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_y_bottom_right);
-		game -> img_data.rock_y_top_right = NULL;
-	}
 	if (game -> img_data.rock_x_left)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_x_left);
-		game -> img_data.rock_x_left = NULL;
-	}
 	if (game -> img_data.rock_x_right)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_x_right);
-		game -> img_data.rock_x_right = NULL;
-	}
 	if (game -> img_data.rock_obstacles)
-	{
 		mlx_destroy_image(game->mlx, game -> img_data.rock_obstacles);
-		game -> img_data.rock_obstacles = NULL;
-	}
 	if (game->img_data.sea)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.sea);
-		game -> img_data.sea = NULL;
-	}
 	if (game->img_data.boat_up)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.boat_up);
-		game -> img_data.boat_up = NULL;
-	}	
 	if (game->img_data.boat_down)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.boat_down);
-		game -> img_data.boat_down = NULL;
-	}
 	if (game->img_data.boat_left)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.boat_left);
-		game -> img_data.boat_left = NULL;
-	}
 	if (game->img_data.boat_right)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.boat_right);
-		game -> img_data.boat_right = NULL;
-	}
 	if (game->img_data.placeholder)
-	{
 		mlx_destroy_image(game->mlx, game->img_data.placeholder);
-		game -> img_data.placeholder = NULL;
-	}
 	if (game->img_data.exit_img)
 	{
 		mlx_destroy_image(game->mlx, game->img_data.exit_img);
 		game -> img_data.exit_img = NULL;
 	}
+	i = 0;
 	if (*(game->img_data.fish_img))
-	{
-		i = 0;
 		while (game -> img_data.fish_img[i])
-		{
-			mlx_destroy_image(game->mlx, game->img_data.fish_img[i]);
-			game -> img_data.fish_img[i++] = NULL;
-		}
-	}
+			mlx_destroy_image(game->mlx, game->img_data.fish_img[i++]);
 }
 
 void	free_game(t_game *game)

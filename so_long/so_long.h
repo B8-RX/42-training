@@ -44,6 +44,10 @@
 # define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
 # define PLACEHOLDER "./ASSETS/fishing_game/placeholder.xpm"
 # define EXIT "./ASSETS/fishing_game/tiles/exit/xpm/island_exit.xpm"
+# define SQUID "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Squid.xpm" 
+# define SALMON "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Salmon.png" 
+# define SOLARFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Solarfish.xpm"
+# define CLOWNFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Clownfish.xpm"
 
 typedef struct 
 {
