@@ -18,32 +18,28 @@ bool	can_move(t_game *game, int keycode)
 	char	**matrix;
 	Pair	pos;
 	bool	can_move;
-	size_t	total_fish;
-	size_t	catched_fish;
 	bool	catch_all_fish;
 
-	total_fish = game -> map_data -> collectibles;
-	catched_fish = game -> map_data -> collected;
-	catch_all_fish = (total_fish == catched_fish);
+	catch_all_fish = (game -> map_data -> collectibles == game -> map_data -> collected);
 	pos = game -> map_data -> player_pos; 
 	matrix = game -> map_data -> matrix;
 	can_move = false;
-	if (keycode == KEY_UP)
+	if (keycode == KEY_UP || keycode == KEY_UP_ARROW)
 	{
 		if (pos.y > 0 && (ft_strchr("0C", matrix[pos.y - 1][pos.x]) || (catch_all_fish && matrix[pos.y - 1][pos.x] == 'E')))
 			can_move = true;
 	}
-	else if (keycode == KEY_DOWN)
+	else if (keycode == KEY_DOWN || keycode == KEY_DOWN_ARROW)
 	{
 		if (pos.y < game -> map_data -> total_rows - 1 && (ft_strchr("0C", matrix[pos.y + 1][pos.x]) || (catch_all_fish && matrix[pos.y + 1][pos.x] == 'E')))
 			can_move = true;
 	}
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT || keycode == KEY_LEFT_ARROW)
 	{
 		if (pos.x > 0 && (ft_strchr("0C", matrix[pos.y][pos.x - 1]) || (catch_all_fish && matrix[pos.y][pos.x - 1] == 'E')))
 			can_move = true;
 	}
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_RIGHT || keycode == KEY_RIGHT_ARROW)
 	{	
 		if (pos.x < game -> map_data -> total_cols - 1 && (ft_strchr("0C", matrix[pos.y][pos.x + 1]) || (catch_all_fish && matrix[pos.y][pos.x + 1] == 'E')))
 			can_move = true;
@@ -67,6 +63,7 @@ void	update_matrix(t_game *game, Pair previous_pos)
 	else if (matrix[pos_y][pos_x] == 'E' && game -> map_data -> collected == collectibles)
 	{
 		game -> map_data -> exit = 1;
+		ft_putendl_fd("CONGRATULATION YOU WIN!", 1);
 		free_game(game);
 	}
 	if (matrix[pos_y][pos_x] != 'P')
@@ -86,22 +83,38 @@ void	execute_move(t_game *game, int keycode)
 	player_pos_x = game -> map_data -> player_pos.x;
 	player_pos_y = game -> map_data -> player_pos.y;
 	previous_pos = (Pair) {player_pos_x, player_pos_y, -1};
-	if (keycode == KEY_UP)
+	if (keycode == KEY_UP || keycode == KEY_UP_ARROW)
 		game -> map_data -> player_pos.y -= 1;
-	else if (keycode == KEY_DOWN)
+	else if (keycode == KEY_DOWN || keycode == KEY_DOWN_ARROW)
 		game -> map_data -> player_pos.y += 1;
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_LEFT || keycode == KEY_LEFT_ARROW)
 		game -> map_data -> player_pos.x -= 1;
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_RIGHT || keycode == KEY_RIGHT_ARROW)
 		game -> map_data -> player_pos.x += 1;
 	update_matrix(game, previous_pos);
+}
+
+bool	is_move_key(int keycode)
+{
+	bool	moving_key;
+
+	moving_key = false;
+	if (keycode == KEY_LEFT || keycode == KEY_UP
+		|| keycode == KEY_RIGHT || keycode == KEY_DOWN
+		|| (keycode >= KEY_LEFT_ARROW && keycode <= KEY_DOWN_ARROW))
+		moving_key = true;
+	return (moving_key);
 }
 
 int	key_events(int keycode, t_game *game)
 {
 	if (keycode == KEY_ESC)
-		free_game(game);
-	game -> img_data.boat_direction = keycode;
+		return (free_game(game), 0);
+	if (is_move_key(keycode))
+	{
+		game -> img_data.boat_direction = keycode;
+		game -> start = true;
+	}
 	if (can_move(game, keycode))
 		execute_move(game, keycode);
 	return (0);

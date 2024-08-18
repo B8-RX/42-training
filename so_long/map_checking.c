@@ -42,7 +42,7 @@ int	check_map_size(t_game *game)
 	if (map_width >= (unsigned int)game -> screen_width ||
 		map_height >= (unsigned int)game -> screen_height)
 	{
-		ft_putendl_fd("ERROR MAP TOO BIG", 2);
+		ft_putendl_fd("ERROR MAP: TOO BIG", 2);
 		fprintf(stderr, "WIDTH:%zu\nHEIGHT:%zu\n", map_width, map_height);
 		return (ERROR);
 	}
@@ -51,7 +51,7 @@ int	check_map_size(t_game *game)
 	if (game -> map_data -> total_cols  < 3 ||
 		game -> map_data -> total_rows  < 3)
 	{
-		ft_putendl_fd("ERROR MAP TOO SMALL", 2);
+		ft_putendl_fd("ERROR MAP: TOO SMALL", 2);
 		return (ERROR);
 	}
 	return (SUCCESS);
@@ -70,7 +70,7 @@ bool	is_map_square(t_map *map_data)
 	{
 		if (ft_strlen(matrix[i]) != first_row_len)
 		{
-			ft_putendl_fd("ERROR MAP NOT SQUARE", 2);
+			ft_putendl_fd("ERROR MAP: NOT SQUARE", 2);
 			return (false);
 		}
 		i++;
@@ -97,7 +97,7 @@ bool	is_valid_walls(t_map *map_data)
 			{
 				if (matrix[row][col] != '1')
 				{
-					ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
+					ft_putendl_fd("ERROR MAP: HAVE NOT WALL ON EVERY SIDES", 2);
 					return (false);
 				}
 				col++;
@@ -105,7 +105,7 @@ bool	is_valid_walls(t_map *map_data)
 		else
 			if (matrix[row][col] != '1' || matrix[row][total_cols - 1] != '1')
 			{
-					ft_putendl_fd("ERROR MAP HAVE NOT WALL ON EVERY SIDES", 2);
+					ft_putendl_fd("ERROR MAP: HAVE NOT WALL ON EVERY SIDES", 2);
 					return (false);
 			}
 		col = 0;
@@ -133,7 +133,7 @@ bool	is_valid_fill(t_map **map_data)
 			{
 				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate(map_data, matrix[row][col]))
 				{
-					ft_putendl_fd("ERROR MAP HAVE NOT VALID FIELD (PE01C) or duplicate items", 2);
+					ft_putendl_fd("ERROR MAP: HAVE NOT VALID FIELD (PE01C) or duplicate items", 2);
 					return (false);
 				}
 				col++;

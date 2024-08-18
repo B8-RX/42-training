@@ -23,10 +23,14 @@
 # define ERROR 1
 # define IMG_SIZE 128
 # define KEY_ESC 65307
-# define KEY_UP 119 
 # define KEY_LEFT 97
-# define KEY_DOWN 115
+# define KEY_UP 119 
 # define KEY_RIGHT 100
+# define KEY_DOWN 115
+# define KEY_LEFT_ARROW 65361
+# define KEY_UP_ARROW 65362 
+# define KEY_RIGHT_ARROW 65363
+# define KEY_DOWN_ARROW 65364
 # define EXT "ber"
 # define ROCK_Y_TOP "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top.xpm"
 # define ROCK_Y_TOP_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_left.xpm"
@@ -42,10 +46,14 @@
 # define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down.xpm"
 # define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left.xpm"
 # define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
+# define BOAT_UP_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_up_hit.xpm"
+# define BOAT_DOWN_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down_hit.xpm"
+# define BOAT_LEFT_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left_hit.xpm"
+# define BOAT_RIGHT_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right_hit.xpm"
 # define PLACEHOLDER "./ASSETS/fishing_game/placeholder.xpm"
 # define EXIT "./ASSETS/fishing_game/tiles/exit/xpm/island_exit.xpm"
 # define SQUID "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Squid.xpm" 
-# define SALMON "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Salmon.png" 
+# define SALMON "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Salmon.xpm"
 # define SOLARFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Solarfish.xpm"
 # define CLOWNFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Clownfish.xpm"
 
@@ -69,10 +77,14 @@ typedef struct s_img {
 	void	*rock_x_right;
 	void	*rock_obstacles;
 	void	*sea;
-	void	*boat_up;
-	void	*boat_down;
 	void	*boat_left;
+	void	*boat_up;
 	void	*boat_right;
+	void	*boat_down;
+	void	*boat_left_hit;
+	void	*boat_up_hit;
+	void	*boat_right_hit;
+	void	*boat_down_hit;
 	int		boat_direction;
 	char	*fish_collection[4];
 	void	*fish_img[4];
@@ -98,6 +110,7 @@ typedef struct s_map {
 } t_map;
 
 typedef struct s_game {
+	bool	start;
 	void	*mlx;
 	void	*mlx_win;
 	t_map	*map_data;
@@ -134,20 +147,17 @@ void	init_images(t_game *game);
 int		init_game(t_game **game);
 int		init_fish_collection(t_game **game);
 
+bool	can_move(t_game *game, int keycode);
+void	update_matrix(t_game *game, Pair previous_pos);
+void	execute_move(t_game *game, int keycode);
 int		display_game(t_game *game);
 
 void	free_map(t_map *map);
 void	free_game(t_game *game);
+void	on_destroy(t_game *game);
 void	free_double_array(char **array);
 
 int		key_events(int keycode, t_game *game);
-int		on_key_up(int keycode, t_game *game);
-int		on_key_down(int keycode, t_game *game);
-int		on_click_down(int button, int x, int y, t_game *game);
-int		on_click_up(int button, int x, int y, t_game *game);
-int		on_mouse_move(int x, int y, t_game *game);
-void	on_destroy(t_game *game);
-
-
+bool	is_move_key(int keycode);
 
 #endif

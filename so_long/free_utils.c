@@ -64,6 +64,14 @@ void	free_img_ptr(t_game	*game)
 		mlx_destroy_image(game->mlx, game->img_data.boat_left);
 	if (game->img_data.boat_right)
 		mlx_destroy_image(game->mlx, game->img_data.boat_right);
+	if (game->img_data.boat_up_hit)
+		mlx_destroy_image(game->mlx, game->img_data.boat_up_hit);
+	if (game->img_data.boat_down_hit)
+		mlx_destroy_image(game->mlx, game->img_data.boat_down_hit);
+	if (game->img_data.boat_left_hit)
+		mlx_destroy_image(game->mlx, game->img_data.boat_left_hit);
+	if (game->img_data.boat_right_hit)
+		mlx_destroy_image(game->mlx, game->img_data.boat_right_hit);
 	if (game->img_data.placeholder)
 		mlx_destroy_image(game->mlx, game->img_data.placeholder);
 	if (game->img_data.exit_img)

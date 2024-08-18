@@ -95,14 +95,15 @@ int	check_extension(char *file_name)
 	}
 	ext = ft_split(file_name, '.');
 	if (ext && ft_strncmp(EXT, ext[dot], ft_strlen(EXT)) == 0)
-	{
 		valid_ext = 1;
-		free_double_array(ext);
-	}
 	if (!valid_ext)
 	{
-		ft_putendl_fd("ERROR EXTENSION", 2);
+		ft_putendl_fd_nl("ERROR EXTENSION: SUPPORT ONLY [.ber] FILE AND GET [.", 2);
+		ft_putendl_fd_nl(ext[dot], 2);
+		ft_putendl_fd("]", 2);
+		free_double_array(ext);
 		return (ERROR);
 	}	
+	free_double_array(ext);
 	return (SUCCESS);
 }
