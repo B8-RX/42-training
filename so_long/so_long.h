@@ -107,6 +107,7 @@ typedef struct s_map {
 	size_t	total_cols;
 	size_t	total_cells;
 	size_t	reached_items;
+	size_t	steps;
 } t_map;
 
 typedef struct s_game {
@@ -119,7 +120,9 @@ typedef struct s_game {
 	int		screen_height;
 } t_game;
 
-int		verify_map(t_game **game, char *map_path);
+int		check_images(t_game *game);
+int		check_images_ext(char *extentions);
+int		verify_map(t_game **game);
 int		check_map_size(t_game *game);
 bool	is_map_square(t_map *map_data);
 bool	is_valid_walls(t_map *map_data);
@@ -135,15 +138,14 @@ bool	is_duplicate(t_map **map_data, char item);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 void	update_position(size_t *pos_x, size_t *pos_y, char *direction);
-int		check_extension(char *file_name);
-
+int		check_file(char *file_name);
 
 int		get_total_rows(t_map *map_data);
 char	*to_string(t_game *game, char *map_path);
 
 void	init_queue(t_map *map_data, Pair queue[]);
 int		init_map(t_game **game, char *map_path);
-void	init_images(t_game *game);
+int		init_images(t_game *game);
 int		init_game(t_game **game);
 int		init_fish_collection(t_game **game);
 
@@ -155,6 +157,7 @@ int		display_game(t_game *game);
 void	free_map(t_map *map);
 void	free_game(t_game *game);
 void	on_destroy(t_game *game);
+int		on_close(t_game *game);
 void	free_double_array(char **array);
 
 int		key_events(int keycode, t_game *game);

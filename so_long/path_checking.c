@@ -20,7 +20,7 @@ bool	is_valid_player_path(t_map **map_data)
 	pos = get_position(map_data, 'P');
 	if (pos.y == 0)
 	{
-		ft_putendl_fd("ERROR CAN GET PLAYER POSITION", 2);
+		ft_putendl_fd("ERROR CAN'T GET PLAYER POSITION", 2);
 		return (false);
 	}
 	(*map_data) -> player_pos = (Pair) {pos.x, pos.y, -1};
@@ -30,7 +30,6 @@ bool	is_valid_player_path(t_map **map_data)
 		ft_putendl_fd("ERROR PLAYER HAVE NOT ACCESS TO EVERY ITEMS", 2);
 		return (false);
 	}
-	printf("VALID PLAYER PATH\n");
 	return (true);
 }
 

@@ -20,11 +20,12 @@ char	*to_string(t_game *game, char *map_path)
 
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
-		return (printf("ERROR OPEN FILE\n"), NULL);
-	printf("FILE OPENED SUCCESSFULLY\n");
+		return (ft_putendl_fd("ERROR OPEN FILE", 2), NULL);
 	line = get_next_line(fd);
 	if (!line)
 		return (close(fd), NULL);
+	if (ft_strlen(line) == 1)
+		return (free(line), close(fd), NULL);
 	game -> map_data -> str_map = ft_strjoin("", "");
 	if (!game -> map_data -> str_map)
 		return (close(fd), NULL);
@@ -45,8 +46,7 @@ char	*to_string(t_game *game, char *map_path)
 	if (!*(game -> map_data -> str_map))
 		return (close(fd), NULL);
 	if (close(fd) == -1)
-		return (printf("ERROR CLOSE FILE\n"), free(game -> map_data -> str_map), NULL);
-	printf("FILE CLOSED SUCCESSFULLY\n");
+		return (ft_putendl_fd("ERROR CLOSE FILE", 2), free(game -> map_data -> str_map), NULL);
 	return (game -> map_data -> str_map);
 }
 

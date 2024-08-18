@@ -13,13 +13,11 @@
 #include "./so_long.h"
 #include <stdio.h>
 
-int verify_map(t_game **game, char *map_path)
+int verify_map(t_game **game)
 {
 	t_map	*map_data;
 	Pair	player_position;
 
-	if (init_map(game, map_path) == ERROR)
-		return (ERROR);
 	map_data = (*game) -> map_data;
 	if (check_map_size(*game) == ERROR
 		|| is_map_square(map_data) == false
@@ -43,11 +41,8 @@ int	check_map_size(t_game *game)
 		map_height >= (unsigned int)game -> screen_height)
 	{
 		ft_putendl_fd("ERROR MAP: TOO BIG", 2);
-		fprintf(stderr, "WIDTH:%zu\nHEIGHT:%zu\n", map_width, map_height);
 		return (ERROR);
 	}
-	printf("TOTAL SIZE IMG x_axe: %zu\n", map_width);
-	printf("TOTAL SIZE IMG y_axe: %zu\n", map_height);
 	if (game -> map_data -> total_cols  < 3 ||
 		game -> map_data -> total_rows  < 3)
 	{
@@ -75,7 +70,6 @@ bool	is_map_square(t_map *map_data)
 		}
 		i++;
 	}
-	printf("VALID SQUARE\n");
 	return (true);
 }
 
@@ -111,7 +105,6 @@ bool	is_valid_walls(t_map *map_data)
 		col = 0;
 		row++;
 	}
-	printf("VALID WALLS\n");
 	return (true);
 }
 
@@ -142,7 +135,6 @@ bool	is_valid_fill(t_map **map_data)
 		row++;
 	}
 	if ((*map_data) -> collectibles == 0 || (*map_data) -> player != 1 || (*map_data) -> exit != 1)
-		return (false);
-	printf("VALID INFILL\n");
+		return (ft_putendl_fd("INVALID FIED [PCEO1]", 2), false);
 	return (true);
 }

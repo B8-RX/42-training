@@ -77,12 +77,13 @@ void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
 		(*pos_x)--;
 }
 
-int	check_extension(char *file_name)
+int	check_file(char *file_name)
 {
 	int		i;
 	int		dot;
 	char	**ext;
 	int		valid_ext;
+	int		fd;
 
 	i = 0;
 	dot = 0;
@@ -105,5 +106,10 @@ int	check_extension(char *file_name)
 		return (ERROR);
 	}	
 	free_double_array(ext);
+	fd = open(file_name, O_RDONLY);
+	if (fd == -1)
+		return (ft_putendl_fd("FILE NOT FOUND", 2), ERROR);
+	else
+		close(fd);
 	return (SUCCESS);
 }

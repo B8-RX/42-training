@@ -29,8 +29,8 @@ void	free_map(t_map *map_data)
 			free(map_data -> matrix);
 			map_data -> matrix = NULL;
 		}
+		free(map_data);	
 	}
-	free(map_data);	
 }
 void	free_img_ptr(t_game	*game)
 {
@@ -91,7 +91,6 @@ void	free_game(t_game *game)
 		free_map(game -> map_data);
 	free_img_ptr(game);
 	on_destroy(game);
-	free(game);
 	exit(SUCCESS);
 }
 
@@ -119,4 +118,12 @@ void	on_destroy(t_game *game)
 		mlx_destroy_display(game -> mlx);
 		free(game -> mlx);
 	}
+	if (game)
+		free(game);
+}
+
+int	on_close(t_game *game)
+{
+	free_game(game);
+	return (SUCCESS);
 }

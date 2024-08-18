@@ -26,22 +26,22 @@ bool	can_move(t_game *game, int keycode)
 	can_move = false;
 	if (keycode == KEY_UP || keycode == KEY_UP_ARROW)
 	{
-		if (pos.y > 0 && (ft_strchr("0C", matrix[pos.y - 1][pos.x]) || (catch_all_fish && matrix[pos.y - 1][pos.x] == 'E')))
+		if (pos.y > 0 && (ft_strchr("0CE", matrix[pos.y - 1][pos.x])))
 			can_move = true;
 	}
 	else if (keycode == KEY_DOWN || keycode == KEY_DOWN_ARROW)
 	{
-		if (pos.y < game -> map_data -> total_rows - 1 && (ft_strchr("0C", matrix[pos.y + 1][pos.x]) || (catch_all_fish && matrix[pos.y + 1][pos.x] == 'E')))
+		if (pos.y < game -> map_data -> total_rows - 1 && (ft_strchr("0CE", matrix[pos.y + 1][pos.x])))
 			can_move = true;
 	}
 	else if (keycode == KEY_LEFT || keycode == KEY_LEFT_ARROW)
 	{
-		if (pos.x > 0 && (ft_strchr("0C", matrix[pos.y][pos.x - 1]) || (catch_all_fish && matrix[pos.y][pos.x - 1] == 'E')))
+		if (pos.x > 0 && (ft_strchr("0CE", matrix[pos.y][pos.x - 1])))
 			can_move = true;
 	}
 	else if (keycode == KEY_RIGHT || keycode == KEY_RIGHT_ARROW)
 	{	
-		if (pos.x < game -> map_data -> total_cols - 1 && (ft_strchr("0C", matrix[pos.y][pos.x + 1]) || (catch_all_fish && matrix[pos.y][pos.x + 1] == 'E')))
+		if (pos.x < game -> map_data -> total_cols - 1 && (ft_strchr("0CE", matrix[pos.y][pos.x + 1])))
 			can_move = true;
 	}
 	return (can_move);
@@ -68,7 +68,10 @@ void	update_matrix(t_game *game, Pair previous_pos)
 	}
 	if (matrix[pos_y][pos_x] != 'P')
 	{
-		matrix[previous_pos.y][previous_pos.x] = '0';
+		if (matrix[pos_y][pos_x] == 'E')
+			matrix[previous_pos.y][previous_pos.x] = 'E';
+		else
+			matrix[previous_pos.y][previous_pos.x] = '0';
 		matrix[pos_y][pos_x] = 'P';
 	}
 	game -> map_data -> matrix = matrix;
@@ -91,6 +94,7 @@ void	execute_move(t_game *game, int keycode)
 		game -> map_data -> player_pos.x -= 1;
 	else if (keycode == KEY_RIGHT || keycode == KEY_RIGHT_ARROW)
 		game -> map_data -> player_pos.x += 1;
+	game -> map_data -> steps++;
 	update_matrix(game, previous_pos);
 }
 
@@ -119,4 +123,3 @@ int	key_events(int keycode, t_game *game)
 		execute_move(game, keycode);
 	return (0);
 }
-

@@ -74,9 +74,11 @@ char	*ft_get_line(char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash;
-	char		*line;
+	static char		*stash;
+	static int		calls = 0;
+	char			*line;
 
+	calls++;
 	if (fd < 0 || !BUFFER_SIZE || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!stash)
@@ -84,6 +86,8 @@ char	*get_next_line(int fd)
 	stash = ft_read_file(fd, stash);
 	if (!stash)
 		return (NULL);
+	if (calls == 1 && ft_strlen(stash) < 2)
+		return (free(stash), NULL);
 	line = ft_get_line(stash);
 	if (!line)
 	{
@@ -93,3 +97,75 @@ char	*get_next_line(int fd)
 	stash = ft_update_stash(stash, "", ft_strlen(line));
 	return (line);
 }
+/*static char	*	ft_strjoin2(char *s1, char *s2)
+{
+	char	*join;
+	int		i;
+	int		j;
+
+	if (!s1)
+	{
+		s1 = malloc(sizeof(char));
+		s1[0] = '\0';
+	}
+	if (!s1 || !s2)
+		return (NULL);
+	join = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (join == NULL)
+		return (NULL);
+	i = -1;
+	while (s1[++i])
+		join[i] = s1[i];
+	j = -1;
+	while (s2[++j])
+		join[i++] = s2[j];
+	join[i] = '\0';
+	free((char *)s1);
+	return (join);
+}
+
+static void	cleanup(char *line, char *keep)
+{
+	int	i;
+	int	j;
+	int	end;
+
+	j = 0;
+	i = 0;
+	while (line[i] != '\n' && line[i])
+		i++;
+	end = i + 1;
+	while (line[i++])
+	{
+		keep[j] = line[i];
+		j++;
+	}
+	line[end] = '\0';
+	keep[j] = '\0';
+	return ;
+}
+
+char	*get_next_line(int fd)
+{
+	char		*line;
+	static char	keep[BUFFER_SIZE + 1] = {0};
+
+	line = NULL;
+	if (keep[0] != 0)
+	{
+		line = ft_strdup(keep);
+		if (ft_strchr(line, '\n'))
+			return (cleanup(line, keep), line);
+	}
+	ft_bzero(keep, BUFFER_SIZE + 1);
+	while (read(fd, keep, BUFFER_SIZE) > 0)
+	{
+		if (!line)
+			line = ft_strdup("");
+		line = ft_strjoin2(line, keep);
+		if (ft_strchr(line, '\n') || ft_strchr(line, '\0'))
+			return (cleanup(line, keep), line);
+		ft_bzero(keep, BUFFER_SIZE + 1);
+	}
+	return (line);
+}*/

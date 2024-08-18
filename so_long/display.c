@@ -40,38 +40,50 @@ char	*select_rock_img(t_game *game, size_t x, size_t y, char target)
 	return (game -> img_data.placeholder);
 }
 
+static char	*get_img_boat_up(t_game *game, int hit_count)
+{
+	if (hit_count && hit_count % 2 == 0 && game -> img_data.boat_up_hit)
+		return (game -> img_data.boat_up_hit);
+	return (game -> img_data.boat_up);
+}
+
+static char	*get_img_boat_down(t_game *game, int hit_count)
+{
+	if (hit_count && hit_count % 2 == 0 && game -> img_data.boat_down_hit)
+		return (game -> img_data.boat_down_hit);
+	return (game -> img_data.boat_down);
+}
+
+static char	*get_img_boat_left(t_game *game, int hit_count)
+{
+	if (hit_count && hit_count % 2 == 0  && game -> img_data.boat_left_hit)
+		return (game -> img_data.boat_left_hit);
+	return (game -> img_data.boat_left);
+}
+
+static char	*get_img_boat_right(t_game *game, int hit_count)
+{
+	if (hit_count && hit_count % 2 == 0  && game -> img_data.boat_right_hit)
+		return (game -> img_data.boat_right_hit);
+	return (game -> img_data.boat_right);
+}
+
 char	*select_boat_img(t_game *game, int hit)
 {
 	int			key_direction;
 	static int	hit_count = 0;
 
-	key_direction = game -> img_data.boat_direction;
 	if (hit)
 		hit_count++;
+	key_direction = game -> img_data.boat_direction;
 	if ((key_direction == KEY_UP || key_direction == KEY_UP_ARROW) && game -> img_data.boat_up)
-	{
-		if (hit && hit_count % 2 == 0 && game -> img_data.boat_up_hit)
-			return (game -> img_data.boat_up_hit);
-		return (game -> img_data.boat_up);
-	}
+		return (get_img_boat_up(game, hit_count));
 	else if ((key_direction == KEY_DOWN || key_direction == KEY_DOWN_ARROW) && game -> img_data.boat_down)
-	{
-		if (hit && hit_count % 2 == 0 && game -> img_data.boat_down_hit)
-			return (game -> img_data.boat_down_hit);
-		return (game -> img_data.boat_down);
-	}
+		return (get_img_boat_down(game, hit_count));
 	else if ((key_direction == KEY_LEFT || key_direction == KEY_LEFT_ARROW) && game -> img_data.boat_left)
-	{
-		if (hit && hit_count % 2 == 0  && game -> img_data.boat_left_hit)
-			return (game -> img_data.boat_left_hit);
-		return (game -> img_data.boat_left);
-	}
+		return (get_img_boat_left(game, hit_count));
 	else if ((key_direction == KEY_RIGHT || key_direction == KEY_RIGHT_ARROW) && game -> img_data.boat_right)
-	{
-		if (hit && hit_count % 2 == 0  && game -> img_data.boat_right_hit)
-			return (game -> img_data.boat_right_hit);
-		return (game -> img_data.boat_right);
-	}
+		return (get_img_boat_right(game, hit_count));
 	return (game -> img_data.placeholder);
 }
 
@@ -82,6 +94,8 @@ int	display_game(t_game *game)
 	size_t		y;
 	static int	time_laps = 0;
 	static int	hit = 0;
+	size_t		moves;
+	bool		collectibles_left;
 
 	if (!game || !game -> mlx_win)
 		return (1);
@@ -90,6 +104,7 @@ int	display_game(t_game *game)
 	while(y < game -> map_data -> total_rows)
 	{
 		x = 0;
+		collectibles_left = game -> map_data -> collectibles > game -> map_data -> collected;
 		while (x < game -> map_data -> total_cols)
 		{
 			if (matrix[y][x] == '1')
@@ -100,21 +115,27 @@ int	display_game(t_game *game)
 				mlx_put_image_to_window(game -> mlx, game -> mlx_win, select_boat_img(game, hit), (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			else if (matrix[y][x] == 'C')
 				mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.fish_img[1], (x * game -> img_data.img_width), (y * game -> img_data.img_height));
-			else if (matrix[y][x] == 'E')
+			else if (matrix[y][x] == 'E' && !collectibles_left)
 				mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.exit_img, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
+			else if (matrix[y][x] == 'E' && collectibles_left)
+				mlx_put_image_to_window(game -> mlx, game -> mlx_win, game -> img_data.sea, (x * game -> img_data.img_width), (y * game -> img_data.img_height));
 			x++;
 		}
 		y++;
 	}
-	if (game -> start && time_laps > 150 && can_move(game, game -> img_data.boat_direction))
+	moves = game -> map_data -> steps;
+	if (game -> start && time_laps > 100 && can_move(game, game -> img_data.boat_direction))
 	{
 		execute_move(game, game -> img_data.boat_direction);
+		game -> map_data -> steps++;
 		time_laps = 0;
 		hit = 0;
-	}	
-	else if (game -> start && time_laps > 200 && !can_move(game, game -> img_data.boat_direction))
+	}
+	if (game -> start && time_laps > 200 && !can_move(game, game -> img_data.boat_direction))
 		hit++;
-	if (hit > 150)
+	if (moves != game -> map_data -> steps)
+		ft_printf("MOVES: %d\n", game -> map_data -> steps);
+	if (time_laps > 150 && hit > 200)
 	{
 		ft_putendl_fd("YOUR BOAT SINK, TRY AGAIN!", 1);
 		free_game(game);

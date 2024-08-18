@@ -35,7 +35,7 @@ OBJS = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE}))
 
 NAME = minilibx_test
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g3
 
 CC = cc
 
