@@ -13,24 +13,23 @@
 #include "./so_long.h"
 #include <stdio.h>
 
-int verify_map(t_game **game)
+void	verify_map(t_game **game)
 {
 	t_map	*map_data;
 	Pair	player_position;
 
 	map_data = (*game) -> map_data;
-	if (check_map_size(*game) == ERROR
-		|| is_map_square(map_data) == false
-		|| is_valid_walls(map_data) == false
-		|| is_valid_fill(&map_data) == false
-		|| is_valid_player_path(&map_data) == false)
-		return (ERROR);
+	check_map_size(*game);
+	is_map_square(*game);
+	is_valid_walls(*game);
+	is_valid_fill(*game);
+	is_valid_player_path(*game);
 	player_position = get_position(&map_data, 'P');
 	(*game) -> map_data -> player_pos = (Pair) {player_position.x, player_position.y, -1};
-	return (SUCCESS);
+	return ;
 }
 
-int	check_map_size(t_game *game)
+void	check_map_size(t_game *game)
 {
 	size_t	map_width;
 	size_t	map_height;
@@ -39,76 +38,61 @@ int	check_map_size(t_game *game)
 	map_height = game -> map_data -> total_rows * 128;
 	if (map_width >= (unsigned int)game -> screen_width ||
 		map_height >= (unsigned int)game -> screen_height)
-	{
-		ft_putendl_fd("ERROR MAP: TOO BIG", 2);
-		return (ERROR);
-	}
+		return (handle_errors(game, "error_size"));
 	if (game -> map_data -> total_cols  < 3 ||
 		game -> map_data -> total_rows  < 3)
-	{
-		ft_putendl_fd("ERROR MAP: TOO SMALL", 2);
-		return (ERROR);
-	}
-	return (SUCCESS);
+		return (handle_errors(game, "error_size"));
+	return ;
 }
 
-bool	is_map_square(t_map *map_data)
+void	is_map_square(t_game *game)
 {
 	size_t	first_row_len;
 	char	**matrix;
 	int		i;
 
 	i = 0;
-	matrix = map_data -> matrix;
+	matrix = game->map_data -> matrix;
 	first_row_len = ft_strlen(matrix[i++]);
 	while (matrix[i])
 	{
 		if (ft_strlen(matrix[i]) != first_row_len)
-		{
-			ft_putendl_fd("ERROR MAP: NOT SQUARE", 2);
-			return (false);
-		}
+			return (handle_errors(game, "not_square"));
 		i++;
 	}
-	return (true);
+	return ;
 }
 
-bool	is_valid_walls(t_map *map_data)
+void	is_valid_walls(t_game *game)
 {
 	size_t	col;
 	size_t	row;
 	size_t	total_cols;
 	char	**matrix;
 
-	matrix = map_data -> matrix;
+	matrix = game->map_data -> matrix;
 	col = -1;
 	row = 0;
 	while (matrix[row])
 	{
 		total_cols = ft_strlen(matrix[row]);
-		if (row == 0 || row == ((map_data -> total_rows) - 1))
+		if (row == 0 || row == ((game->map_data -> total_rows) - 1))
 			while (col < total_cols)
 			{
 				if (matrix[row][col] != '1')
-				{
-					ft_putendl_fd("ERROR MAP: HAVE NOT WALL ON EVERY SIDES", 2);
-					return (false);
-				}
+					return (handle_errors(game, "error_borders"));
 				col++;
 			}
 		else
 			if (matrix[row][col] != '1' || matrix[row][total_cols - 1] != '1')
-			{
-					ft_putendl_fd("ERROR MAP: HAVE NOT WALL ON EVERY SIDES", 2);
-					return (false);
-			}
+				return (handle_errors(game, "error_borders"));
 		col = 0;
 		row++;
 	}
-	return (true);
+	return ;
 }
 
-bool	is_valid_fill(t_map **map_data)
+void	is_valid_fill(t_game *game)
 {
 	size_t	col;
 	size_t	row;
@@ -117,24 +101,21 @@ bool	is_valid_fill(t_map **map_data)
 
 	col = 1;
 	row = 0;
-	matrix = (*map_data) -> matrix;
+	matrix = game->map_data -> matrix;
 	while (matrix[row])
 	{
 		total_cols = ft_strlen(matrix[row]);
-		if (row > 0 && row < ((*map_data) -> total_rows - 1))
+		if (row > 0 && row < (game->map_data-> total_rows - 1))
 			while (col < total_cols - 1)
 			{
-				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate(map_data, matrix[row][col]))
-				{
-					ft_putendl_fd("ERROR MAP: HAVE NOT VALID FIELD (PE01C) or duplicate items", 2);
-					return (false);
-				}
+				if (!ft_strchr("0PCE1", matrix[row][col]) || is_duplicate(&game->map_data, matrix[row][col]))
+				return (handle_errors(game, "error_infill"));
 				col++;
 			}
 		col = 1;
 		row++;
 	}
-	if ((*map_data) -> collectibles == 0 || (*map_data) -> player != 1 || (*map_data) -> exit != 1)
-		return (ft_putendl_fd("INVALID FIED [PCEO1]", 2), false);
-	return (true);
+	if (game->map_data -> collectibles == 0 || game->map_data -> player != 1 || game->map_data -> exit != 1)
+		return (handle_errors(game, "error_infill"));
+	return ;
 }

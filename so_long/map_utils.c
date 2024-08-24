@@ -12,7 +12,7 @@
 
 #include "./so_long.h"
 
-char	*to_string(t_game *game, char *map_path)
+int	map_to_string(t_game *game, char *map_path)
 {
 	char	*temp;
 	char	*line;
@@ -20,15 +20,15 @@ char	*to_string(t_game *game, char *map_path)
 
 	fd = open(map_path, O_RDONLY);
 	if (fd == -1)
-		return (ft_putendl_fd("ERROR OPEN FILE", 2), NULL);
+		return (ft_putendl_fd("ERROR OPEN FILE", 2), ERROR);
 	line = get_next_line(fd);
 	if (!line)
-		return (close(fd), NULL);
+		return (close(fd), ERROR);
 	if (ft_strlen(line) == 1)
-		return (free(line), close(fd), NULL);
+		return (free(line), close(fd), ERROR);
 	game -> map_data -> str_map = ft_strjoin("", "");
 	if (!game -> map_data -> str_map)
-		return (close(fd), NULL);
+		return (close(fd), ERROR);
 	while (line)
 	{
 		temp = ft_strjoin(game -> map_data -> str_map, line);
@@ -36,7 +36,7 @@ char	*to_string(t_game *game, char *map_path)
 		{
 			if (line)
 				free(line);
-			return (close(fd), NULL);
+			return (close(fd), ERROR);
 		}
 		free(game -> map_data -> str_map);
 		game -> map_data -> str_map = temp;
@@ -44,10 +44,10 @@ char	*to_string(t_game *game, char *map_path)
 		line = get_next_line(fd);
 	}
 	if (!*(game -> map_data -> str_map))
-		return (close(fd), NULL);
+		return (close(fd), ERROR);
 	if (close(fd) == -1)
-		return (ft_putendl_fd("ERROR CLOSE FILE", 2), free(game -> map_data -> str_map), NULL);
-	return (game -> map_data -> str_map);
+		return (ft_putendl_fd("ERROR CLOSE FILE", 2), free(game -> map_data -> str_map), ERROR);
+	return (SUCCESS);
 }
 
 int	get_total_rows(t_map *map_data)

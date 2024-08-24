@@ -46,10 +46,13 @@ void	free_img_ptr(t_game	*game)
 
 void	free_game(t_game *game)
 {
-	if (game->map_data)
-		free_map(game->map_data);
-	free_img_ptr(game);
-	on_destroy(game);
+	if (game)
+	{
+		if (game->map_data)
+			free_map(game->map_data);
+		free_img_ptr(game);
+		on_destroy(game);
+	}
 	exit(SUCCESS);
 }
 

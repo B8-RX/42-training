@@ -19,6 +19,20 @@
 #include <mlx.h>
 #include "libft.h"
 
+# define ERR_GAME_INIT "err_game_init"
+# define ERR_COLLECTIBLES_INIT "err_collectibles_init"
+# define ERR_MAP_FORMAT "err_map_format"
+# define ERR_MAP_NOT_FOUND "err_map_not_found"
+# define ERR_PLAYER_POS "player_pos"
+# define ERR_SPRITE_FORMAT "sprite_format"
+# define ERR_MAP_INIT "map_init"
+# define ERR_IMG_NOT_FOUND "img_not_found"
+# define ERR_SQUARE "not_square"
+# define ERR_SIZE "error_size"
+# define ERR_BORDERS "error_borders"
+# define ERR_INFILL "error_infill"
+# define ERR_ITEMS_ACCESS "error_access_items"
+# define ERR_MAP_VALIDATION {ERR_SIZE, ERR_SQUARE, ERR_BORDERS, ERR_INFILL, ERR_ITEMS_ACCESS}
 # define EXTENSION "xpm"
 # define SUCCESS 0
 # define ERROR 1
@@ -124,15 +138,17 @@ typedef struct s_game {
 	int		time_laps;
 } t_game;
 
-int		check_images(t_game *game);
-int		check_images_ext(void);
-int		verify_map(t_game **game);
-int		check_map_size(t_game *game);
-bool	is_map_square(t_map *map_data);
-bool	is_valid_walls(t_map *map_data);
-bool	is_valid_fill(t_map **map_data);
+void	check_images(t_game *game);
 
-bool	is_valid_player_path(t_map **map_data);
+void	check_images_ext(t_game *game);
+
+void	verify_map(t_game **game);
+void	check_map_size(t_game *game);
+void	is_map_square(t_game *game);
+void	is_valid_walls(t_game *game);
+void	is_valid_fill(t_game *game);
+void	is_valid_player_path(t_game *game);
+
 void	init_queue(t_map *map_data, Pair queue[]);
 Pair	get_position(t_map **map_data, char target);
 bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, char target);
@@ -143,19 +159,25 @@ bool	is_duplicate(t_map **map_data, char item);
 bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
 bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
 void	update_position(size_t *pos_x, size_t *pos_y, char *direction);
-int		check_file(char *file_name);
+void	check_file(t_game *game, char *file_name);
 
 int		get_total_rows(t_map *map_data);
-char	*to_string(t_game *game, char *map_path);
+int		map_to_string(t_game *game, char *map_path);
 
-int		init_game(t_game **game);
-int		init_map(t_game **game, char *map_path);
-int		init_images(t_game *game);
+void	init_game(t_game **game);
+void	init_map(t_game **game, char *map_path);
+void	set_map_infos(t_game *game);
+void	init_images(t_game *game);
 void	*create_image(t_game *game, char *img_path);
 void	init_rock(t_game *game);
 void	init_boat(t_game *game);
 int		init_fish_collection(t_game **game);
 char	*select_boat_img(t_game *game, int hit_count);
+
+//mlx
+void	init_server(t_game *game);
+void	init_window(t_game *game);
+void	run_game(t_game *game);
 void	put_img_to_window(t_game *game, int x, int y, bool coll_left);
 
 bool	can_move(t_game *game, int keycode);
@@ -177,7 +199,6 @@ void	free_double_array(char **array);
 int		key_events(int keycode, t_game *game);
 void	handle_gameover(t_game *game);
 void	handle_win(t_game *game);
-
-void	display_error_ext(char *ext, char *file);
+void	handle_errors(t_game *game, char *name);
 
 #endif

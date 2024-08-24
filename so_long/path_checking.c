@@ -25,25 +25,19 @@ void	init_queue(t_map *map_data, Pair queue[])
 	queue[0] = (Pair){map_data->player_pos.x, map_data->player_pos.y, 1};
 }
 
-bool	is_valid_player_path(t_map **map_data)
+void	is_valid_player_path(t_game *game)
 {
 	size_t	total_items;
 	Pair	pos;
 
-	pos = get_position(map_data, 'P');
+	pos = get_position(&game->map_data, 'P');
 	if (pos.y == 0)
-	{
-		ft_putendl_fd("ERROR CAN'T GET PLAYER POSITION", 2);
-		return (false);
-	}
-	(*map_data) -> player_pos = (Pair) {pos.x, pos.y, -1};
-	total_items = (*map_data) -> collectibles + (*map_data) -> exit;
-	if (!can_access_items(*map_data, (*map_data) -> total_cells, total_items, 'C'))
-	{
-		ft_putendl_fd("ERROR PLAYER HAVE NOT ACCESS TO EVERY ITEMS", 2);
-		return (false);
-	}
-	return (true);
+		return (handle_errors(game, "player_pos"));
+	game->map_data-> player_pos = (Pair) {pos.x, pos.y, -1};
+	total_items = game->map_data->collectibles + game->map_data->exit;
+	if (!can_access_items(game->map_data, game->map_data-> total_cells, total_items, 'C'))
+		return (handle_errors(game, "error_access_items"));
+	return ;
 }
 
 Pair	get_position(t_map **map_data, char target)

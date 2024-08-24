@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-int	check_images_ext(void)
+void	check_images_ext(t_game *game)
 {
 	int					i;
 	char				*img_ext;
@@ -29,17 +29,13 @@ int	check_images_ext(void)
 	{
 		img_ext = ft_strdup(img[i] + ft_strlen(img[i]) - 3);
 		if (ft_strncmp(img_ext, EXTENSION, 3))
-		{
-			display_error_ext(img_ext, (char *)img[i]);
-			free(img_ext);
-			return (ERROR);
-		}
+			return (free(img_ext), handle_errors(game, "sprite_format"));
 		free(img_ext);
 	}
-	return (SUCCESS);
+	return ;
 }
 
-int	check_images(t_game *game)
+void	check_images(t_game *game)
 {
 	t_img	img;
 
@@ -53,6 +49,6 @@ int	check_images(t_game *game)
 		|| !img.boat_up_hit || !img.boat_right_hit || !img.boat_down_hit
 		|| !img.placeholder || !img.exit_img || !img.fish_img[0]
 		|| !img.fish_img[1] || !img.fish_img[2] || !img.fish_img[3])
-		return (ft_putendl_fd("IMAGE NOT FOUND", 2), ERROR);
-	return (SUCCESS);
+		return (handle_errors(game, "img_not_found"));
+	return ;
 }

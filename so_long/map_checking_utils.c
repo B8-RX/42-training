@@ -77,7 +77,7 @@ void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
 		(*pos_x)--;
 }
 
-int	check_file(char *file_name)
+void	check_file(t_game *game, char *file_name)
 {
 	int		i;
 	int		dot;
@@ -99,17 +99,14 @@ int	check_file(char *file_name)
 		valid_ext = 1;
 	if (!valid_ext)
 	{
-		ft_putendl_fd_nl("ERROR EXTENSION: SUPPORT ONLY [.ber] FILE AND GET [.", 2);
-		ft_putendl_fd_nl(ext[dot], 2);
-		ft_putendl_fd("]", 2);
 		free_double_array(ext);
-		return (ERROR);
+		return (handle_errors(game, ERR_MAP_FORMAT));
 	}	
 	free_double_array(ext);
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
-		return (ft_putendl_fd("FILE NOT FOUND", 2), ERROR);
+		return (handle_errors(game, ERR_MAP_NOT_FOUND));
 	else
 		close(fd);
-	return (SUCCESS);
+	return ;
 }
