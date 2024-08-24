@@ -12,6 +12,19 @@
 
 #include "./so_long.h"
 
+
+void	init_queue(t_map *map_data, Pair queue[])
+{
+	size_t	i;
+
+	i = 0;
+	if (!map_data)
+		return ;
+	while (i < map_data->total_cells)
+		queue[i++].visited = -1;
+	queue[0] = (Pair){map_data->player_pos.x, map_data->player_pos.y, 1};
+}
+
 bool	is_valid_player_path(t_map **map_data)
 {
 	size_t	total_items;

@@ -19,6 +19,7 @@
 #include <mlx.h>
 #include "libft.h"
 
+# define EXTENSION "xpm"
 # define SUCCESS 0
 # define ERROR 1
 # define IMG_SIZE 128
@@ -96,8 +97,10 @@ typedef struct s_map {
 	char	**matrix;
 	char	*str_map;
 	size_t	player;
+	int		player_hit;
 	size_t	collectibles;
 	size_t	collected;
+	bool	collectibles_left;
 	size_t	exit;
 	size_t	empty;
 	size_t	wall;
@@ -107,7 +110,7 @@ typedef struct s_map {
 	size_t	total_cols;
 	size_t	total_cells;
 	size_t	reached_items;
-	size_t	steps;
+	size_t	total_steps;
 } t_map;
 
 typedef struct s_game {
@@ -118,10 +121,11 @@ typedef struct s_game {
 	t_img	img_data;
 	int		screen_width;
 	int		screen_height;
+	int		time_laps;
 } t_game;
 
 int		check_images(t_game *game);
-int		check_images_ext(char *extentions);
+int		check_images_ext(void);
 int		verify_map(t_game **game);
 int		check_map_size(t_game *game);
 bool	is_map_square(t_map *map_data);
@@ -129,6 +133,7 @@ bool	is_valid_walls(t_map *map_data);
 bool	is_valid_fill(t_map **map_data);
 
 bool	is_valid_player_path(t_map **map_data);
+void	init_queue(t_map *map_data, Pair queue[]);
 Pair	get_position(t_map **map_data, char target);
 bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, char target);
 bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
@@ -143,11 +148,15 @@ int		check_file(char *file_name);
 int		get_total_rows(t_map *map_data);
 char	*to_string(t_game *game, char *map_path);
 
-void	init_queue(t_map *map_data, Pair queue[]);
+int		init_game(t_game **game);
 int		init_map(t_game **game, char *map_path);
 int		init_images(t_game *game);
-int		init_game(t_game **game);
+void	*create_image(t_game *game, char *img_path);
+void	init_rock(t_game *game);
+void	init_boat(t_game *game);
 int		init_fish_collection(t_game **game);
+char	*select_boat_img(t_game *game, int hit_count);
+void	put_img_to_window(t_game *game, int x, int y, bool coll_left);
 
 bool	can_move(t_game *game, int keycode);
 void	update_matrix(t_game *game, Pair previous_pos);
@@ -156,11 +165,19 @@ int		display_game(t_game *game);
 
 void	free_map(t_map *map);
 void	free_game(t_game *game);
+void	free_img_rock(t_game *game);
+void	free_img_boat(t_game *game);
+void	free_img_sea(t_game *game);
+void	free_img_exit(t_game *game);
+void	free_img_collectibles(t_game *game);
 void	on_destroy(t_game *game);
 int		on_close(t_game *game);
 void	free_double_array(char **array);
 
 int		key_events(int keycode, t_game *game);
-bool	is_move_key(int keycode);
+void	handle_gameover(t_game *game);
+void	handle_win(t_game *game);
+
+void	display_error_ext(char *ext, char *file);
 
 #endif

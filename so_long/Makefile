@@ -29,7 +29,7 @@ LIBFT_LIB = $(LIBFT_DIR)libft.a
 
 OBJS_PATH = ./objs/
 
-SOURCE = ./main.c ./display.c ./events.c ./free_utils.c ./init.c ./map_checking.c ./map_checking_utils.c ./map_utils.c ./path_checking.c 
+SOURCE = ./main.c ./display.c ./display_utils-1.c ./display_utils-2.c ./events.c ./moves_utils.c ./free_utils.c ./free_img.c ./init.c ./init_2.c ./check_utils.c ./map_checking.c ./map_checking_utils.c ./map_utils.c ./path_checking.c ./errors_utils.c 
 
 OBJS = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE}))
 
