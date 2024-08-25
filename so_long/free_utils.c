@@ -77,6 +77,9 @@ void	on_destroy(t_game *game)
 	if (game->mlx_win && game)
 	{
 		mlx_destroy_window(game->mlx, game->mlx_win);
+	}
+	if (game && game->mlx)
+	{
 		mlx_destroy_display(game->mlx);
 		free(game->mlx);
 	}

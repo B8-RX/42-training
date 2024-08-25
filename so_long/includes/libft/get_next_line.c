@@ -34,10 +34,7 @@ char	*ft_read_file(int fd, char *stash)
 		buff[read_bytes] = '\0';
 		stash = ft_update_stash(stash, buff, 0);
 		if (!stash)
-		{
-			free(buff);
-			return (NULL);
-		}
+			return (free(buff), NULL);
 	}
 	free(buff);
 	return (stash);

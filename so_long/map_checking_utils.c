@@ -28,7 +28,7 @@ bool	is_duplicate(t_map **map_data, char item)
 	return (false);
 }
 
-bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y)
+bool	is_visited_cell(t_pair queue[], size_t pos_x, size_t pos_y)
 {
 	int		i;
 	int		is_visited;
@@ -40,7 +40,7 @@ bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y)
 		if ((queue[i].y == pos_y && queue[i].x == pos_x))
 		{
 			is_visited = 1;
-			break;
+			break ;
 		}	
 		i++;
 	}
@@ -49,16 +49,18 @@ bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y)
 	return (false);
 }
 
-bool	is_target_or_path(t_map	*map_data, size_t pos_x, size_t pos_y, char target)
+bool	is_target_or_path(t_map	*data, size_t pos_x, size_t pos_y, char target)
 {
 	char	**matrix;
 	char	curr_item;
-	
-	if (!map_data)
+
+	if (!data)
 		return (false);
-	matrix = map_data -> matrix;
+	matrix = data -> matrix;
 	curr_item = matrix[pos_y][pos_x];
-	if (pos_y > 0 && pos_y < (map_data -> total_rows) && pos_x > 0 && pos_x < (map_data -> total_cols) && (curr_item == '0' || curr_item == target || curr_item == 'E'))
+	if (pos_y > 0 && pos_y < (data -> total_rows) && pos_x > 0
+		&& pos_x < (data -> total_cols) && (curr_item == '0'
+			|| curr_item == target || curr_item == 'E'))
 		return (true);
 	return (false);
 }
@@ -80,29 +82,13 @@ void	update_position(size_t *pos_x, size_t *pos_y, char *direction)
 void	check_file(t_game *game, char *file_name)
 {
 	int		i;
-	int		dot;
-	char	**ext;
-	int		valid_ext;
 	int		fd;
+	size_t	len;
 
 	i = 0;
-	dot = 0;
-	valid_ext = 0;
-	while (file_name[i])
-	{
-		if (file_name[i] == '.' && file_name[i + 1] != '/')
-			dot++;
-		i++;
-	}
-	ext = ft_split(file_name, '.');
-	if (ext && ft_strncmp(EXT, ext[dot], ft_strlen(EXT)) == 0)
-		valid_ext = 1;
-	if (!valid_ext)
-	{
-		free_double_array(ext);
+	len = ft_strlen(file_name) - 4;
+	if (ft_strlen(file_name) < 5 || ft_strncmp(file_name + len, ".ber", 4))
 		return (handle_errors(game, ERR_MAP_FORMAT));
-	}	
-	free_double_array(ext);
 	fd = open(file_name, O_RDONLY);
 	if (fd == -1)
 		return (handle_errors(game, ERR_MAP_NOT_FOUND));

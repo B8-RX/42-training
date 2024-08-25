@@ -12,9 +12,26 @@
 
 #include "./so_long.h"
 
-int	map_to_string(t_game *game, char *map_path)
+static void	append_next_line(t_game *game, int fd, char **line)
 {
 	char	*temp;
+
+	temp = ft_strjoin(game -> map_data -> str_map, *line);
+	if (!temp)
+	{
+		if (*line)
+			free(*line);
+		close(fd);
+		return ;
+	}
+	free(game -> map_data -> str_map);
+	game -> map_data -> str_map = temp;
+	free(*line);
+	*line = get_next_line(fd);
+}
+
+int	map_to_string(t_game *game, char *map_path)
+{
 	char	*line;
 	int		fd;
 
@@ -27,26 +44,13 @@ int	map_to_string(t_game *game, char *map_path)
 	if (ft_strlen(line) == 1)
 		return (free(line), close(fd), ERROR);
 	game -> map_data -> str_map = ft_strjoin("", "");
-	if (!game -> map_data -> str_map)
-		return (close(fd), ERROR);
 	while (line)
-	{
-		temp = ft_strjoin(game -> map_data -> str_map, line);
-		if (!temp)
-		{
-			if (line)
-				free(line);
-			return (close(fd), ERROR);
-		}
-		free(game -> map_data -> str_map);
-		game -> map_data -> str_map = temp;
-		free(line);
-		line = get_next_line(fd);
-	}
+		append_next_line(game, fd, &line);
 	if (!*(game -> map_data -> str_map))
 		return (close(fd), ERROR);
 	if (close(fd) == -1)
-		return (ft_putendl_fd("ERROR CLOSE FILE", 2), free(game -> map_data -> str_map), ERROR);
+		return (ft_putendl_fd("ERROR CLOSE FILE", 2),
+			free(game -> map_data -> str_map), ERROR);
 	return (SUCCESS);
 }
 
@@ -59,6 +63,5 @@ int	get_total_rows(t_map *map_data)
 	row = 0;
 	while (matrix[row])
 		row++;
-	return (row);	
+	return (row);
 }
-

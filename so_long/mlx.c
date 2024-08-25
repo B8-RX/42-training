@@ -25,14 +25,16 @@ void	init_server(t_game *game)
 
 void	init_window(t_game *game)
 {
-	game->mlx_win =	mlx_new_window(game->mlx, game->map_data->total_cols * 128, game->map_data->total_rows * 128, "test window");
+	game->mlx_win = mlx_new_window(game->mlx, game->map_data->total_cols * 128,
+			game->map_data->total_rows * 128, "test window");
 	if (!game->mlx_win)
 	{
 		ft_putendl_fd("ERROR WINDOW INITIALIZATION", 2);
 		free_game(game);
 		exit(ERROR);
 	}
-	mlx_get_screen_size(game->mlx, &(game->screen_width), &(game->screen_height));
+	mlx_get_screen_size(game->mlx, &(game->screen_width),
+		&(game->screen_height));
 }
 
 void	run_game(t_game *game)

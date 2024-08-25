@@ -12,12 +12,11 @@
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
- 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <mlx.h>
-#include "libft.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <stdbool.h>
+# include <mlx.h>
+# include "libft.h"
 
 # define ERR_GAME_INIT "err_game_init"
 # define ERR_COLLECTIBLES_INIT "err_collectibles_init"
@@ -27,12 +26,11 @@
 # define ERR_SPRITE_FORMAT "sprite_format"
 # define ERR_MAP_INIT "map_init"
 # define ERR_IMG_NOT_FOUND "img_not_found"
-# define ERR_SQUARE "not_square"
-# define ERR_SIZE "error_size"
-# define ERR_BORDERS "error_borders"
-# define ERR_INFILL "error_infill"
-# define ERR_ITEMS_ACCESS "error_access_items"
-# define ERR_MAP_VALIDATION {ERR_SIZE, ERR_SQUARE, ERR_BORDERS, ERR_INFILL, ERR_ITEMS_ACCESS}
+# define ERR_MAP_SIZE "error_size"
+# define ERR_MAP_SHAPE "not_square"
+# define ERR_MAP_BORDERS "error_borders"
+# define ERR_MAP_INFILL "error_infill"
+# define ERR_MAP_ACCESS_ITEMS "error_access_items"
 # define EXTENSION "xpm"
 # define SUCCESS 0
 # define ERROR 1
@@ -46,38 +44,38 @@
 # define KEY_UP_ARROW 65362 
 # define KEY_RIGHT_ARROW 65363
 # define KEY_DOWN_ARROW 65364
-# define EXT "ber"
-# define ROCK_Y_TOP "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top.xpm"
-# define ROCK_Y_TOP_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_left.xpm"
-# define ROCK_Y_TOP_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_top_right.xpm"
-# define ROCK_Y_BOTTOM "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom.xpm"
-# define ROCK_Y_BOTTOM_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom_left.xpm"
-# define ROCK_Y_BOTTOM_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_y_bottom_right.xpm"
-# define ROCK_X_LEFT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_x_left.xpm"
-# define ROCK_X_RIGHT "./ASSETS/fishing_game/tiles/rock/xpm/rocks_x_right.xpm"
-# define ROCK_OBSTACLES "./ASSETS/fishing_game/tiles/rock/xpm/rock_obstacles.xpm"
-# define WATER_1 "./ASSETS/fishing_game/tiles/sea/xpm/water-v1.xpm"
-# define BOAT_UP "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_up.xpm"
-# define BOAT_DOWN "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down.xpm"
-# define BOAT_LEFT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left.xpm"
-# define BOAT_RIGHT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right.xpm"
-# define BOAT_UP_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_up_hit.xpm"
-# define BOAT_DOWN_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_down_hit.xpm"
-# define BOAT_LEFT_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_left_hit.xpm"
-# define BOAT_RIGHT_HIT "./ASSETS/fishing_game/sprites/boat_sprites/xpm/boat_right_hit.xpm"
-# define PLACEHOLDER "./ASSETS/fishing_game/placeholder.xpm"
-# define EXIT "./ASSETS/fishing_game/tiles/exit/xpm/island_exit.xpm"
-# define SQUID "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Squid.xpm" 
-# define SALMON "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Salmon.xpm"
-# define SOLARFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Solarfish.xpm"
-# define CLOWNFISH "./ASSETS/fishing_game/sprites/fish_sprites/xpm/Clownfish.xpm"
+# define EXT ".ber"
+# define ROCK_Y_TOP "./ASSETS/game/tiles/rock/rocks_y_top.xpm"
+# define ROCK_Y_TOP_LEFT "./ASSETS/game/tiles/rock/rocks_y_top_left.xpm"
+# define ROCK_Y_TOP_RIGHT "./ASSETS/game/tiles/rock/rocks_y_top_right.xpm"
+# define ROCK_Y_BOTTOM "./ASSETS/game/tiles/rock/rocks_y_bottom.xpm"
+# define ROCK_Y_BOTTOM_LEFT "./ASSETS/game/tiles/rock/rocks_y_bottom_left.xpm"
+# define ROCK_Y_BOTTOM_RIGHT "./ASSETS/game/tiles/rock/rocks_y_bottom_right.xpm"
+# define ROCK_X_LEFT "./ASSETS/game/tiles/rock/rocks_x_left.xpm"
+# define ROCK_X_RIGHT "./ASSETS/game/tiles/rock/rocks_x_right.xpm"
+# define ROCK_OBSTACLES "./ASSETS/game/tiles/rock/rock_obstacles.xpm"
+# define WATER_1 "./ASSETS/game/tiles/sea/xpm/water-v1.xpm"
+# define BOAT_UP "./ASSETS/game/sprites/boat/xpm/boat_up.xpm"
+# define BOAT_DOWN "./ASSETS/game/sprites/boat/xpm/boat_down.xpm"
+# define BOAT_LEFT "./ASSETS/game/sprites/boat/xpm/boat_left.xpm"
+# define BOAT_RIGHT "./ASSETS/game/sprites/boat/xpm/boat_right.xpm"
+# define BOAT_UP_HIT "./ASSETS/game/sprites/boat/xpm/boat_up_hit.xpm"
+# define BOAT_DOWN_HIT "./ASSETS/game/sprites/boat/xpm/boat_down_hit.xpm"
+# define BOAT_LEFT_HIT "./ASSETS/game/sprites/boat/xpm/boat_left_hit.xpm"
+# define BOAT_RIGHT_HIT "./ASSETS/game/sprites/boat/xpm/boat_right_hit.xpm"
+# define PLACEHOLDER "./ASSETS/game/placeholder.xpm"
+# define EXIT "./ASSETS/game/tiles/exit/xpm/island_exit.xpm"
+# define SQUID "./ASSETS/game/sprites/fish/xpm/Squid.xpm" 
+# define SALMON "./ASSETS/game/sprites/fish/xpm/Salmon.xpm"
+# define SOLARFISH "./ASSETS/game/sprites/fish/xpm/Solarfish.xpm"
+# define CLOWNFISH "./ASSETS/game/sprites/fish/xpm/Clownfish.xpm"
 
-typedef struct 
+typedef struct s_pair
 {
 	size_t	x;
 	size_t	y;
-	int	visited;
-} Pair;
+	int		visited;
+}	t_pair;
 
 typedef struct s_img {
 	int		img_width;
@@ -105,7 +103,7 @@ typedef struct s_img {
 	void	*fish_img[4];
 	void	*exit_img;
 	void	*placeholder;
-} t_img;
+}	t_img;
 
 typedef struct s_map {
 	char	**matrix;
@@ -118,14 +116,14 @@ typedef struct s_map {
 	size_t	exit;
 	size_t	empty;
 	size_t	wall;
-	Pair	player_pos;
-	Pair	exit_pos;
+	t_pair	player_pos;
+	t_pair	exit_pos;
 	size_t	total_rows;
 	size_t	total_cols;
 	size_t	total_cells;
 	size_t	reached_items;
 	size_t	total_steps;
-} t_map;
+}	t_map;
 
 typedef struct s_game {
 	bool	start;
@@ -136,7 +134,7 @@ typedef struct s_game {
 	int		screen_width;
 	int		screen_height;
 	int		time_laps;
-} t_game;
+}	t_game;
 
 void	check_images(t_game *game);
 
@@ -145,19 +143,22 @@ void	check_images_ext(t_game *game);
 void	verify_map(t_game **game);
 void	check_map_size(t_game *game);
 void	is_map_square(t_game *game);
-void	is_valid_walls(t_game *game);
-void	is_valid_fill(t_game *game);
+void	is_valid_walls(t_game *game, char **matrix);
+void	is_valid_fill(t_game *game, t_map *map_data);
 void	is_valid_player_path(t_game *game);
 
-void	init_queue(t_map *map_data, Pair queue[]);
-Pair	get_position(t_map **map_data, char target);
-bool	can_access_items(t_map *map_data, size_t total_cells, size_t total_items, char target);
-bool	check_path(t_map *map_data, Pair queue[], size_t tail, char *direction, char target);
-bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
+void	init_queue(t_map *map_data, t_pair queue[]);
+t_pair	get_position(t_map **map_data, char target);
+bool	can_access_items(t_map *map_data, size_t total_cells,
+			size_t total_items);
+bool	check_path(t_map *map_data, t_pair queue[],
+			size_t tail, char *direction);
+bool	is_visited_cell(t_pair queue[], size_t pos_x, size_t pos_y);
 
 bool	is_duplicate(t_map **map_data, char item);
-bool	is_visited_cell(Pair queue[], size_t pos_x, size_t pos_y);
-bool	is_target_or_path(t_map *map_data, size_t pos_x, size_t pos_y, char target);
+bool	is_visited_cell(t_pair queue[], size_t pos_x, size_t pos_y);
+bool	is_target_or_path(t_map *map_data, size_t pos_x,
+			size_t pos_y, char target);
 void	update_position(size_t *pos_x, size_t *pos_y, char *direction);
 void	check_file(t_game *game, char *file_name);
 
@@ -181,7 +182,7 @@ void	run_game(t_game *game);
 void	put_img_to_window(t_game *game, int x, int y, bool coll_left);
 
 bool	can_move(t_game *game, int keycode);
-void	update_matrix(t_game *game, Pair previous_pos);
+void	update_matrix(t_game *game, t_pair previous_pos);
 void	execute_move(t_game *game, int keycode);
 int		display_game(t_game *game);
 

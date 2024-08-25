@@ -96,7 +96,7 @@ char	**ft_split(const char *s, char c)
 		child_len = ft_check_child_len(s, c);
 		parent[parent_index] = malloc(child_len * sizeof(char) + 1);
 		if (!parent[parent_index])
-			return ft_memory_error(parent, parent_index);
+			return (ft_memory_error(parent, parent_index));
 		ft_strlcpy(parent[parent_index], s, child_len + 1);
 		s += child_len;
 	}

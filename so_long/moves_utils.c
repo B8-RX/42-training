@@ -15,7 +15,7 @@
 bool	can_move(t_game *game, int keycode)
 {
 	char	**matrix;
-	Pair	pos;
+	t_pair	pos;
 	bool	can_move;
 
 	pos = game->map_data->player_pos;
@@ -38,7 +38,7 @@ bool	can_move(t_game *game, int keycode)
 	return (can_move);
 }
 
-void	update_matrix(t_game *game, Pair previous_pos)
+void	update_matrix(t_game *game, t_pair previous_pos)
 {
 	size_t	pos_x;
 	size_t	pos_y;
@@ -64,13 +64,13 @@ void	update_matrix(t_game *game, Pair previous_pos)
 
 void	execute_move(t_game *game, int keycode)
 {
-	Pair	previous_pos;
+	t_pair	previous_pos;
 	size_t	player_pos_x;
 	size_t	player_pos_y;
 
 	player_pos_x = game->map_data->player_pos.x;
 	player_pos_y = game->map_data->player_pos.y;
-	previous_pos = (Pair){player_pos_x, player_pos_y, -1};
+	previous_pos = (t_pair){player_pos_x, player_pos_y, -1};
 	if (keycode == KEY_UP || keycode == KEY_UP_ARROW)
 		game->map_data->player_pos.y -= 1;
 	else if (keycode == KEY_DOWN || keycode == KEY_DOWN_ARROW)

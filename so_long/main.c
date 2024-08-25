@@ -16,8 +16,8 @@ int	main(int argc, char **argv)
 {
 	t_game	*game;
 
-	if (argc < 2)
-		return (ERROR);
+	if (argc != 2)
+		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
 	game = NULL;
 	check_file(game, argv[1]);
 	init_game(&game);
@@ -25,7 +25,7 @@ int	main(int argc, char **argv)
 	init_map(&game, argv[1]);
 	init_window(game);
 	verify_map(&game);
-	init_images(game); 
+	init_images(game);
 	run_game(game);
 	if (game)
 		free_game(game);

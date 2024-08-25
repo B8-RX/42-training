@@ -6,7 +6,7 @@
 #    By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/17 09:46:57 by ssghioua          #+#    #+#              #
-#    Updated: 2024/07/17 09:46:58 by ssghioua         ###   ########.fr        #
+#    Updated: 2024/08/25 03:49:26 by ssghioua         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ SOURCE = ./main.c ./display.c ./display_utils-1.c ./display_utils-2.c ./events.c
 
 OBJS = $(patsubst %.c, ${OBJS_PATH}%.o, $(notdir ${SOURCE}))
 
-NAME = minilibx_test
+NAME = so_long
 
 CFLAGS = -Wall -Werror -Wextra -g3
 

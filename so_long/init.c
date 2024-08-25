@@ -20,7 +20,6 @@ void	init_game(t_game **game)
 	ft_memset(*game, 0, sizeof(t_game));
 	if (init_fish_collection(game) == ERROR)
 		return (handle_errors(*game, ERR_COLLECTIBLES_INIT));
-		// free(*game);
 	(*game)->start = false;
 	return ;
 }
