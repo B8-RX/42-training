@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/ft_printf.h"
+#include "libft.h"
 
 int	ft_handle_minus_flag(t_printf *printf_props, char prev_char)
 {

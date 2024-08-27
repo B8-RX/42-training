@@ -1,34 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/01 03:55:36 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/02/01 03:55:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/15 17:04:06 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/19 01:43:52 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-// char	*ft_substr(const char *s, unsigned int start, size_t len)
-// {
-// 	char			*new;
-//
-// 	if (!s)
-// 		return (NULL);
-// 	if (start >= ft_strlen(s))
-// 		len = 0;
-// 	if (len > ft_strlen(s + start))
-// 		len = ft_strlen(s + start);
-// 	new = malloc((len + 1) * sizeof(char));
-// 	if (!new)
-// 		return (NULL);
-// 	ft_strlcpy(new, s + start, len + 1);
-// 	return (new);
-// }
-//
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
 	int		len_src;

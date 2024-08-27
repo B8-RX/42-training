@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 09:46:37 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/07/17 09:46:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/07 15:12:08 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/19 03:05:21 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	t_game	*game;
-
-	if (argc != 2)
-		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
-	game = NULL;
-	check_file(game, argv[1]);
-	init_game(&game);
-	init_server(game);
-	init_map(&game, argv[1]);
-	verify_map(&game);
-	init_window(game);
-	init_images(game);
-	run_game(game);
-	if (game)
-		free_game(game);
-	return (SUCCESS);
+	if (n == 0)
+		return (0);
+	while (*s1 && *s2 && *s1 == *s2 && (n - 1))
+	{
+		s1++;
+		s2++;
+		n--;
+	}
+	if (*s1 != *s2)
+		return ((unsigned char)*s1 - (unsigned char)*s2);
+	return (0);
 }

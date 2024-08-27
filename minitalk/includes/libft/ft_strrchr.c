@@ -1,33 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 09:46:37 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/07/17 09:46:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/07 13:53:18 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/19 04:40:37 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+char	*ft_strrchr(const char *str, int c)
 {
-	t_game	*game;
+	int	len_str;
 
-	if (argc != 2)
-		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
-	game = NULL;
-	check_file(game, argv[1]);
-	init_game(&game);
-	init_server(game);
-	init_map(&game, argv[1]);
-	verify_map(&game);
-	init_window(game);
-	init_images(game);
-	run_game(game);
-	if (game)
-		free_game(game);
-	return (SUCCESS);
+	len_str = ft_strlen(str);
+	while (len_str >= 0)
+	{
+		if (*(unsigned char *)(str + len_str) == (unsigned char)c)
+			return ((char *)str + len_str);
+		len_str--;
+	}
+	if (c == '\0')
+		return ((char *)str + (ft_strlen(str) + 1));
+	return ((void *)0);
 }

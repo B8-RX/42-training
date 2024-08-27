@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/ft_printf.h"
+#include "libft.h"
 
 t_printf	*ft_format_processing(t_printf **printf_props, const char *format)
 {

@@ -1,33 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 09:46:37 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/07/17 09:46:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/08 21:29:42 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 04:29:48 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+char	*ft_strnstr(const char *s1, const char *s2, size_t len)
 {
-	t_game	*game;
+	size_t	i;
+	size_t	j;
 
-	if (argc != 2)
-		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
-	game = NULL;
-	check_file(game, argv[1]);
-	init_game(&game);
-	init_server(game);
-	init_map(&game, argv[1]);
-	verify_map(&game);
-	init_window(game);
-	init_images(game);
-	run_game(game);
-	if (game)
-		free_game(game);
-	return (SUCCESS);
+	if (!s1 && len == 0)
+		return (NULL);
+	if (ft_strlen(s2) == 0)
+		return ((char *)s1);
+	i = 0;
+	while (s1[i] && len > i)
+	{
+		j = 0;
+		while (s2[j] && s1[i + j] == s2[j] && i + j <= len - 1)
+			j++;
+		if (j == ft_strlen(s2))
+			return ((char *)(s1 + i));
+		i++;
+	}
+	return (NULL);
 }

@@ -1,33 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 09:46:37 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/07/17 09:46:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/09 19:00:24 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 05:35:24 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	t_game	*game;
+	unsigned char	*res;
+	unsigned char	*source;
+	size_t			i;
 
-	if (argc != 2)
-		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
-	game = NULL;
-	check_file(game, argv[1]);
-	init_game(&game);
-	init_server(game);
-	init_map(&game, argv[1]);
-	verify_map(&game);
-	init_window(game);
-	init_images(game);
-	run_game(game);
-	if (game)
-		free_game(game);
-	return (SUCCESS);
+	if (!dest && !src)
+		return (NULL);
+	i = 0;
+	res = (unsigned char *)dest;
+	source = (unsigned char *)src;
+	while (n > 0)
+	{
+		res[i] = source[i];
+		i++;
+		n--;
+	}
+	return (res);
 }

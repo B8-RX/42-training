@@ -1,33 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/17 09:46:37 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/07/17 09:46:39 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/17 21:40:37 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/22 02:53:46 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "libft.h"
 
-int	main(int argc, char **argv)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	t_game	*game;
+	char			*new;
+	size_t			len_s1;
+	size_t			len_s2;
 
-	if (argc != 2)
-		return (ft_putstr_fd("Error\nbad arg\n", 2), ERROR);
-	game = NULL;
-	check_file(game, argv[1]);
-	init_game(&game);
-	init_server(game);
-	init_map(&game, argv[1]);
-	verify_map(&game);
-	init_window(game);
-	init_images(game);
-	run_game(game);
-	if (game)
-		free_game(game);
-	return (SUCCESS);
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	new = (char *)ft_calloc((len_s1 + len_s2 + 1), sizeof(char));
+	if (new == NULL)
+		return (new);
+	ft_strlcpy(new, s1, len_s1 + 1);
+	ft_strlcat(new, s2, len_s1 + len_s2 + 1);
+	return (new);
 }

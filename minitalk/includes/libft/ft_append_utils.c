@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/ft_printf.h"
+#include "libft.h"
 
 char	*ft_append_blank(t_printf *props, char *src)
 {

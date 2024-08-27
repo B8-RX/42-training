@@ -1,42 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 23:24:01 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/01/23 23:24:05 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/17 00:03:08 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 04:31:15 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/ft_printf.h"
+#include "libft.h"
 
-int	ft_atoi(char *str)
+char	*ft_strdup(const char *src)
 {
+	char	*new;
 	int		i;
-	int		sign;
-	long	result;
 
+	new = (char *)malloc((ft_strlen(src) / sizeof(char)) + 1);
+	if (new == NULL)
+		return (new);
 	i = 0;
-	sign = 1;
-	result = 0;
-	while ((str[i] >= 8 && str[i] <= 13) || str[i] == 32)
-		i++;
-	if (str[i] == '-' || str[i] == '+')
+	while (src[i])
 	{
-		if (str[i] == '-')
-			sign = -1;
+		new[i] = src[i];
 		i++;
 	}
-	while (str[i] >= 48 && str[i] <= 57)
-	{
-		if (result == 0)
-			result = str[i] - '0';
-		else
-			result = (result * 10 + str[i]) - '0';
-		i++;
-	}
-	free(str);
-	return (result * sign);
+	new[i] = '\0';
+	return (new);
 }

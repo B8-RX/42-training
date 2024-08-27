@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/ft_printf.h"
+#include "libft.h"
 
 int	ft_print_str(t_printf *props, char *str)
 {

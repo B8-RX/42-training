@@ -47,30 +47,6 @@ typedef struct s_game {
 
 } t_game;
 
-void	free_game(t_game *game)
-{
-	int	i;
-
-	i = 0;
-	if (!game)
-		return ;
-	if (game -> mlx)
-		free(game -> mlx);
-	if (game -> mlx_win)
-		free(game -> mlx_win);
-	if (game -> map_data)
-	{
-		if (game -> map_data -> matrix)
-		{
-			while(game -> map_data -> matrix[i])
-				free(game -> map_data -> matrix[i++]);
-			free(game -> map_data -> matrix);
-		}
-		free(game -> map_data);	
-	}
-	free(game);
-}
-
 void	draw_square(t_data *data, int x_pos, int y_pos, int color, int img_width, int img_height)
 {
 	char	*dst;

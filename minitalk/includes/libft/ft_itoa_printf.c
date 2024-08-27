@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   ft_itoa_printf.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/28 02:46:50 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/01/28 02:46:52 by ssghioua         ###   ########.fr       */
+/*   Updated: 2024/08/23 01:39:51 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./lib/ft_printf.h"
+#include "libft.h"
 
 int	ft_check_num_len(int nb)
 {
@@ -45,7 +45,7 @@ char	*ft_fill_str(char *res, int nb, int num_len)
 	return (res);
 }
 
-char	*ft_itoa(t_printf *printf_props, int n)
+char	*ft_itoa_printf(t_printf *printf_props, int n)
 {
 	int		num_len;
 	char	*res;

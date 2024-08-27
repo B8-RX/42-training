@@ -6,7 +6,7 @@
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 11:06:29 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/01/16 11:06:31 by ssghioua         ###   ########.fr       */
+/*   Updated: 2024/08/23 01:40:38 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ void		*ft_handle_err_format(t_printf *printf_props,
 void		ft_save_specifier_if_found(t_printf *printf_props,
 				const char format);
 void		ft_handle_s_specifier(t_printf *printf_props);
-char		*ft_itoa(t_printf *printf_props, int nb);
+char		*ft_itoa_printf(t_printf *printf_props, int nb);
 char		*ft_uitoa(unsigned int n);
 char		*ft_ultoa(t_printf *printf_props, unsigned long n);
-int			ft_atoi(char *str);
+int			ft_atoi_printf(char *str);
 int			ft_print_char(t_printf *printf_props, char c);
 int			ft_handle_char_with_flags(t_printf *printf_props, char c);
 void		*ft_print_percent_sign(t_printf *printf_props);
@@ -88,7 +88,7 @@ char		*ft_append_parity(t_printf *printf_props, char *str);
 char		*ft_append_blank(t_printf *printf_props, char *src);
 char		*ft_append_prefix_hexa(t_printf *printf_props, char *str);
 char		*ft_append_char_to_str(char *str, char c, int c_position);
-char		*ft_bzero(int size);
+char		*ft_bzero_printf(int size);
 char		*ft_strjoin(char *s1, char *s2);
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strchr(const char *s, int c);
