@@ -12,11 +12,29 @@
 
 # include "minitalk.h"
 
+void	handle_sigint(int sig)
+{
+	printf("Caught signal %d\n", sig);
+}
+
 int	main(void)
 {
 	int	pid;
+	struct sigaction sa;
 
+	sa.sa_handler = handle_sigint;
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+
+	sigaction(SIGINT, &sa, NULL);
 	pid = getpid();
-	ft_printf("PID = %d", pid);
+
+	while (1)
+	{
+		ft_printf("Running...\n");
+		ft_printf("PID = %d\n", pid);
+		sleep(1);
+	}
+
 	return (0);
 }

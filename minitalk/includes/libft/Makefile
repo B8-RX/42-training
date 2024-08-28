@@ -50,6 +50,7 @@ ${NAME} :	${OBJS}
 
 clean :
 		rm -f ${OBJS_ALL}
+		rm -rf ${OBJS_PATH}
 
 fclean :	clean
 		rm -f ${NAME} 
