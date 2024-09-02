@@ -10,14 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minitalk.h"
+#include "minitalk.h"
 
 int	main(void)
 {
-	struct sigaction sa;
+	struct sigaction	sa;
 
-	sa.sa_handler = &handle_sigint;
-	sa.sa_flags = SA_RESTART;
+	// sa.sa_handler = &handle_sigint;
+	sa.sa_flags = SA_RESTART | SA_SIGINFO;
+	sa.sa_sigaction = &get_pid;
 	sigemptyset(&sa.sa_mask);
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		return (1);

@@ -10,17 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MINITALK_H
+
+# define MINITALK_H
+
 # include <stdio.h>
 # include <unistd.h>
 # include <sys/types.h>
 # include <signal.h>
 # include "ft_printf.h"
 
-typedef struct s_bits_8 {
-	int curr;
+typedef struct s_bits_8
+{
+	int	curr;
 	int	total;
+	int	start;
+	int	signal_pid;
 }	t_bits_8;
 
+void	get_pid(int sig, siginfo_t *info, void *context);
 void	handle_sigint(int sig);
 void	char_to_bin(char c, int processus);
+void	send_ack(void);
 int		ft_atoi(const char *str);
+
+
+#endif // !MINITALK_H
