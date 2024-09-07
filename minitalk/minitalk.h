@@ -11,8 +11,8 @@
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
-
 # define MINITALK_H
+# define PID_MAX 4194304
 
 # include <stdio.h>
 # include <unistd.h>
@@ -28,11 +28,7 @@ typedef struct s_bits_8
 	int	signal_pid;
 }	t_bits_8;
 
-void	get_pid(int sig, siginfo_t *info, void *context);
-void	handle_sigint(int sig);
 void	char_to_bin(char c, int processus);
-void	send_ack(void);
 int		ft_atoi(const char *str);
-
 
 #endif // !MINITALK_H

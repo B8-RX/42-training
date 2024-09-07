@@ -12,42 +12,6 @@
 
 #include "./minitalk.h"
 
-t_bits_8	g_bits = {128, 0, 0, -1};
-
-void	get_pid(int sig, siginfo_t *info, void *context)
-{
-	(void)context;
-	if (g_bits.signal_pid == -1)
-		g_bits.signal_pid = info->si_pid;
-	handle_sigint(sig);
-}
-
-void	handle_sigint(int sig)
-{
-	if (g_bits.start == 0)
-	{
-		g_bits.start = 1;
-		write(1, "Client send: ", 13);
-	}
-	if (sig == SIGUSR1)
-		g_bits.total += g_bits.curr;
-	g_bits.curr /= 2;
-	if (g_bits.curr < 1)
-	{
-		if (g_bits.total == 0)
-		{
-			write(1, "\n", 1);
-			kill(g_bits.signal_pid, SIGUSR1);
-			g_bits.signal_pid = -1;
-			g_bits.start = 0;
-		}
-		else
-			write(1, &g_bits.total, 1);
-		g_bits.curr = 128;
-		g_bits.total = 0;
-	}
-}
-
 void	char_to_bin(char c, int processus)
 {
 	int		i;
@@ -64,17 +28,6 @@ void	char_to_bin(char c, int processus)
 		usleep(500);
 		j++;
 		i--;
-	}
-}
-
-void	send_ack(void)
-{
-	char	*ack_message = "Message received!\n";
-
-	while (*ack_message)
-	{
-		char_to_bin(*ack_message, g_bits.signal_pid);
-		ack_message++;
 	}
 }
 

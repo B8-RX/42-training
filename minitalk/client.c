@@ -12,6 +12,8 @@
 
 #include "minitalk.h"
 
+t_bits_8	g_bits = {128, 0, 0, -1};
+
 void	handle_ack(int sig)
 {
 	if (sig == SIGUSR1)
@@ -23,8 +25,8 @@ void	handle_ack(int sig)
 
 int	main(int argc, char **argv)
 {
-	char	*str;
-	int		processus;
+	char				*str;
+	int					processus;
 	struct sigaction	sa;
 
 	if (argc != 3)
@@ -34,21 +36,16 @@ int	main(int argc, char **argv)
 	}
 	str = argv[2];
 	processus = ft_atoi(argv[1]);
-	if (processus == -1)
-		return (1);
+	if ((processus < 0 || processus > PID_MAX))
+		return (ft_printf("INVALID [PID]\n"), 1);
 	sa.sa_handler = &handle_ack;
 	sa.sa_flags = SA_RESTART;
-	// sa.sa_sigaction = &get_pid;
 	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-		return (1);
-	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+	if (sigaction(SIGUSR1, &sa, NULL) == -1
+		|| sigaction(SIGUSR2, &sa, NULL) == -1)
 		return (1);
 	while (*str)
-	{
-		char_to_bin(*str, processus);
-		str++;
-	}
+		char_to_bin(*str++, processus);
 	char_to_bin('\0', processus);
 	while (1)
 		pause();
