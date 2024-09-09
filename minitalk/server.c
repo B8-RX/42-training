@@ -11,29 +11,55 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
+#include <stdio.h>
 
-t_bits_8	g_bits = {128, 0, 0, -1};
+t_bits_8	g_bits = {128, 0, 0, -1, NULL};
 
-void	get_pid(int sig, siginfo_t *info, void *context)
+char	*ft_append_char(char *str, int c)
 {
-	(void)context;
-	if (g_bits.signal_pid == -1)
-		g_bits.signal_pid = info->si_pid;
-	handle_sigint(sig);
+	int		len;
+	char	*res;
+	int		i;
+
+	i = 0;
+	len = 0;
+	if (str)
+		len = ft_strlen(str);
+	res = malloc ((len + 2) * sizeof(char));
+	if (!res)
+		return (NULL);
+	if (str)
+	{
+		while (i < len)
+		{
+			res[i] = str[i];
+			i++;
+		}
+		free(str);
+		str = NULL;
+	}
+	res[i] = c;
+	res[i + 1] = '\0';
+	return (res);
 }
 
 void	handle_sigint(int sig)
 {
-	if (g_bits.start == 0)
-	{
-		g_bits.start = 1;
-		write(1, "Client send: ", 13);
-	}
 	if (sig == SIGUSR1)
 		g_bits.total |= g_bits.curr;
 	g_bits.curr >>= 1;
 	if (g_bits.curr < 1)
 	{
+		g_bits.str = ft_append_char(g_bits.str, g_bits.total);
+		if (g_bits.total == '\n' || g_bits.total == '\0')
+		{
+			if (g_bits.start == 0)
+				write(1, "Client send: ", 13);
+			g_bits.start = 1;
+			ft_putstr_fd(g_bits.str, 1);
+			free(g_bits.str);
+			g_bits.str = NULL;
+		}
 		if (g_bits.total == 0)
 		{
 			write(1, "\n", 1);
@@ -41,11 +67,17 @@ void	handle_sigint(int sig)
 			g_bits.signal_pid = -1;
 			g_bits.start = 0;
 		}
-		else
-			write(1, &g_bits.total, 1);
 		g_bits.curr = 128;
 		g_bits.total = 0;
 	}
+}
+
+void	get_pid(int sig, siginfo_t *info, void *context)
+{
+	(void)context;
+	if (g_bits.signal_pid == -1)
+		g_bits.signal_pid = info->si_pid;
+	handle_sigint(sig);
 }
 
 int	main(void)

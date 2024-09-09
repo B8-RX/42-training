@@ -1,34 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/07 11:34:46 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/18 23:06:30 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+int	ft_isalnum(int c)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
-
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57))
+		return (1);
+	return (0);
+}

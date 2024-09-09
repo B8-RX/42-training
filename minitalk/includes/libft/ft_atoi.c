@@ -1,35 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 08:06:30 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/09/02 08:06:33 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/16 21:36:22 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/19 03:30:56 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minitalk.h"
-
-void	char_to_bin(char c, int processus)
-{
-	int		i;
-	int		j;
-
-	i = 7;
-	j = 0;
-	while (i >= 0)
-	{
-		if ((c >> i) & 1)
-			kill(processus, SIGUSR1);
-		else
-			kill(processus, SIGUSR2);
-		usleep(400);
-		j++;
-		i--;
-	}
-}
+#include "libft.h"
 
 int	ft_atoi(const char *str)
 {

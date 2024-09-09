@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/08 15:51:39 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 03:43:55 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	unsigned char	*res;
+	size_t			i;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	i = 0;
+	res = (unsigned char *)s;
+	while (i < n)
+	{
+		if (res[i] == (unsigned char)c)
+		{
+			return (res + i);
+		}
+		i++;
+	}
+	return (NULL);
+}

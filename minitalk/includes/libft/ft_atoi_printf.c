@@ -1,37 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   ft_atoi_printf.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 08:06:30 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/09/02 08:06:33 by ssghioua         ###   ########.fr       */
+/*   Created: 2024/01/23 23:24:01 by ssghioua          #+#    #+#             */
+/*   Updated: 2024/01/23 23:24:05 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./minitalk.h"
+#include "libft.h"
 
-void	char_to_bin(char c, int processus)
-{
-	int		i;
-	int		j;
-
-	i = 7;
-	j = 0;
-	while (i >= 0)
-	{
-		if ((c >> i) & 1)
-			kill(processus, SIGUSR1);
-		else
-			kill(processus, SIGUSR2);
-		usleep(400);
-		j++;
-		i--;
-	}
-}
-
-int	ft_atoi(const char *str)
+int	ft_atoi_printf(char *str)
 {
 	int		i;
 	int		sign;
@@ -56,5 +37,6 @@ int	ft_atoi(const char *str)
 			result = (result * 10 + str[i]) - '0';
 		i++;
 	}
+	free(str);
 	return (result * sign);
 }

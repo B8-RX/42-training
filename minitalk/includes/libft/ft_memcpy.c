@@ -1,34 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/09 19:00:24 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 05:35:24 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	unsigned char	*res;
+	unsigned char	*source;
+	size_t			i;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	if (!dest && !src)
+		return (NULL);
+	i = 0;
+	res = (unsigned char *)dest;
+	source = (unsigned char *)src;
+	while (n > 0)
+	{
+		res[i] = source[i];
+		i++;
+		n--;
+	}
+	return (res);
+}

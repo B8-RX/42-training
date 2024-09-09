@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/08 18:19:38 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/26 04:11:17 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+void	ft_bzero(void *s, size_t n)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	unsigned char	*res;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	res = s;
+	while (n)
+	{
+		*res = 0;
+		n--;
+		res++;
+	}
+}

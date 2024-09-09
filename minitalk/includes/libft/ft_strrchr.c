@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/07 13:53:18 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/19 04:40:37 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+char	*ft_strrchr(const char *str, int c)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	int	len_str;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	len_str = ft_strlen(str);
+	while (len_str >= 0)
+	{
+		if (*(unsigned char *)(str + len_str) == (unsigned char)c)
+			return ((char *)str + len_str);
+		len_str--;
+	}
+	if (c == '\0')
+		return ((char *)str + (ft_strlen(str) + 1));
+	return ((void *)0);
+}

@@ -22,11 +22,11 @@ NAME_SERVER = server
 
 HEADER = minitalk.h
 
-INCLUDES = -I./includes/ft_printf/src/lib/
+INCLUDES = -I./includes/libft/
 
-FTPRINTF_DIR = ./includes/ft_printf/
+LIBFT_DIR = ./includes/libft/
 
-FTPRINTF_LIB = ${FTPRINTF_DIR}libftprintf.a
+LIBFT_LIB = ${LIBFT_DIR}libft.a
 
 OBJS_PATH = ./obj/
 
@@ -44,22 +44,22 @@ ${OBJS_PATH}%.o : %.c
 	mkdir -p ${OBJS_PATH}
 	${CC} ${CFLAGS} -I${HEADER} ${INCLUDES} -c $< -o $@
 
-${NAME_SERVER} : ${HEADER} ${FTPRINTF_LIB} ${OBJ_SERVER}
-	${CC} ${CFLAGS} -o ${NAME_SERVER} ${OBJ_SERVER} ${FTPRINTF_LIB}
+${NAME_SERVER} : ${HEADER} ${LIBFT_LIB} ${OBJ_SERVER}
+	${CC} ${CFLAGS} -o ${NAME_SERVER} ${OBJ_SERVER} ${LIBFT_LIB}
 
-${NAME_CLIENT} : ${HEADER} ${FTPRINTF_LIB} ${OBJ_CLIENT}
-	${CC} ${CFLAGS} -o ${NAME_CLIENT} ${OBJ_CLIENT} ${FTPRINTF_LIB}
+${NAME_CLIENT} : ${HEADER} ${LIBFT_LIB} ${OBJ_CLIENT}
+	${CC} ${CFLAGS} -o ${NAME_CLIENT} ${OBJ_CLIENT} ${LIBFT_LIB}
 
-${FTPRINTF_LIB} :
-	@make bonus -C ${FTPRINTF_DIR}
+${LIBFT_LIB} :
+	@make bonus -C ${LIBFT_DIR}
 
 clean :
 	rm -rf ${OBJS_PATH}
-	@make -C ${FTPRINTF_DIR} clean
+	@make -C ${LIBFT_DIR} clean
 
 fclean: clean
 	rm -f ${NAME_SERVER} ${NAME_CLIENT}
-	@make -C ${FTPRINTF_DIR} fclean
+	@make -C ${LIBFT_DIR} fclean
 
 re : fclean all
 

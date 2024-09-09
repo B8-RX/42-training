@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/09 20:27:40 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/23 03:42:35 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	unsigned char	*source;
+	unsigned char	*res;
+	size_t			i;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	i = 0;
+	if (!dest && !src)
+		return (NULL);
+	source = (unsigned char *)src;
+	res = (unsigned char *)dest;
+	if (res > source)
+		while (n-- > 0)
+			res[n] = source[n];
+	else
+	{
+		while (i < n)
+		{
+			res[i] = source[i];
+			i++;
+		}
+	}
+	return (res);
+}

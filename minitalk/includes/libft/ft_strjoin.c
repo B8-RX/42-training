@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/27 01:00:15 by ssghioua          #+#    #+#             */
-/*   Updated: 2024/08/27 01:00:17 by ssghioua         ###   ########.fr       */
+/*   Created: 2023/11/17 21:40:37 by ssghioua          #+#    #+#             */
+/*   Updated: 2023/11/22 02:53:46 by ssghioua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
-# define PID_MAX 4194304
+#include "libft.h"
 
-# include <stdio.h>
-# include <unistd.h>
-# include <sys/types.h>
-# include <signal.h>
-# include "libft.h"
-
-typedef struct s_bits_8
+char	*ft_strjoin(const char *s1, const char *s2)
 {
-	int				curr;
-	unsigned char	total;
-	int				start;
-	int				signal_pid;
-	char			*str;
-}	t_bits_8;
+	char			*new;
+	size_t			len_s1;
+	size_t			len_s2;
 
-void	char_to_bin(char c, int processus);
-
-#endif // !MINITALK_H
+	if (!s1 || !s2)
+		return (NULL);
+	len_s1 = ft_strlen(s1);
+	len_s2 = ft_strlen(s2);
+	new = (char *)ft_calloc((len_s1 + len_s2 + 1), sizeof(char));
+	if (new == NULL)
+		return (new);
+	ft_strlcpy(new, s1, len_s1 + 1);
+	ft_strlcat(new, s2, len_s1 + len_s2 + 1);
+	return (new);
+}
