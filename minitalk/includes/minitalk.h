@@ -26,9 +26,10 @@ typedef struct s_bits_8
 	unsigned char	total;
 	int				start;
 	int				signal_pid;
-	char			*str;
+	unsigned char	*str;
 }	t_bits_8;
 
-void	char_to_bin(char c, int processus);
+void	char_to_bin(unsigned char c, int processus);
+void	send_message(unsigned char *str, int pid);
 
 #endif // !MINITALK_H

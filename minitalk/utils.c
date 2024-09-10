@@ -12,7 +12,7 @@
 
 #include "./minitalk.h"
 
-void	char_to_bin(char c, int processus)
+void	char_to_bin(unsigned char c, int processus)
 {
 	int		i;
 	int		j;

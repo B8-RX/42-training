@@ -20,11 +20,11 @@ NAME_CLIENT = client
 
 NAME_SERVER = server
 
-HEADER = minitalk.h
+HEADER = ./includes/
 
-INCLUDES = -I./includes/libft/
+LIBFT_DIR = ./libft/
 
-LIBFT_DIR = ./includes/libft/
+INCLUDES = -I${LIBFT_DIR}
 
 LIBFT_LIB = ${LIBFT_DIR}libft.a
 

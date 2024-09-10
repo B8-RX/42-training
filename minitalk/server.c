@@ -15,17 +15,17 @@
 
 t_bits_8	g_bits = {128, 0, 0, -1, NULL};
 
-char	*ft_append_char(char *str, int c)
+unsigned char	*ft_append_char(unsigned char *str, int c)
 {
-	int		len;
-	char	*res;
-	int		i;
+	int				len;
+	unsigned char	*res;
+	int				i;
 
 	i = 0;
 	len = 0;
 	if (str)
-		len = ft_strlen(str);
-	res = malloc ((len + 2) * sizeof(char));
+		len = ft_strlen((char *)str);
+	res = malloc ((len + 2) * sizeof(unsigned char));
 	if (!res)
 		return (NULL);
 	if (str)
@@ -38,7 +38,7 @@ char	*ft_append_char(char *str, int c)
 		free(str);
 		str = NULL;
 	}
-	res[i] = c;
+	res[i] = (unsigned char)c;
 	res[i + 1] = '\0';
 	return (res);
 }
@@ -54,9 +54,9 @@ void	handle_sigint(int sig)
 		if (g_bits.total == '\n' || g_bits.total == '\0')
 		{
 			if (g_bits.start == 0)
-				write(1, "Client send: ", 13);
+				write (1, "Client send: ", 13);
 			g_bits.start = 1;
-			ft_putstr_fd(g_bits.str, 1);
+			ft_putstr_fd((char *)g_bits.str, 1);
 			free(g_bits.str);
 			g_bits.str = NULL;
 		}
@@ -74,7 +74,7 @@ void	handle_sigint(int sig)
 
 void	get_pid(int sig, siginfo_t *info, void *context)
 {
-	(void)context;
+	(void) context;
 	if (g_bits.signal_pid == -1)
 		g_bits.signal_pid = info->si_pid;
 	handle_sigint(sig);

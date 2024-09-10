@@ -45,9 +45,27 @@ int	is_digit(char *str)
 	return (is_digit);
 }
 
+void	send_message(unsigned char *str, int pid)
+{
+	int	len;
+
+	len = 0;
+	while (*str && ++len)
+	{
+		if (len >= 200 && (char)*str == ' ')
+		{
+			char_to_bin((unsigned char) '\n', pid);
+			len = 0;
+		}
+		else
+			char_to_bin(*str++, pid);
+	}
+	char_to_bin('\0', pid);
+}
+
 int	main(int argc, char **argv)
 {
-	char				*str;
+	unsigned char		*str;
 	int					processus;
 	struct sigaction	sa;
 
@@ -55,7 +73,7 @@ int	main(int argc, char **argv)
 		return (ft_printf("INVALID FORMAT: [exec] [PID] [MESSAGE]\n", 1));
 	if (!is_digit(argv[1]))
 		return (ft_printf("INVALID [PID]\n"), 1);
-	str = argv[2];
+	str = (unsigned char *) argv[2];
 	processus = ft_atoi(argv[1]);
 	if (processus < 0 || processus > PID_MAX || kill(processus, 0) == -1)
 		return (ft_printf("INVALID [PID]\n"), 1);
@@ -65,9 +83,7 @@ int	main(int argc, char **argv)
 	if (sigaction(SIGUSR1, &sa, NULL) == -1
 		|| sigaction(SIGUSR2, &sa, NULL) == -1)
 		return (1);
-	while (*str)
-		char_to_bin((char)*str++, processus);
-	char_to_bin('\0', processus);
+	send_message(str, processus);
 	while (1)
 		pause();
 	return (0);
