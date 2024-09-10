@@ -43,23 +43,31 @@ unsigned char	*ft_append_char(unsigned char *str, int c)
 	return (res);
 }
 
+void	display_line(t_bits_8 *g_bits)
+{
+	if (g_bits->start == 0)
+		write (1, "Client send: ", 13);
+	g_bits->start = 1;
+	ft_putstr_fd((char *)g_bits->str, 1);
+	free(g_bits->str);
+	g_bits->str = NULL;
+}
+
 void	handle_sigint(int sig)
 {
+	size_t	len;
+
 	if (sig == SIGUSR1)
 		g_bits.total |= g_bits.curr;
 	g_bits.curr >>= 1;
 	if (g_bits.curr < 1)
 	{
 		g_bits.str = ft_append_char(g_bits.str, g_bits.total);
-		if (g_bits.total == '\n' || g_bits.total == '\0')
-		{
-			if (g_bits.start == 0)
-				write (1, "Client send: ", 13);
-			g_bits.start = 1;
-			ft_putstr_fd((char *)g_bits.str, 1);
-			free(g_bits.str);
-			g_bits.str = NULL;
-		}
+		len = ft_strlen((char *)g_bits.str);
+		if (g_bits.total == '\n'
+			|| g_bits.total == '\0'
+			|| (len > 200 && (char)g_bits.str[len] == ' '))
+			display_line(&g_bits);
 		if (g_bits.total == 0)
 		{
 			write(1, "\n", 1);
