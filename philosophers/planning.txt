@@ -1,0 +1,13 @@
+Planification 
+
+    Jour 1-2 (14-15 octobre) : Analyse complète de l'énoncé et compréhension des règles.
+    Jour 3-5 (16-18 octobre): Créer la structure des données et initialiser les threads et mutexes.
+    Jour 6-7 (19-20 octobre): Implémenter le cycle de vie des philosophes et la gestion des mutexes pour les fourchettes.
+    Jour 8-9 (21-22 octobre): Ajouter les mécanismes de surveillance et de logs.
+    Jour 10 (23 octobre): Tests, débogage, et optimisation du code.
+
+Tests:
+
+    Tester avec différents paramètres (nombre de philosophes, temps de vie, etc.).
+    Vérifier que les logs sont corrects et bien synchronisés.
+    Simuler des scénarios avec des philosophes qui meurent pour s'assurer que le programme gère bien ces cas.
