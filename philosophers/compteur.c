@@ -16,28 +16,37 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void *routine() {
-  printf("Test from treads\n");
-  sleep(3);
-  printf("End of threads\n");
-  return (NULL);
+int compteur = 0;
+pthread_mutex_t	mutex;
+
+void *incrementer(void *arg) {
+
+	int i = 0;
+	
+	while (i++ < 10)
+	{
+		pthread_mutex_lock(&mutex);
+		compteur++;
+		printf("%s : compteur = %d\n", (char *)arg, compteur);
+		pthread_mutex_unlock(&mutex);
+		usleep(100);
+	}
+	
+	return (NULL);
 }
 
 int main(int argc, char **argv) {
 
-  pthread_t t1, t2;
+	pthread_t t1, t2;
+	
+	pthread_mutex_init(&mutex, NULL);
+	pthread_create(&t1, NULL, &incrementer, "thread 1");
+	pthread_create(&t2, NULL, &incrementer, "thread 2");
 
-  if (pthread_create(&t1, NULL, &routine, NULL) != 0) {
-    return 1;
-  }
-  if (pthread_create(&t2, NULL, &routine, NULL) != 0) {
-    return 2;
-  }
-  if (pthread_join(t1, NULL) != 0) {
-    return 3;
-  }
-  if (pthread_join(t2, NULL) != 0) {
-    return 4;
-  }
-  return (0);
+	pthread_join(t1, NULL);
+	pthread_join(t2, NULL);
+
+	pthread_mutex_destroy(&mutex);
+
+	return (0);
 }
