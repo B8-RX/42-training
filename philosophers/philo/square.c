@@ -33,4 +33,3 @@ int main(void)
 	free(result2);
 	return (0);
 }
-
