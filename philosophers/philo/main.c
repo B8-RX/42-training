@@ -1,91 +1,110 @@
-
+#include "./philo.h"
+#include <bits/pthreadtypes.h>
 #include <pthread.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h>
 
-typedef struct s_philo
+t_philo	*create_philo(int id, long long time_to_die, long long time_to_eat, long long time_to_sleep)
 {
-	int				id;
-	long long		time_to_eat;
-	long long		time_to_sleep;
-	long long		time_to_die;
-	bool			eat;
-	bool			sleep;
-	bool			dead;
-	int				nb_of_meals;
-	pthread_mutex_t	mutex;
+	t_philo	*philo;
 	
-} t_philo;
 
-typedef struct s_philo_list
-{
-	t_philo				philo_data;
-	struct s_philo_list	*next;
-} t_philo_list;
-
-size_t	ft_strlen(char *str)
-{
-	int i;
-
-	i = 0;
-	while(str[i])
-		i++;
-	return (i);
+	pthread_mutex_init(&philo->mutex, NULL);
+	philo->id = id;
+	philo->time_to_die = time_to_die;
+	philo->time_to_eat = time_to_eat;
+	philo->time_to_sleep = time_to_sleep;
+	philo->sleep = false;
+	philo->eat = false;
+	philo->dead = false;
+	printf("PHILOSOPHER NUMBER %d CREATED\n", id);
+	return (philo);
 }
 
-long long	atoll(char *num)
+bool	is_digits(char *arg)
 {
-	long long	sum;
-
-	sum = 0;
-	while (*num && (*num >= 48 && *num <= 57))
+	while (arg && *arg)
 	{
-		sum = sum * 10 + (*num - '0');
-		num++;
+		if (*arg < 48 || *arg > 57)
+			return (false);
+		arg++;
 	}
-	return (sum);
+	return (true);
 }
 
-int	create_philo(int id, long long time_to_die, long long time_to_eat, long long time_to_sleep, void *meals_arg)
+void	init_list(t_philo_list **philo_list)
 {
-	t_philo			philo;
+	*philo_list = malloc(sizeof(t_philo_list));
+	(*philo_list)->curr_philo = NULL;
+	(*philo_list)->next = NULL;
+}
 
-	philo.id = id;
-	philo.time_to_die = time_to_die;
-	philo.time_to_eat = time_to_eat;
-	philo.time_to_sleep = time_to_sleep;
-	philo.sleep = false;
-	philo.eat = false;
-	philo.dead = false;
-	
+void	push_philo(t_philo_list *list, t_philo *philo)
+{
+	t_philo	*tmp;
 
-	return (0);
+	tmp = philo;
+	if (list && list->curr_philo == NULL)
+		list->curr_philo = tmp;
+	else
+	{
+		while (list && list->next != NULL)
+			list = list->next;
+		list->curr_philo = tmp;
+		list->next = NULL;
+	}
+}
+
+void	handle_params(t_params **params, int total_philo, long long time_to_die, long long time_to_eat, long long time_to_sleep, int meals)
+{
+	(*params)->total_philo = total_philo;
+	(*params)->time_to_die = time_to_die;
+	(*params)->time_to_eat = time_to_eat;
+	(*params)->time_to_sleep = time_to_sleep;
+	(*params)->total_meals = meals;
+	printf("HANDLE PARAMS FINISH\n");
 }
 
 int main(int argc, char **argv)
 {
-	int		i;
-	void	*meals_arg;
+	int				i;
+	int				meals_arg;
+	t_params		*params;
+	t_philo_list	*philo_list;
 
 	i = 0;
-	meals_arg = NULL;
-	if (argc != 4 && argc != 5)
+	meals_arg = -1;
+	if (argc != 5 && argc != 6)
 	{
 		printf("ERROR ARGUMENTS\n");
 		exit(1);
 	}
-	if (argc == 5 && argv[4] != 0)
-		meals_arg = argv[4];
-	while (++i <= atoll(argv[1]))
-		create_philo(i, atoll(argv[2]), atoll(argv[3]), atoll(argv[4]), meals_arg);
-
+	if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
+		meals_arg = ft_atoi(argv[5]);
+	params = malloc(sizeof(t_params));
+	handle_params(&params, ft_atoi(argv[1]), ft_atoll(argv[2]), ft_atoll(argv[3]), ft_atoll(argv[4]), meals_arg);
+	printf("total philo= %d\nto die= %lld\nto eat = %lld\nto sleep = %lld\ntotal meals = %d\n", params->total_philo, params->time_to_die, params->time_to_eat, params->time_to_sleep, params->total_meals);
+	init_list(&philo_list);
+	while (++i <= params->total_philo)
+	{
+		push_philo(philo_list, create_philo(i, params->time_to_die, params->time_to_eat, params->time_to_sleep));
+	}
+	
+	free(params);
+	t_philo_list *tmp;
+	while (philo_list->next)
+	{
+		tmp = philo_list->next;
+		free(philo_list->curr_philo);
+		philo_list->curr_philo = tmp->curr_philo;
+		philo_list->next = tmp->next;
+	}
+	free(philo_list);
 	return (0);
-	// check arguments (3 mandatory and one optional) argc == 4 || 5 (EXIT CASE)
+}
+
+// check arguments (3 mandatory and one optional) argc == 4 || 5 (EXIT CASE)
 	// number of philosophers: also the number of forks
 	// time to die (milliseconds) (CASE STOP)
 	// time to eat (millisconds)
 	// time to sleep (milliseconds)
 	// [ optional ] number of times each philosophers must eat (CASE STOP)
-}
