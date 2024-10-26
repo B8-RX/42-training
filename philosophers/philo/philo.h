@@ -7,26 +7,38 @@
 #ifndef PHILO_H
 # define PHILO_H 
 
+typedef  struct s_monitoring
+{
+	long long	current_time;
+	long long	elapsed_time;
+	bool	  	time_is_up;
+	bool  		philo_died;
+} t_monitoring;
+
 typedef struct s_params
 {
-	int				total_philo;
+	int				  total_philo;
 	long long		time_to_die;
 	long long		time_to_eat;
 	long long		time_to_sleep;
-	int				total_meals;
+	int				  total_meals;
 } t_params;
+
+typedef struct s_ressources
+{
+  pthread_mutex_t *fork;
+} t_ressources;
 
 typedef struct s_philo
 {
-	int				id;
-	long long		time_to_eat;
-	long long		time_to_sleep;
-	long long		time_to_die;
-	bool			eat;
-	bool			sleep;
-	bool			dead;
-	pthread_mutex_t	mutex;
-	
+	int			  	    id;
+  pthread_t       *thread;
+	bool  		    	eat;
+	bool	  	    	sleep;
+	bool		      	dead;
+	pthread_mutex_t	fork;
+  t_params        *params;
+  t_ressources    *shared;
 } t_philo;
 
 typedef struct s_philo_list

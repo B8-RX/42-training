@@ -1,7 +1,6 @@
 #include "./philo.h"
 
-long long	ft_atoll(char *num)
-{
+long long	ft_atoll(char *num) {
 	long long	sum;
 
 	sum = 0;
@@ -10,37 +9,32 @@ long long	ft_atoll(char *num)
 		sum = sum * 10 + (*num - '0');
 		num++;
 	}
-	return (sum);
+  return (sum);
 }
 
-int	ft_atoi(char *num)
-{
-	int	sum;
-	int	sign;
+int ft_atoi(char *num) {
+  int sum;
+  int sign;
 
-	sign = 1;
-	sum = 0;
-	if (*num == '-' || *num == '+')
-	{
-		if (*num == '-')
-			sign = -1;
-		num++;
-	}
-	while (*num && (*num >= 48 && *num <= 57))
-	{
-		sum = sum * 10 + (*num - '0');
-		num++;
-	}
-	return (sum * sign);
+  sign = 1;
+  sum = 0;
+  if (*num == '-' || *num == '+') {
+    if (*num == '-')
+      sign = -1;
+    num++;
+  }
+  while (*num && (*num >= 48 && *num <= 57)) {
+    sum = sum * 10 + (*num - '0');
+    num++;
+  }
+  return (sum * sign);
 }
 
-size_t	ft_strlen(char *str)
-{
+size_t ft_strlen(char *str) {
 	int i;
 
 	i = 0;
-	while(str[i])
+	while (str[i])
 		i++;
 	return (i);
 }
-
