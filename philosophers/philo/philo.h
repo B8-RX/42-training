@@ -3,17 +3,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/time.h>
+#include <errno.h>
 
 #ifndef PHILO_H
 # define PHILO_H 
-
-typedef  struct s_monitoring
-{
-	long long	current_time;
-	long long	elapsed_time;
-	bool	  	time_is_up;
-	bool  		philo_died;
-} t_monitoring;
 
 typedef struct s_params
 {
@@ -22,23 +16,24 @@ typedef struct s_params
 	long long		time_to_eat;
 	long long		time_to_sleep;
 	int				  total_meals;
+  int         served_meals;
 } t_params;
 
-typedef struct s_ressources
+typedef struct s_shared
 {
   pthread_mutex_t *fork;
-} t_ressources;
+} t_shared;
 
 typedef struct s_philo
 {
 	int			  	    id;
-  pthread_t       *thread;
+  pthread_t       thread;
+  t_params        *params;
+  t_shared        *shared;
+	bool		      	dead;
 	bool  		    	eat;
 	bool	  	    	sleep;
-	bool		      	dead;
-	pthread_mutex_t	fork;
-  t_params        *params;
-  t_ressources    *shared;
+
 } t_philo;
 
 typedef struct s_philo_list
