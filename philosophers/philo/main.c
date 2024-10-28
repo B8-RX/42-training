@@ -73,49 +73,88 @@ void	free_philo_list(t_philo_list *list)
 	}
 }
 
+unsigned long get_timestamp(void)
+{
+  struct timeval  tv; 
+
+  gettimeofday(&tv, NULL);
+  return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+bool  is_time_over(unsigned long waiting_time, int time_to_die)
+{
+  return ((get_timestamp() - waiting_time) >= time_to_die);
+}
+
+bool  handle_forks(t_philo  *philo)
+{
+  int             philo_fork_index;
+  int             shared_fork_index;
+  unsigned long   waiting_time;
+
+  philo_fork_index = philo->id;
+  shared_fork_index = (philo->id + 1) % philo->params->total_philo;
+  if (pthread_mutex_lock(&philo->shared->fork[philo_fork_index]) == 0)
+  {
+    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    waiting_time = get_timestamp();
+
+    while (pthread_mutex_lock(&philo->shared->fork[shared_fork_index]) != 0)
+    {
+      if (is_time_over(waiting_time, philo->params->time_to_die))
+      {
+        printf("%lu %d died\n", get_timestamp(), philo->id + 1);
+        philo->eat = false;
+        philo->dead = true;
+        pthread_mutex_unlock(&philo->shared->fork[philo_fork_index]);
+        return (false);
+      }
+      usleep(100);
+    }
+    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    philo->eat = true;
+    printf("%lu %d is eating\n", get_timestamp(), philo->id + 1);
+    return (true);
+  }
+  return (false);
+}
+
+void  release_forks(t_philo *philo)
+{
+  int philo_fork_index;
+  int shared_fork_index;
+
+  philo_fork_index = philo->id;
+  shared_fork_index = (philo->id + 1) % philo->params->total_philo;
+  pthread_mutex_unlock(&philo->shared->fork[philo_fork_index]);
+  pthread_mutex_unlock(&philo->shared->fork[shared_fork_index]);
+  philo->eat = false;
+}
+
 void  *routine(void *arg)
 {
   t_philo         *philo;
-  struct timeval  tv; 
-  unsigned long   timestamp;
-  unsigned long   waiting_time;
-  int             result;
 
   philo = (t_philo*)arg;
+  if (philo->params->total_philo == 1)
+  {
+    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    usleep(philo->params->time_to_die * 1000);
+    printf("%lu %d died\n", get_timestamp(), philo->id + 1);
+    philo->dead = true;
+    return (NULL);
+  }
   while (!philo->dead)
   {
-    pthread_mutex_lock(&philo->shared->fork[philo->id]);
-    gettimeofday(&tv, NULL);
-    timestamp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    printf("%lu %d has taken a fork\n", timestamp, philo->id + 1);
-    waiting_time = timestamp;
-    result = pthread_mutex_lock(&philo->shared->fork[(philo->id + 1) % philo->params->total_philo]);
-    while (result == EBUSY)
-    {
-      gettimeofday(&tv, NULL);
-      timestamp = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-      if ((timestamp - waiting_time) >= philo->params->time_to_die)
-      {
-        printf("%lu %d died\n", timestamp, philo->id + 1);
-        philo->eat = false;
-        philo->dead = true;
-        pthread_mutex_unlock(&philo->shared->fork[philo->id]);
-        return (NULL);
-      }
-      usleep(100);
-      result = pthread_mutex_lock(&philo->shared->fork[(philo->id + 1) % philo->params->total_philo]);
-    }
-    printf("%lu %d has taken a fork\n", timestamp, philo->id + 1);
-    philo->eat = true;
+    if (!handle_forks(philo))
+      continue;
     usleep(philo->params->time_to_eat * 1000);
-    pthread_mutex_unlock(&philo->shared->fork[philo->id]);
-    pthread_mutex_unlock(&philo->shared->fork[(philo->id + 1) % philo->params->total_philo]);
-    philo->eat = false;
+    release_forks(philo);
     philo->sleep = true;
-    printf("%lu %d is sleeping\n", timestamp, philo->id + 1);
+    printf("%lu %d is sleeping\n", get_timestamp(), philo->id + 1);
     usleep(philo->params->time_to_sleep * 1000);
     philo->sleep = false;
-    printf("%lu %d is thinking\n", timestamp, philo->id + 1);
+    printf("%lu %d is thinking\n", get_timestamp(), philo->id + 1);
   }
   return (NULL);
 }
@@ -127,7 +166,11 @@ void	start_routines(t_philo_list *list)
   philosophers = list;
   while (philosophers)
   {
-    pthread_create(&philosophers->curr_philo->thread, NULL, &routine, philosophers->curr_philo); 
+    if (pthread_create(&philosophers->curr_philo->thread, NULL, &routine, philosophers->curr_philo) != 0)
+    {
+      fprintf(stderr, "Error on thread creation for philosopher %d\n", philosophers->curr_philo->id);
+      exit(EXIT_FAILURE);
+    }
     philosophers = philosophers->next;
   }
   philosophers = list;
@@ -166,7 +209,7 @@ int main(int argc, char **argv) {
   if (params->total_philo <= 0 || params->total_philo > 200)
   {
     free(params);
-    perror("PHILOSOPHERS SHOULD BE MORE THAN 1 AND LESS THAN 200\n");
+    fprintf(stderr, "PHILOSOPHERS SHOULD BE MORE THAN 1 AND LESS THAN 200\n");
     exit(1);
   }
   shared = malloc (sizeof(t_shared));
