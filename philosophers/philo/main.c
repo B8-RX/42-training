@@ -1,4 +1,5 @@
 #include "./philo.h"
+#include <cstring>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -112,8 +113,6 @@ bool  handle_forks(t_philo  *philo)
       usleep(100);
     }
     printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
-    philo->eat = true;
-    printf("%lu %d is eating\n", get_timestamp(), philo->id + 1);
     return (true);
   }
   return (false);
@@ -131,6 +130,58 @@ void  release_forks(t_philo *philo)
   philo->eat = false;
 }
 
+void  reset_states(t_philo *philo)
+{
+  philo->dead = false;
+  philo->eat = false;
+  philo->sleep = false;
+}
+
+int ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+  if (n == 0)
+    return (0);
+  while (*s1 && *s1 == *s2 && --n)
+  {
+    s1++;
+    s2++;
+  }
+  return ((unsigned char)*s1 - (unsigned char)*s2);
+}
+
+void  set_state(t_philo *philo, char *state)
+{
+  reset_states(philo);
+  if (ft_strncmp(state, "dead", 4) == 0)
+    philo->dead = true;
+  else if (ft_strncmp(state, "eat", 3) == 0)
+    philo->eat = true;
+  else if (ft_strncmp(state, "sleep", 5) == 0)
+      philo->sleep = true;
+}
+
+void  go_eat(t_philo *philo)
+{
+    set_state(philo, "eat");
+    printf("%lu %d is eating\n", get_timestamp(), philo->id + 1);
+    usleep(philo->params->time_to_eat * 1000);
+}
+
+void  go_sleep(t_philo *philo)
+{
+    set_state(philo, "sleep");
+    printf("%lu %d is sleeping\n", get_timestamp(), philo->id + 1);
+    usleep(philo->params->time_to_sleep * 1000);
+}
+
+void  go_die(t_philo *philo)
+{
+  reset_states(philo);
+  set_state(philo, "dead");
+  usleep(philo->params->time_to_die * 1000);
+  printf("%lu %d died\n", get_timestamp(), philo->id + 1);
+}
+
 void  *routine(void *arg)
 {
   t_philo         *philo;
@@ -139,21 +190,17 @@ void  *routine(void *arg)
   if (philo->params->total_philo == 1)
   {
     printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
-    usleep(philo->params->time_to_die * 1000);
-    printf("%lu %d died\n", get_timestamp(), philo->id + 1);
-    philo->dead = true;
+    go_die(philo);
     return (NULL);
   }
   while (!philo->dead)
   {
     if (!handle_forks(philo))
       continue;
-    usleep(philo->params->time_to_eat * 1000);
+    go_eat(philo);
     release_forks(philo);
-    philo->sleep = true;
-    printf("%lu %d is sleeping\n", get_timestamp(), philo->id + 1);
-    usleep(philo->params->time_to_sleep * 1000);
-    philo->sleep = false;
+    go_sleep(philo);
+    reset_states(philo);
     printf("%lu %d is thinking\n", get_timestamp(), philo->id + 1);
   }
   return (NULL);
