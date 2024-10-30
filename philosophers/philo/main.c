@@ -1,5 +1,4 @@
 #include "./philo.h"
-#include <cstring>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +16,7 @@ t_philo	*create_philo(int id, t_params *params) {
 	philo->dead = false;
 	philo->eat = false;
 	philo->sleep = false;
+  philo->meals_eaten = 0;
   printf("PHILOSOPHER NUMBER %d CREATED\n", id + 1);
   return (philo);
 }
@@ -50,14 +50,14 @@ void push_philo(t_philo_list **list, t_philo *philo) {
 	}
 }
 
-void	handle_params(t_params **params, int total_philo, long long time_to_die,
+void	set_params(t_params *params, int total_philo, long long time_to_die,
                    long long time_to_eat, long long time_to_sleep, int meals) {
-	(*params)->total_philo = total_philo;
-	(*params)->time_to_die = time_to_die;
-	(*params)->time_to_eat = time_to_eat;
-	(*params)->time_to_sleep = time_to_sleep;
-	(*params)->total_meals = meals;
-	printf("HANDLE PARAMS FINISH\n");
+	params->total_philo = total_philo;
+	params->time_to_die = time_to_die;
+	params->time_to_eat = time_to_eat;
+	params->time_to_sleep = time_to_sleep;
+	params->max_meals = meals;
+  params->limit_meals_reach = false;
 }
 
 void	free_philo_list(t_philo_list *list)
@@ -82,6 +82,47 @@ unsigned long get_timestamp(void)
   return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
+void  log_action(const char *action, int philo_id)
+{
+    printf("%lu %d %s\n", get_timestamp(), philo_id + 1, action);
+}
+
+void  set_state(t_philo *philo, t_state state)
+{
+  philo->dead = (state == DEAD);
+  philo->eat = (state == EAT);
+  philo->sleep = (state == SLEEP);
+  if (state == EAT)
+    philo->meals_eaten += 1;
+}
+
+void  go_eat(t_philo *philo)
+{
+    set_state(philo, EAT);
+    log_action("is eating", philo->id);
+    usleep(philo->params->time_to_eat * 1000);
+    if (philo->params->max_meals > 0 && philo->params->max_meals == philo->meals_eaten)
+    {
+      lock_fork(&philo->shared->meals_mutex);
+      philo->shared->total_philo_finished_meals += 1;
+      unlock_fork(&philo->shared->meals_mutex);
+      printf("PHILO %d HAVE EAT %d LUNCH\n", philo->id + 1, philo->meals_eaten);
+    }
+}
+
+void  go_sleep(t_philo *philo)
+{
+    set_state(philo, SLEEP);
+    log_action("is sleeping", philo->id);
+    usleep(philo->params->time_to_sleep * 1000);
+}
+
+void  go_die(t_philo *philo)
+{
+  set_state(philo, DEAD);
+  log_action("died", philo->id);
+}
+
 bool  is_time_over(unsigned long waiting_time, int time_to_die)
 {
   return ((get_timestamp() - waiting_time) >= time_to_die);
@@ -93,26 +134,35 @@ bool  handle_forks(t_philo  *philo)
   int             shared_fork_index;
   unsigned long   waiting_time;
 
-  philo_fork_index = philo->id;
-  shared_fork_index = (philo->id + 1) % philo->params->total_philo;
-  if (pthread_mutex_lock(&philo->shared->fork[philo_fork_index]) == 0)
+  if (philo->id % 2 == 0)
   {
-    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    philo_fork_index = philo->id;
+    shared_fork_index = (philo->id + 1) % philo->params->total_philo;
+  }
+  else
+  {
+    philo_fork_index = (philo->id + 1) % philo->params->total_philo;
+    shared_fork_index = philo->id;
+  }
+  if (lock_fork(&philo->shared->fork[philo_fork_index]))
+  {
+    log_action("has taken a fork", philo->id);
     waiting_time = get_timestamp();
-
-    while (pthread_mutex_lock(&philo->shared->fork[shared_fork_index]) != 0)
+    while (!philo->params->limit_meals_reach && !lock_fork(&philo->shared->fork[shared_fork_index]))
     {
       if (is_time_over(waiting_time, philo->params->time_to_die))
-      {
-        printf("%lu %d died\n", get_timestamp(), philo->id + 1);
-        philo->eat = false;
-        philo->dead = true;
-        pthread_mutex_unlock(&philo->shared->fork[philo_fork_index]);
+      {        
+        unlock_fork(&philo->shared->fork[philo_fork_index]);
+        go_die(philo);
         return (false);
+        // quitter le programme ici (liberer tout les mallocs avant) 
       }
       usleep(100);
     }
-    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    if (philo->params->limit_meals_reach)
+        unlock_fork(&philo->shared->fork[philo_fork_index]);
+    else
+      log_action("has taken a fork", philo->id);
     return (true);
   }
   return (false);
@@ -125,83 +175,36 @@ void  release_forks(t_philo *philo)
 
   philo_fork_index = philo->id;
   shared_fork_index = (philo->id + 1) % philo->params->total_philo;
-  pthread_mutex_unlock(&philo->shared->fork[philo_fork_index]);
-  pthread_mutex_unlock(&philo->shared->fork[shared_fork_index]);
-  philo->eat = false;
-}
-
-void  reset_states(t_philo *philo)
-{
-  philo->dead = false;
-  philo->eat = false;
-  philo->sleep = false;
-}
-
-int ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-  if (n == 0)
-    return (0);
-  while (*s1 && *s1 == *s2 && --n)
-  {
-    s1++;
-    s2++;
-  }
-  return ((unsigned char)*s1 - (unsigned char)*s2);
-}
-
-void  set_state(t_philo *philo, char *state)
-{
-  reset_states(philo);
-  if (ft_strncmp(state, "dead", 4) == 0)
-    philo->dead = true;
-  else if (ft_strncmp(state, "eat", 3) == 0)
-    philo->eat = true;
-  else if (ft_strncmp(state, "sleep", 5) == 0)
-      philo->sleep = true;
-}
-
-void  go_eat(t_philo *philo)
-{
-    set_state(philo, "eat");
-    printf("%lu %d is eating\n", get_timestamp(), philo->id + 1);
-    usleep(philo->params->time_to_eat * 1000);
-}
-
-void  go_sleep(t_philo *philo)
-{
-    set_state(philo, "sleep");
-    printf("%lu %d is sleeping\n", get_timestamp(), philo->id + 1);
-    usleep(philo->params->time_to_sleep * 1000);
-}
-
-void  go_die(t_philo *philo)
-{
-  reset_states(philo);
-  set_state(philo, "dead");
-  usleep(philo->params->time_to_die * 1000);
-  printf("%lu %d died\n", get_timestamp(), philo->id + 1);
+  unlock_fork(&philo->shared->fork[philo_fork_index]);
+  unlock_fork(&philo->shared->fork[shared_fork_index]);
 }
 
 void  *routine(void *arg)
 {
-  t_philo         *philo;
+  t_philo *philo;
+  int     total_meals;   
+  bool    limit_meals_reached;
 
   philo = (t_philo*)arg;
+  limit_meals_reached = philo->params->limit_meals_reach;
+  total_meals = philo->params->max_meals;
   if (philo->params->total_philo == 1)
   {
-    printf("%lu %d has taken a fork\n", get_timestamp(), philo->id + 1);
+    log_action("has taken a fork", philo->id);
     go_die(philo);
     return (NULL);
   }
-  while (!philo->dead)
+  while (!philo->dead && !limit_meals_reached)
   {
     if (!handle_forks(philo))
       continue;
     go_eat(philo);
     release_forks(philo);
     go_sleep(philo);
-    reset_states(philo);
-    printf("%lu %d is thinking\n", get_timestamp(), philo->id + 1);
+    log_action("is thinking", philo->id);
+    limit_meals_reached = (philo->shared->total_philo_finished_meals == philo->params->total_philo);
+    if (limit_meals_reached || philo->dead)
+      break;
   }
   return (NULL);
 }
@@ -229,63 +232,20 @@ void	start_routines(t_philo_list *list)
 }
 
 int main(int argc, char **argv) {
-	int			    	meals_arg;
 	t_params		  *params;
 	t_philo_list	*philo_list;
-	t_philo			  *philo;
 	int				    i;
   t_shared      *shared;
 
-	meals_arg = -1;
-	philo_list = NULL;
-	if (argc != 5 && argc != 6) {
-	    printf("ERROR ARGUMENTS\n");
-		exit(1);
-	}
-	if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
-		meals_arg = ft_atoi(argv[5]);
-	params = malloc(sizeof(t_params));
-	if (!params)
-		return (1);
-	handle_params(&params, ft_atoi(argv[1]), ft_atoll(argv[2]), ft_atoll(argv[3]),
-                ft_atoll(argv[4]), meals_arg);
-	printf("total philo= %d\nto die= %lld\nto eat = %lld\nto sleep = %lld\ntotal "
-         "meals = %d\n",
-    params->total_philo, params->time_to_die, params->time_to_eat,
-    params->time_to_sleep, params->total_meals);
-  if (params->total_philo <= 0 || params->total_philo > 200)
-  {
-    free(params);
-    fprintf(stderr, "PHILOSOPHERS SHOULD BE MORE THAN 1 AND LESS THAN 200\n");
-    exit(1);
-  }
-  shared = malloc (sizeof(t_shared));
-  if (!shared)
-  {
-    free(params);
-    exit(1);
-  }
-  shared->fork = malloc(sizeof(pthread_mutex_t) * params->total_philo);
-  if (!shared->fork)
-  {
-    free(shared);
-    free(params);
-    exit(1);
-  }
-	i = -1;
-  while (++i < params->total_philo)
-    pthread_mutex_init(&shared->fork[i], NULL);
-  i = -1;
-	while (++i < params->total_philo)
-	{
-		philo = create_philo(i, params);
-    philo->shared = shared;
-		push_philo(&philo_list, philo);
-	}
+  params = handle_args(argc, argv);
+  shared = init_shared(params);
+  init_forks(params, shared);
+  init_philo(params, &philo_list, shared);
 	start_routines(philo_list);
   i = -1;
   while (++i < params->total_philo)
-    pthread_mutex_destroy(&shared->fork[i]);
+    pthread_mutex_destroy(&shared->fork[i]);  
+  pthread_mutex_destroy(&shared->meals_mutex);
   free(shared->fork);
   free(shared);
   free_philo_list(philo_list);
