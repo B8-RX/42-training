@@ -141,7 +141,7 @@ bool  handle_forks(t_philo  *philo)
     left_fork = (philo->params->total_philo - 1);
   else
     left_fork = (philo->id - 1);
-  right_fork = (philo->id + 1) % philo->params->total_philo;
+  right_fork = (philo->id) % philo->params->total_philo;
   if (lock_fork(&philo->shared->fork[right_fork]))
   {
     log_action("has taken a fork", philo->id);
