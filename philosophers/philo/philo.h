@@ -35,6 +35,8 @@ typedef struct s_philo
 	bool		      	dead;
 	bool  		    	eat;
 	bool	  	    	sleep;
+  long long       timestamp_meal;
+  long long       time_since_last_meal;
   int             meals_eaten;
 } t_philo;
 
