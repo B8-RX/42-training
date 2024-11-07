@@ -17,7 +17,6 @@ t_philo	*create_philo(int id, t_params *params) {
 	philo->eat = false;
 	philo->sleep = false;
   philo->meals_eaten = 0;
-  printf("PHILOSOPHER NUMBER %d CREATED\n", id + 1);
   return (philo);
 }
 
@@ -57,7 +56,7 @@ void	set_params(t_params *params, int total_philo, long long time_to_die,
 	params->time_to_eat = time_to_eat;
 	params->time_to_sleep = time_to_sleep;
 	params->max_meals = meals;
-  params->limit_meals_reach = false;
+  params->limit_meals_reached = false;
 }
 
 void	free_philo_list(t_philo_list *list)
@@ -89,6 +88,7 @@ void  log_action(const char *action, int philo_id)
 
 void  set_state(t_philo *philo, t_state state)
 {
+  lock_fork(&philo->shared->write_lock);
   philo->dead = (state == DEAD);
   philo->eat = (state == EAT);
   philo->sleep = (state == SLEEP);
@@ -96,27 +96,23 @@ void  set_state(t_philo *philo, t_state state)
   {
     philo->meals_eaten += 1;
     if (philo->params->max_meals > 0 && philo->params->max_meals == philo->meals_eaten)
-    {
-      lock_fork(&philo->shared->meals_mutex);
       philo->shared->total_philo_finished_meals += 1;
-      unlock_fork(&philo->shared->meals_mutex);
-      printf("PHILO %d HAVE EAT %d LUNCH\n", philo->id + 1, philo->meals_eaten);
-    }
   }
+  unlock_fork(&philo->shared->write_lock);
 }
 
 void  go_eat(t_philo *philo)
 {
-    set_state(philo, EAT);
-    log_action("is eating", philo->id);
-    usleep(philo->params->time_to_eat * 1000);
+  set_state(philo, EAT);
+  log_action("is eating", philo->id);
+  usleep(philo->params->time_to_eat * 1000);
 }
 
 void  go_sleep(t_philo *philo)
 {
-    set_state(philo, SLEEP);
-    log_action("is sleeping", philo->id);
-    usleep(philo->params->time_to_sleep * 1000);
+  set_state(philo, SLEEP);
+  log_action("is sleeping", philo->id);
+  usleep(philo->params->time_to_sleep * 1000);
 }
 
 void  go_die(t_philo *philo)
@@ -125,34 +121,41 @@ void  go_die(t_philo *philo)
   log_action("died", philo->id);
 }
 
-bool  is_time_over(unsigned long waiting_time, int time_to_die)
-{
-  return ((get_timestamp() - waiting_time) >= time_to_die);
-}
+// bool  is_time_over(unsigned long waiting_time, int time_to_die)
+// {
+//   return ((get_timestamp() - waiting_time) >= time_to_die);
+// }
 
 bool  handle_forks(t_philo  *philo)
 {
   int             left_fork;
   int             right_fork;
-  int             swap_fork;
-  unsigned long   waiting_time;
+  int             swap;
+  // unsigned long   waiting_time;
 
-  if (philo->id == 0)
-    left_fork = (philo->params->total_philo - 1);
-  else
-    left_fork = (philo->id - 1);
-  right_fork = (philo->id) % philo->params->total_philo;
-  if (lock_fork(&philo->shared->fork[right_fork]))
+  left_fork = philo->id;
+  right_fork = (philo->id + 1) % philo->params->total_philo;
+  if (left_fork > right_fork)
+  {
+    swap = left_fork;
+    left_fork = right_fork;
+    right_fork = swap;
+  }
+  if (philo->id % 2 != 0)
+  {
+    swap = left_fork;
+    left_fork = right_fork;
+    right_fork = swap;
+  }
+  if (lock_fork(&philo->shared->fork[left_fork]))
   {
     log_action("has taken a fork", philo->id);
-    if (lock_fork(&philo->shared->fork[left_fork]))
+    if (lock_fork(&philo->shared->fork[right_fork]))
     {
       log_action("has taken a fork", philo->id);
-      return (true);
+   
+      return (true);    
     }
-    else
-      unlock_fork(&philo->shared->fork[right_fork]);
-    usleep(100);
   }
   return (false);
 }
@@ -161,9 +164,16 @@ void  release_forks(t_philo *philo)
 {
   int left_fork;
   int right_fork;
+  int swap;
 
   left_fork = philo->id;
   right_fork = (philo->id + 1) % philo->params->total_philo;
+  if (left_fork > right_fork)
+  {
+    swap = left_fork;
+    left_fork = right_fork;
+    right_fork = swap;
+  }
   unlock_fork(&philo->shared->fork[left_fork]);
   unlock_fork(&philo->shared->fork[right_fork]);
 }
@@ -171,29 +181,32 @@ void  release_forks(t_philo *philo)
 void  *routine(void *arg)
 {
   t_philo *philo;
-  int     total_meals;   
   bool    limit_meals_reached;
+  bool    is_dead;
 
   philo = (t_philo*)arg;
-  limit_meals_reached = philo->params->limit_meals_reach;
-  total_meals = philo->params->max_meals;
-  if (philo->params->total_philo == 1)
+   if (philo->params->total_philo == 1)
   {
     log_action("has taken a fork", philo->id);
     go_die(philo);
     return (NULL);
   }
-  while (!philo->dead && !limit_meals_reached)
+  while (1)
   {
+    pthread_mutex_lock(&philo->shared->write_lock); 
+    is_dead = philo->dead;
+    limit_meals_reached = (philo->shared->total_philo_finished_meals == philo->params->total_philo);
+    pthread_mutex_unlock(&philo->shared->write_lock); 
+
+    if (limit_meals_reached || is_dead)
+      break;
+
     if (!handle_forks(philo))
       continue;
     go_eat(philo);
     release_forks(philo);
     go_sleep(philo);
     log_action("is thinking", philo->id);
-    limit_meals_reached = (philo->shared->total_philo_finished_meals == philo->params->total_philo);
-    if (limit_meals_reached || philo->dead)
-      break;
   }
   return (NULL);
 }
@@ -234,7 +247,7 @@ int main(int argc, char **argv) {
   i = -1;
   while (++i < params->total_philo)
     pthread_mutex_destroy(&shared->fork[i]);  
-  pthread_mutex_destroy(&shared->meals_mutex);
+  pthread_mutex_destroy(&shared->write_lock);
   free(shared->fork);
   free(shared);
   free_philo_list(philo_list);

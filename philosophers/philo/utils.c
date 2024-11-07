@@ -41,6 +41,7 @@ size_t ft_strlen(char *str) {
 
 int lock_fork(pthread_mutex_t *fork)
 {
+  // pthread_mutex_lock(fork);
   if(pthread_mutex_lock(fork) == 0)
     return (1);
   return (0);
@@ -48,6 +49,7 @@ int lock_fork(pthread_mutex_t *fork)
 
 int unlock_fork(pthread_mutex_t *fork)
 {
+  // pthread_mutex_unlock(fork);
   if (pthread_mutex_unlock(fork) == 0)
     return (1);
   return (0);
@@ -101,12 +103,12 @@ t_shared  *init_shared(t_params *params)
     fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
 		exit (1);
   }
-  if (pthread_mutex_init(&shared->meals_mutex, NULL) != 0)
+  if (pthread_mutex_init(&shared->write_lock, NULL) != 0)
   {
     free(shared->fork);
     free(shared);
     free(params);
-    fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
+    fprintf(stderr, "ERROR MUTEX INIT\n");
 		exit (1);
   }
   shared->total_philo_finished_meals = 0;
