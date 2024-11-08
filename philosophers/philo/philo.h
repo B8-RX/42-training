@@ -15,14 +15,16 @@ typedef struct s_params
 	long long		    time_to_die;
 	long long	    	time_to_eat;
 	long long		    time_to_sleep;
+	long long		    timestamp_start;
 	int				      max_meals;
-  bool            limit_meals_reach;
+  bool            limit_meals_reached;
 } t_params;
 
 typedef struct s_shared
 {
   pthread_mutex_t *fork;
   pthread_mutex_t meals_mutex;
+  pthread_mutex_t write_lock;
   int             total_philo_finished_meals;
 } t_shared;
 
