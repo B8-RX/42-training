@@ -41,7 +41,6 @@ size_t ft_strlen(char *str) {
 
 int lock_fork(pthread_mutex_t *fork)
 {
-  // pthread_mutex_lock(fork);
   if(pthread_mutex_lock(fork) == 0)
     return (1);
   return (0);
@@ -49,7 +48,6 @@ int lock_fork(pthread_mutex_t *fork)
 
 int unlock_fork(pthread_mutex_t *fork)
 {
-  // pthread_mutex_unlock(fork);
   if (pthread_mutex_unlock(fork) == 0)
     return (1);
   return (0);
@@ -62,10 +60,12 @@ t_params *handle_args(int argc, char **argv)
   t_params      *params;
 
 	meals_arg = 0;
-  if (argc != 5 && argc != 6) {
-	    fprintf(stderr, "ERROR ARGUMENTS\n");
-		exit (1); }
-	if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
+  if (argc != 5 && argc != 6)
+  {
+	  fprintf(stderr, "ERROR ARGUMENTS\n");
+		exit (1); 
+  }
+  if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
 		meals_arg = ft_atoi(argv[5]);
 	params = malloc(sizeof(t_params));
 	if (!params)

@@ -13,11 +13,7 @@ t_philo	*create_philo(int id, t_params *params) {
 		return (NULL);
 	philo->id = id;
   philo->params = params;
-	philo->dead = false;
-	philo->eat = false;
-	philo->sleep = false;
   philo->meals_eaten = 0;
-  philo->time_since_last_meal = 0;
   return (philo);
 }
 
@@ -65,8 +61,8 @@ void	set_params(t_params *params, int total_philo, long long time_to_die,
 	params->time_to_eat = time_to_eat;
 	params->time_to_sleep = time_to_sleep;
 	params->max_meals = meals;
-  params->limit_meals_reached = false;
   params->timestamp_start = 0;
+  params->is_game_over = false;
 }
 
 void	free_philo_list(t_philo_list *list)
@@ -75,7 +71,6 @@ void	free_philo_list(t_philo_list *list)
 
 	while (list)
 	{
-		printf("freeing philo: %d\n", list->curr_philo->id + 1);
 		tmp = list;
 		list = list->next;
 		free(tmp->curr_philo);
@@ -88,49 +83,27 @@ void  log_action(const char *action, t_philo *philo)
     printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start, philo->id + 1, action);
 }
 
-void  set_state(t_philo *philo, t_state state)
-{
-  lock_fork(&philo->shared->write_lock);
-  philo->dead = (state == DEAD);
-  philo->eat = (state == EAT);
-  philo->sleep = (state == SLEEP);
-  if (state == EAT)
-  {
-    philo->meals_eaten += 1;
-    if (philo->params->max_meals > 0 && philo->params->max_meals == philo->meals_eaten)
-      philo->shared->total_philo_finished_meals += 1;
-  }
-  unlock_fork(&philo->shared->write_lock);
-}
-
 void  go_eat(t_philo *philo)
 {
-  set_state(philo, EAT);
+  pthread_mutex_lock(&philo->shared->write_lock);
+  philo->last_meal_timestamp = get_timestamp();
   log_action("is eating", philo);
   usleep(philo->params->time_to_eat * 1000);
+  philo->meals_eaten += 1;
+  pthread_mutex_unlock(&philo->shared->write_lock);
+
 }
 
 void  go_sleep(t_philo *philo)
 {
-  set_state(philo, SLEEP);
   log_action("is sleeping", philo);
   usleep(philo->params->time_to_sleep * 1000);
 }
 
 void  go_die(t_philo *philo)
 {
-  set_state(philo, DEAD);
   log_action("died", philo);
-}
-
-bool  is_time_over(long long waiting_time, long long time_to_die)
-{
-  long long elapsed_time;
-
-  elapsed_time = (get_timestamp() - waiting_time);
-  printf("ELAPSED TIME %lld\n", elapsed_time);
-  printf("TIME TO DIE: %lld\n", time_to_die);
-  return (elapsed_time >= time_to_die);
+  usleep(philo->params->time_to_die * 1000);
 }
 
 bool  handle_forks(t_philo  *philo)
@@ -141,12 +114,6 @@ bool  handle_forks(t_philo  *philo)
 
   left_fork = philo->id;
   right_fork = (philo->id + 1) % philo->params->total_philo;
-  if (left_fork > right_fork)
-  {
-    swap = left_fork;
-    left_fork = right_fork;
-    right_fork = swap;
-  }
   if (philo->id % 2 != 0)
   {
     swap = left_fork;
@@ -156,6 +123,15 @@ bool  handle_forks(t_philo  *philo)
   if (lock_fork(&philo->shared->fork[left_fork]))
   {
     log_action("has taken a fork", philo);
+    if (philo->params->total_philo == 1)
+    {
+      go_die(philo);
+      pthread_mutex_lock(&philo->shared->write_lock);
+      philo->params->is_game_over = true;
+      pthread_mutex_unlock(&philo->shared->write_lock);
+      unlock_fork(&philo->shared->fork[left_fork]);
+      return (false);
+    }
     if (lock_fork(&philo->shared->fork[right_fork]))
     {
       log_action("has taken a fork", philo);
@@ -183,41 +159,65 @@ void  release_forks(t_philo *philo)
   unlock_fork(&philo->shared->fork[right_fork]);
 }
 
+void  *monitor(void *arg)
+{
+  t_philo_list  *philo_list;
+  t_philo_list  *current;
+  t_philo       *philo;
+
+  philo_list = (t_philo_list *)arg;
+  while (1)
+  {
+    current = philo_list;
+    while (current)
+    {
+      // printf("MONITOR CURRENT LOOP\n");
+      philo = current->curr_philo;
+      pthread_mutex_lock(&philo->shared->write_lock);
+      if (philo->params->is_game_over)
+      {
+        pthread_mutex_unlock(&philo->shared->write_lock);
+        return (NULL);
+      }
+      if (philo->last_meal_timestamp > 0 && get_timestamp() - philo->last_meal_timestamp >= philo->params->time_to_die)
+      {
+        go_die(philo);
+        philo->params->is_game_over = true;
+        pthread_mutex_unlock(&philo->shared->write_lock);
+        return (NULL);
+      }
+      if (philo->params->max_meals > 0 && philo->meals_eaten >= philo->params->max_meals)
+        philo->shared->total_philo_finished_meals += 1;
+      if (philo->shared->total_philo_finished_meals == philo->params->total_philo)
+      {
+        philo->params->is_game_over = true;
+        pthread_mutex_unlock(&philo->shared->write_lock);
+        return (NULL);  
+      }
+      pthread_mutex_unlock(&philo->shared->write_lock);
+      current = current->next;
+    }
+    usleep(50);
+  }
+ return (NULL); 
+}
+
 void  *routine(void *arg)
 {
   t_philo *philo;
-  bool    limit_meals_reached;
-  bool    is_dead;
   
   philo = (t_philo*)arg;
-  if (philo->params->total_philo == 1)
-  {
-    log_action("has taken a fork", philo);
-    go_die(philo);
-    return (NULL);
-  }
-  pthread_mutex_lock(&philo->shared->write_lock);
-  philo->time_since_last_meal = get_timestamp();
-  pthread_mutex_unlock(&philo->shared->write_lock); 
   while (1)
   {
     pthread_mutex_lock(&philo->shared->write_lock);
-    if (is_time_over(philo->time_since_last_meal, philo->params->time_to_die))
+    if (philo->params->is_game_over)
     {
-      go_die(philo);
       pthread_mutex_unlock(&philo->shared->write_lock); 
       break;
     }
-    is_dead = philo->dead;
-    limit_meals_reached = (philo->shared->total_philo_finished_meals == philo->params->total_philo);
     pthread_mutex_unlock(&philo->shared->write_lock); 
-    if (limit_meals_reached || is_dead)
-      break;
     if (!handle_forks(philo))
       continue;
-    pthread_mutex_lock(&philo->shared->write_lock);
-    philo->time_since_last_meal = get_timestamp();
-    pthread_mutex_unlock(&philo->shared->write_lock);
     go_eat(philo);
     release_forks(philo);
     go_sleep(philo);
@@ -229,8 +229,14 @@ void  *routine(void *arg)
 void	start_routines(t_philo_list *list)
 {
   t_philo_list  *philosophers;
+  pthread_t       monitor_thread;
 
   philosophers = list;
+  if (pthread_create(&monitor_thread, NULL, &monitor, list) != 0)
+  {
+    fprintf(stderr, "Error on thread creation for monitor\n");
+    exit(EXIT_FAILURE);
+  }
   while (philosophers)
   {
     if (pthread_create(&philosophers->curr_philo->thread, NULL, &routine, philosophers->curr_philo) != 0)
@@ -246,6 +252,7 @@ void	start_routines(t_philo_list *list)
     pthread_join(philosophers->curr_philo->thread, NULL);
     philosophers = philosophers->next;
   }
+  pthread_join(monitor_thread, NULL);
 }
 
 int main(int argc, char **argv) {
