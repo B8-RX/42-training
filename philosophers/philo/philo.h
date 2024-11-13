@@ -16,7 +16,7 @@ typedef struct s_params
 	long long	    	time_to_eat;
 	long long		    time_to_sleep;
 	int				      max_meals;
-  bool            limit_meals_reached;
+  bool            max_meals_reached;
 } t_params;
 
 typedef struct s_shared
