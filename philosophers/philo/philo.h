@@ -54,8 +54,6 @@ typedef enum
 long long	    ft_atoll(char *num);
 int			      ft_atoi(char *num);
 size_t	      ft_strlen(char *str);
-int           lock_fork(pthread_mutex_t *fork);
-int           unlock_fork(pthread_mutex_t *fork);
 t_params      *handle_args(int argc, char **argv);
 void          set_params(t_params *params, int total_philo, long long time_to_die,
                    long long time_to_eat, long long time_to_sleep, int meals);

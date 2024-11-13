@@ -39,20 +39,6 @@ size_t ft_strlen(char *str) {
 	return (i);
 }
 
-int lock_fork(pthread_mutex_t *fork)
-{
-  if(pthread_mutex_lock(fork) == 0)
-    return (1);
-  return (0);
-}
-
-int unlock_fork(pthread_mutex_t *fork)
-{
-  if (pthread_mutex_unlock(fork) == 0)
-    return (1);
-  return (0);
-}
-
 t_params *handle_args(int argc, char **argv)
 {
 
