@@ -16,7 +16,8 @@ typedef struct s_params
 	long long	    	time_to_eat;
 	long long		    time_to_sleep;
 	int				      max_meals;
-  bool            max_meals_reached;
+  bool            limit_meals_reached;
+  long long       timestamp_start;
 } t_params;
 
 typedef struct s_shared
@@ -56,8 +57,6 @@ typedef enum
 long long	    ft_atoll(char *num);
 int			      ft_atoi(char *num);
 size_t	      ft_strlen(char *str);
-int           lock_fork(pthread_mutex_t *fork);
-int           unlock_fork(pthread_mutex_t *fork);
 t_params      *handle_args(int argc, char **argv);
 void          set_params(t_params *params, int total_philo, long long time_to_die,
                    long long time_to_eat, long long time_to_sleep, int meals);
@@ -67,6 +66,7 @@ void          init_forks(t_params *params, t_shared *shared);
 void          init_philo(t_params *params, t_philo_list **philo_list, t_shared *shared);
 void          push_philo(t_philo_list **list, t_philo *philo);
 t_philo       *create_philo(int id, t_params *params);
+long long     get_timestamp(void);
 
 
 #endif // !PHILO_H
