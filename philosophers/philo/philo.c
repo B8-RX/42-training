@@ -14,6 +14,7 @@ t_philo	*create_philo(int id, t_params *params) {
 	philo->id = id;
   philo->params = params;
   philo->meals_eaten = 0;
+  philo->last_meal_timestamp = 0;
   return (philo);
 }
 
@@ -61,7 +62,6 @@ void	set_params(t_params *params, int total_philo, long long time_to_die,
 	params->time_to_eat = time_to_eat;
 	params->time_to_sleep = time_to_sleep;
 	params->max_meals = meals;
-  params->timestamp_start = 0;
   params->is_game_over = false;
 }
 
@@ -80,13 +80,12 @@ void	free_philo_list(t_philo_list *list)
 
 void  log_action(const char *action, t_philo *philo)
 {
-    printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start, philo->id + 1, action);
+    printf("%lld %d %s\n", get_timestamp() - philo->timestamp_start, philo->id + 1, action);
 }
 
 void  go_eat(t_philo *philo)
 {
   pthread_mutex_lock(&philo->shared->write_lock);
-  philo->last_meal_timestamp = get_timestamp();
   log_action("is eating", philo);
   usleep(philo->params->time_to_eat * 1000);
   philo->meals_eaten += 1;
@@ -120,6 +119,11 @@ void  *monitor(void *arg)
     {
       philo = current->curr_philo;
       pthread_mutex_lock(&philo->shared->write_lock);
+      // if (philo->last_meal_timestamp > 0)
+      // {
+      //   printf("LAST MEAL: %lld\n", philo->last_meal_timestamp);
+      //   printf("DELTA: %lld\n", (get_timestamp() - philo->last_meal_timestamp));
+      // }
       if (philo->last_meal_timestamp > 0 && (get_timestamp() - philo->last_meal_timestamp) >= philo->params->time_to_die)
       {
         go_die(philo);
@@ -168,9 +172,16 @@ void  release_forks(t_philo *philo)
 {
   int left_fork;
   int right_fork;
+  int             swap;
 
   left_fork = philo->id;
   right_fork = (philo->id + 1) % philo->params->total_philo;
+  if (philo->id % 2 == 0)
+  {
+    swap = left_fork;
+    left_fork = right_fork;
+    right_fork = swap;
+  }
   pthread_mutex_unlock(&philo->shared->fork[left_fork]);
   pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }
@@ -179,20 +190,26 @@ void  release_forks(t_philo *philo)
 void  *routine(void *arg)
 {
   t_philo *philo;
-  
+   
   philo = (t_philo*)arg;
-  pthread_mutex_lock(&philo->shared->write_lock);
-  while (!philo->params->is_game_over)
+  while (1)
   {
-    pthread_mutex_unlock(&philo->shared->write_lock);
     log_action("is thinking", philo);
+    pthread_mutex_lock(&philo->shared->write_lock);
+    if (philo->params->is_game_over)
+    {
+      pthread_mutex_unlock(&philo->shared->write_lock);
+      break;
+    }
+    pthread_mutex_unlock(&philo->shared->write_lock);
     handle_forks(philo);
+    pthread_mutex_lock(&philo->shared->write_lock);
+    philo->last_meal_timestamp = get_timestamp();
+    pthread_mutex_unlock(&philo->shared->write_lock);
     go_eat(philo);
     release_forks(philo);
     go_sleep(philo);
-    pthread_mutex_lock(&philo->shared->write_lock);
   }
-  pthread_mutex_unlock(&philo->shared->write_lock);
   return (NULL);
 }
 
@@ -212,6 +229,7 @@ void	start_routines(t_philo_list *list)
   while (philosophers)
   {
     list_length++;
+    philosophers->curr_philo->timestamp_start = get_timestamp();
     if (pthread_create(&philosophers->curr_philo->thread, NULL, &routine, philosophers->curr_philo) != 0)
     {
       fprintf(stderr, "Error on thread creation for philosopher %d\n", philosophers->curr_philo->id);
@@ -247,7 +265,6 @@ int main(int argc, char **argv) {
   params = handle_args(argc, argv);
   shared = init_shared(params);
   init_forks(params, shared);
-  params->timestamp_start = get_timestamp();
   init_philo(params, &philo_list, shared);
 	start_routines(philo_list);
   i = -1;
