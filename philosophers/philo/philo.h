@@ -59,7 +59,7 @@ int			      ft_atoi(char *num);
 size_t	      ft_strlen(char *str);
 t_params      *handle_args(int argc, char **argv);
 void          set_params(t_params *params, int total_philo, long long time_to_die,
-                   long long time_to_eat, long long time_to_sleep, int meals);
+long long     time_to_eat, long long time_to_sleep, int meals);
 bool          is_digits(char *arg);
 t_shared      *init_shared(t_params *params);
 void          init_forks(t_params *params, t_shared *shared);
@@ -67,6 +67,15 @@ void          init_philo(t_params *params, t_philo_list **philo_list, t_shared *
 void          push_philo(t_philo_list **list, t_philo *philo);
 t_philo       *create_philo(int id, t_params *params);
 long long     get_timestamp(void);
+void          set_state(t_philo *philo, t_state state);
+void          log_action(const char *action, t_philo *philo);
+void          go_die(t_philo *philo);
+void          go_sleep(t_philo *philo);
+void          go_eat(t_philo *philo);
+bool          handle_forks(t_philo  *philo);
+void          release_forks(t_philo *philo);
+void        	free_philo_list(t_philo_list *list);
+void        	start_routines(t_philo_list *list);
 
 
 #endif // !PHILO_H

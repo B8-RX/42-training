@@ -8,6 +8,10 @@ PHILO_LIB = ./philo.h
 
 SRC = philo.c \
     utils.c \
+		philo_action.c \
+		philo_data_management.c \
+		routine.c \
+		init.c \
 
 OBJS = $(SRC:.c=.o)
 
