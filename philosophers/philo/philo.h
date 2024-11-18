@@ -12,10 +12,12 @@
 typedef struct s_params
 {
 	int				      total_philo;
+  int             total_philo_finished_meals;
 	long long		    time_to_die;
 	long long	    	time_to_eat;
 	long long		    time_to_sleep;
 	int				      max_meals;
+	long long		    timestamp_start;
   bool            is_game_over;
 } t_params;
 
@@ -24,7 +26,6 @@ typedef struct s_shared
   pthread_mutex_t *fork;
   pthread_mutex_t meals_mutex;
   pthread_mutex_t write_lock;
-  int total_philo_finished_meals;
 } t_shared;
 
 typedef struct s_philo
@@ -33,7 +34,6 @@ typedef struct s_philo
   pthread_t       thread;
   t_params        *params;
   t_shared        *shared;
-	long long		    timestamp_start;
   long long       last_meal_timestamp;
   int             meals_eaten;
 } t_philo;
@@ -64,6 +64,7 @@ void          init_philo(t_params *params, t_philo_list **philo_list, t_shared *
 void          push_philo(t_philo_list **list, t_philo *philo);
 t_philo       *create_philo(int id, t_params *params);
 long long     get_timestamp(void);
+void          create_threads(t_philo_list *list);
 
 #endif // !PHILO_H
 

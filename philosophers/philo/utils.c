@@ -45,7 +45,7 @@ t_params *handle_args(int argc, char **argv)
 	int			    	meals_arg;
   t_params      *params;
 
-	meals_arg = 0;
+	meals_arg = -1;
   if (argc != 5 && argc != 6)
   {
 	  fprintf(stderr, "ERROR ARGUMENTS\n");
@@ -97,7 +97,6 @@ t_shared  *init_shared(t_params *params)
     fprintf(stderr, "ERROR MUTEX INIT\n");
 		exit (1);
   }
-  shared->total_philo_finished_meals = 0;
   return (shared);
 }
 
