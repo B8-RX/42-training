@@ -18,7 +18,8 @@ typedef struct s_params
 	long long		    time_to_sleep;
 	int				      max_meals;
 	long long		    timestamp_start;
-  bool            is_game_over;
+  bool            a_philo_died;
+  bool            all_finished;
 } t_params;
 
 typedef struct s_shared
@@ -36,6 +37,7 @@ typedef struct s_philo
   t_shared        *shared;
   long long       last_meal_timestamp;
   int             meals_eaten;
+  bool            finished_meals;
 } t_philo;
 
 typedef struct s_philo_list
