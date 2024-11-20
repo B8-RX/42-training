@@ -164,6 +164,7 @@ void  *monitor(void *arg)
         pthread_mutex_unlock(&philo->shared->write_lock);
       }
       current = current->next;
+      usleep(100);
     }
   }
  return (NULL); 
