@@ -197,9 +197,18 @@ bool  handle_forks(t_philo  *philo)
     pthread_mutex_unlock(&philo->shared->fork[left_fork]);
     return (false);
   }
+  pthread_mutex_unlock(&philo->shared->write_lock);
   log_action("has taken a fork", philo);
   pthread_mutex_unlock(&philo->shared->write_lock);
   pthread_mutex_lock(&philo->shared->fork[right_fork]);
+  pthread_mutex_lock(&philo->shared->write_lock);
+  if (philo->params->a_philo_died || philo->params->all_finished)
+  {
+    pthread_mutex_unlock(&philo->shared->write_lock);
+    pthread_mutex_unlock(&philo->shared->fork[right_fork]);
+    return (false);
+  }
+  pthread_mutex_unlock(&philo->shared->write_lock);
   log_action("has taken a fork", philo);
   return (true);    
 }
@@ -243,17 +252,7 @@ void  *routine(void *arg)
 
     log_action("is thinking", philo);
     if (!handle_forks(philo))
-      break;
-    
-    pthread_mutex_lock(&philo->shared->write_lock);
-    if (philo->params->a_philo_died || philo->params->all_finished)
-    {
-      pthread_mutex_unlock(&philo->shared->write_lock);
-      release_forks(philo);
-      break;
-    }
-    pthread_mutex_unlock(&philo->shared->write_lock);
-    
+      return (NULL);
     go_eat(philo);
     release_forks(philo);
     
