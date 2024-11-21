@@ -38,6 +38,8 @@ typedef struct s_philo
   long long       last_meal_timestamp;
   int             meals_eaten;
   bool            finished_meals;
+  bool            left_fork_locked;
+  bool            right_fork_locked;
 } t_philo;
 
 typedef struct s_philo_list
@@ -66,7 +68,7 @@ void          init_philo(t_params *params, t_philo_list **philo_list, t_shared *
 void          push_philo(t_philo_list **list, t_philo *philo);
 t_philo       *create_philo(int id, t_params *params);
 long long     get_timestamp(void);
-void          create_threads(t_philo_list *list);
+void          create_threads(t_philo_list *list, t_shared *shared, t_params *params);
 
 #endif // !PHILO_H
 
