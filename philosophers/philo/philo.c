@@ -17,8 +17,6 @@ t_philo	*create_philo(int id, t_params *params) {
   philo->meals_eaten = 0;
   philo->finished_meals = false;
   philo->last_meal_timestamp = 0;
-  philo->left_fork_locked = false;
-  philo->right_fork_locked = false;
   return (philo);
 }
 
@@ -177,8 +175,6 @@ bool  handle_forks(t_philo  *philo)
 {
   int             left_fork;
   int             right_fork;
-  bool  left_locked = false;
-  bool  right_locked = false;
   int             swap;
   
   left_fork = philo->id;
@@ -198,25 +194,20 @@ bool  handle_forks(t_philo  *philo)
   pthread_mutex_unlock(&philo->shared->write_lock);
   
   pthread_mutex_lock(&philo->shared->fork[left_fork]);
-  left_locked = true;
   
   pthread_mutex_lock(&philo->shared->write_lock);
   if (philo->params->a_philo_died || philo->params->all_finished)
   {
     pthread_mutex_unlock(&philo->shared->write_lock);
     pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-    left_locked = false;
     return (false);
   }
   pthread_mutex_unlock(&philo->shared->write_lock);
   log_action("has taken a fork", philo);
   
   pthread_mutex_lock(&philo->shared->fork[right_fork]);
-  right_locked = true;
   log_action("has taken a fork", philo);
   
-  philo->left_fork_locked = left_locked;
-  philo->right_fork_locked = right_locked;
   return (true);    
 }
 
@@ -234,16 +225,8 @@ void  release_forks(t_philo *philo)
     left_fork = right_fork;
     right_fork = swap;
   }
-  if (philo->left_fork_locked)
-  {
-    pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-    philo->left_fork_locked = false;
-  }
-  if (philo->right_fork_locked)
-  {
-    pthread_mutex_unlock(&philo->shared->fork[right_fork]);
-    philo->right_fork_locked = false;
-  }
+  pthread_mutex_unlock(&philo->shared->fork[left_fork]);
+  pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }
 
 
@@ -280,18 +263,14 @@ int  routine(void *arg)
     pthread_mutex_unlock(&philo->shared->write_lock);
     go_sleep(philo);
   }
-  release_forks(philo);
   return (1);
 }
 
-void	create_threads(t_philo_list *list, t_shared *shared, t_params *params)
+void	create_threads(t_philo_list *list)
 {
   t_philo_list  *philosophers;
   pthread_t       monitor_thread;
   int        list_length = 0;
-  void          *ret_thread;
-  int           finished_thread = 0;
-	int				    i;
 
   philosophers = list;
   if (pthread_create(&monitor_thread, NULL, &monitor, list) != 0)
@@ -312,9 +291,7 @@ void	create_threads(t_philo_list *list, t_shared *shared, t_params *params)
   philosophers = list;
   while (philosophers)
   {
-    pthread_join(philosophers->curr_philo->thread, &ret_thread);
-    if ((int)(size_t)ret_thread == 1)
-      finished_thread++;
+    pthread_join(philosophers->curr_philo->thread, NULL);
     philosophers = philosophers->next;
   }
   pthread_join(monitor_thread, NULL);
@@ -327,18 +304,6 @@ void	create_threads(t_philo_list *list, t_shared *shared, t_params *params)
     list->curr_philo->params->a_philo_died = true;
     pthread_mutex_unlock(&list->curr_philo->shared->write_lock);
   }
-  if (finished_thread == list_length)
-  {
-    printf("ALL THREADS FINISHED!! \n");
-    i = -1;
-    while (++i < params->total_philo)
-      pthread_mutex_destroy(&shared->fork[i]);  
-    pthread_mutex_destroy(&shared->write_lock);
-    pthread_mutex_destroy(&shared->meals_mutex);
-  }
-  else
-    printf("THREADS NOT FINISHED!! \n");
-
 }
 
 void  free_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
@@ -353,12 +318,18 @@ int main(int argc, char **argv) {
 	t_params		  *params;
 	t_philo_list	*philo_list;
   t_shared      *shared;
+	int				    i;
 
   params = handle_args(argc, argv);
   shared = init_shared(params);
   init_forks(params, shared);
   init_philo(params, &philo_list, shared);
-	create_threads(philo_list, shared, params);
-   free_data(shared, philo_list, params);
+	create_threads(philo_list);
+  i = -1;
+  while (++i < params->total_philo)
+    pthread_mutex_destroy(&shared->fork[i]);  
+  pthread_mutex_destroy(&shared->write_lock);
+  pthread_mutex_destroy(&shared->meals_mutex);
+  free_data(shared, philo_list, params);
 	return (0);
 }
