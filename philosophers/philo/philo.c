@@ -229,7 +229,17 @@ void  release_forks(t_philo *philo)
   pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }
 
-
+bool  found_stop_cases(t_philo *philo)
+{
+  pthread_mutex_lock(&philo->shared->write_lock);
+  if (philo->params->a_philo_died || philo->params->all_finished)
+  {
+    pthread_mutex_unlock(&philo->shared->write_lock);
+    return (true);
+  }
+  pthread_mutex_unlock(&philo->shared->write_lock);
+  return (false);
+}
 
 int  routine(void *arg)
 {
@@ -240,30 +250,48 @@ int  routine(void *arg)
     return (1);
   while (1)
   {
-    pthread_mutex_lock(&philo->shared->write_lock);
-    if (philo->params->a_philo_died || philo->params->all_finished)
-    {
-      pthread_mutex_unlock(&philo->shared->write_lock);
+    if (found_stop_cases(philo))
       break;
-    }
-    pthread_mutex_unlock(&philo->shared->write_lock);
-
     log_action("is thinking", philo);
     if (!handle_forks(philo))
       break ;
     go_eat(philo);
     release_forks(philo);
-    
-    pthread_mutex_lock(&philo->shared->write_lock);
-    if (philo->params->a_philo_died || philo->params->all_finished)
-    {
-      pthread_mutex_unlock(&philo->shared->write_lock);
+    if (found_stop_cases(philo))
       break;
-    }
-    pthread_mutex_unlock(&philo->shared->write_lock);
     go_sleep(philo);
   }
   return (1);
+}
+
+void  handle_single_philo(t_philo_list *list)
+{
+    log_action("is thinking", list->curr_philo);
+    log_action("has taken a fork", list->curr_philo);
+    pthread_mutex_lock(&list->curr_philo->shared->write_lock);
+    go_die(list->curr_philo);
+    list->curr_philo->params->a_philo_died = true;
+    pthread_mutex_unlock(&list->curr_philo->shared->write_lock);
+}
+
+void  init_philo_thr(t_philo_list *list, int *list_length)
+{
+  t_philo_list  *philosophers;
+  int           len;
+
+  philosophers = list;
+  len = 0;
+  while (philosophers)
+  {
+    len++;
+    if (pthread_create(&philosophers->curr_philo->thread, NULL, (void *)&routine, philosophers->curr_philo) != 0)
+    {
+      fprintf(stderr, "Error on thread creation for philosopher %d\n", philosophers->curr_philo->id);
+      exit(EXIT_FAILURE);
+    }
+    philosophers = philosophers->next;
+  }
+  *list_length = len;
 }
 
 void	create_threads(t_philo_list *list)
@@ -278,16 +306,9 @@ void	create_threads(t_philo_list *list)
     fprintf(stderr, "Error on thread creation for monitor\n");
     exit(EXIT_FAILURE);
   }
-  while (philosophers)
-  {
-    list_length++;
-    if (pthread_create(&philosophers->curr_philo->thread, NULL, (void *)&routine, philosophers->curr_philo) != 0)
-    {
-      fprintf(stderr, "Error on thread creation for philosopher %d\n", philosophers->curr_philo->id);
-      exit(EXIT_FAILURE);
-    }
-    philosophers = philosophers->next;
-  }
+  init_philo_thr(list, &list_length);
+  if (list_length == 1)
+    handle_single_philo(list);
   philosophers = list;
   while (philosophers)
   {
@@ -295,15 +316,6 @@ void	create_threads(t_philo_list *list)
     philosophers = philosophers->next;
   }
   pthread_join(monitor_thread, NULL);
-  if (list_length == 1)
-  {
-    log_action("is thinking", list->curr_philo);
-    log_action("has taken a fork", list->curr_philo);
-    pthread_mutex_lock(&list->curr_philo->shared->write_lock);
-    go_die(list->curr_philo);
-    list->curr_philo->params->a_philo_died = true;
-    pthread_mutex_unlock(&list->curr_philo->shared->write_lock);
-  }
 }
 
 void  free_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
