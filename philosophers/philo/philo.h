@@ -69,6 +69,10 @@ t_philo       *create_philo(int id, t_params *params);
 long long     get_timestamp(void);
 void          create_threads(t_philo_list *list);
 bool  found_stop_cases(t_philo *philo);
+bool  found_philo_died(t_philo *philo);
+bool  is_philo_starve(t_philo *philo);
+bool  all_philo_satiate(t_philo *philo);
+bool  monitor_check_stop_cases(t_philo *philo);
 
 #endif // !PHILO_H
 
