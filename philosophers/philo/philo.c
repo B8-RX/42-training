@@ -185,29 +185,17 @@ bool  handle_forks(t_philo  *philo)
     left_fork = right_fork;
     right_fork = swap;
   }
-  pthread_mutex_lock(&philo->shared->write_lock);
-  if (philo->params->a_philo_died || philo->params->all_finished)
-  {
-    pthread_mutex_unlock(&philo->shared->write_lock);
+  if (found_stop_cases(philo))
     return (false);
-  }
-  pthread_mutex_unlock(&philo->shared->write_lock);
-  
   pthread_mutex_lock(&philo->shared->fork[left_fork]);
-  
-  pthread_mutex_lock(&philo->shared->write_lock);
-  if (philo->params->a_philo_died || philo->params->all_finished)
+  if (found_stop_cases(philo))
   {
-    pthread_mutex_unlock(&philo->shared->write_lock);
     pthread_mutex_unlock(&philo->shared->fork[left_fork]);
     return (false);
   }
-  pthread_mutex_unlock(&philo->shared->write_lock);
   log_action("has taken a fork", philo);
-  
   pthread_mutex_lock(&philo->shared->fork[right_fork]);
   log_action("has taken a fork", philo);
-  
   return (true);    
 }
 
