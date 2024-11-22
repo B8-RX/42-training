@@ -75,6 +75,15 @@ bool  all_philo_satiate(t_philo *philo);
 bool  monitor_check_stop_cases(t_philo *philo);
 void  clean_mutex(t_params *params, t_shared *shared);
 void  clean_data(t_shared *shared, t_philo_list *philo_list, t_params *params);
+void  handle_single_philo(t_philo_list *list);
+void  release_forks(t_philo *philo);
+void  log_action(const char *action, t_philo *philo);
+void  go_eat(t_philo *philo);
+void  go_sleep(t_philo *philo);
+void  go_die(t_philo *philo);
+bool  handle_forks(t_philo  *philo);
+void  *monitor(void *arg);
+int  routine(void *arg);
 
 #endif // !PHILO_H
 
