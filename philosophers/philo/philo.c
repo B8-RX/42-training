@@ -232,7 +232,6 @@ void  release_forks(t_philo *philo)
   pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }
 
-
 bool  found_philo_died(t_philo *philo)
 {
   pthread_mutex_lock(&philo->shared->write_lock);
