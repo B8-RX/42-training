@@ -12,6 +12,15 @@ long long	ft_atoll(char *num) {
   return (sum);
 }
 
+bool is_digits(char *arg) {
+  while (arg && *arg) {
+    if (*arg < 48 || *arg > 57)
+      return (false);
+    arg++;
+  }
+  return (true);
+}
+
 int ft_atoi(char *num) {
   int sum;
   int sign;
@@ -39,99 +48,10 @@ size_t ft_strlen(char *str) {
 	return (i);
 }
 
-t_params *handle_args(int argc, char **argv)
+long long get_timestamp()
 {
+  struct timeval  tv; 
 
-	int			    	meals_arg;
-  t_params      *params;
-
-	meals_arg = -1;
-  if (argc != 5 && argc != 6)
-  {
-	  fprintf(stderr, "ERROR ARGUMENTS\n");
-		exit (1); 
-  }
-  if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
-		meals_arg = ft_atoi(argv[5]);
-	params = malloc(sizeof(t_params));
-	if (!params)
-  {  
-    fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
-		exit (1);
-  }
-  set_params(params, ft_atoi(argv[1]), ft_atoll(argv[2]), ft_atoll(argv[3]),
-                ft_atoll(argv[4]), meals_arg);
-  if (params->total_philo <= 0 || params->total_philo > 200)
-  {
-    free(params);
-    fprintf(stderr, "PHILOSOPHERS SHOULD BE MORE THAN 1 AND LESS THAN 200\n");
-    exit (1);
-  }
-  return (params);
+  gettimeofday(&tv, NULL);
+  return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
-
-t_shared  *init_shared(t_params *params)
-{
-  t_shared  *shared;
-
-  shared = malloc (sizeof(t_shared));
-  if (!shared)
-  {
-    free(params);
-    fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
-		exit (1);
-  }
-  shared->fork = malloc(sizeof(pthread_mutex_t) * params->total_philo);
-  if (!shared->fork)
-  {
-    free(shared);
-    free(params);
-    fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
-		exit (1);
-  }
-  if (pthread_mutex_init(&shared->write_lock, NULL) != 0)
-  {
-    free(shared->fork);
-    free(shared);
-    free(params);
-    fprintf(stderr, "ERROR MUTEX INIT\n");
-		exit (1);
-  }
-  return (shared);
-}
-
-void  init_forks(t_params *params, t_shared *shared)
-{
-  int i;
-
-  i = -1;
-  while (++i < params->total_philo)
-    pthread_mutex_init(&shared->fork[i], NULL);
-}
-
-void  init_philo(t_params *params, t_philo_list **philo_list, t_shared *shared)
-{
-	int				    i;
-	t_philo			  *philo;
-	
-  i = -1;
-  *philo_list = NULL;
-  while (++i < params->total_philo)
-	{
-		philo = create_philo(i, params);
-    philo->shared = shared;
-		push_philo(philo_list, philo);
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
