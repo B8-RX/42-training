@@ -63,10 +63,12 @@ bool          is_digits(char *arg);
 t_shared      *init_shared(t_params *params);
 void          init_forks(t_params *params, t_shared *shared);
 void          init_philo(t_params *params, t_philo_list **philo_list, t_shared *shared);
+void          init_philo_thr(t_philo_list *list, int *list_length);
 void          push_philo(t_philo_list **list, t_philo *philo);
 t_philo       *create_philo(int id, t_params *params);
 long long     get_timestamp(void);
 void          create_threads(t_philo_list *list);
+bool  found_stop_cases(t_philo *philo);
 
 #endif // !PHILO_H
 
