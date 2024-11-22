@@ -73,6 +73,8 @@ bool  found_philo_died(t_philo *philo);
 bool  is_philo_starve(t_philo *philo);
 bool  all_philo_satiate(t_philo *philo);
 bool  monitor_check_stop_cases(t_philo *philo);
+void  clean_mutex(t_params *params, t_shared *shared);
+void  clean_data(t_shared *shared, t_philo_list *philo_list, t_params *params);
 
 #endif // !PHILO_H
 

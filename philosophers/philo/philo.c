@@ -334,7 +334,7 @@ void	create_threads(t_philo_list *list)
   pthread_join(monitor_thread, NULL);
 }
 
-void  free_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
+void  clean_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
 {
   free(shared->fork);
   free(shared);
@@ -342,22 +342,28 @@ void  free_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
 	free(params);
 }
 
+void  clean_mutex(t_params *params, t_shared *shared)
+{
+  int				    i;
+  
+  i = -1;
+  while (++i < params->total_philo)
+    pthread_mutex_destroy(&shared->fork[i]);  
+  pthread_mutex_destroy(&shared->write_lock);
+  pthread_mutex_destroy(&shared->meals_mutex);
+}
+
 int main(int argc, char **argv) {
 	t_params		  *params;
 	t_philo_list	*philo_list;
   t_shared      *shared;
-	int				    i;
 
   params = handle_args(argc, argv);
   shared = init_shared(params);
   init_forks(params, shared);
   init_philo(params, &philo_list, shared);
 	create_threads(philo_list);
-  i = -1;
-  while (++i < params->total_philo)
-    pthread_mutex_destroy(&shared->fork[i]);  
-  pthread_mutex_destroy(&shared->write_lock);
-  pthread_mutex_destroy(&shared->meals_mutex);
-  free_data(shared, philo_list, params);
+  clean_mutex(params, shared);
+  clean_data(shared, philo_list, params);
 	return (0);
 }
