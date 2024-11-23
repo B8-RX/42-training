@@ -24,15 +24,15 @@ all: $(NAME)
         
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -I${PHILO_LIB} -o $(NAME) $(OBJS)
-	echo "\033[1mLets Do It\033[0m"
+	echo "\033[1mCOMPILATION COMPLETE\033[0m"
 
 clean:
 	rm -rf $(OBJS)
-	echo "ya foy"
+	echo "c'est clean"
 
 fclean: clean
 	rm -rf $(NAME)
-	echo "c'est fclean gros"
+	echo "c'est fclean"
 
 re: fclean all
 
