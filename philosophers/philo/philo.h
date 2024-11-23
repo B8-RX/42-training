@@ -72,7 +72,7 @@ bool		is_digits(char *arg);
 long long	get_timestamp(void);
 
 t_params	*handle_args(int argc, char **argv);
-void		set_params(t_params *params, char **argv, int meals);
+t_params	*set_params(char **argv, int meals);
 t_shared	*init_shared(t_params *params);
 
 void		init_philo_list(t_params *params,

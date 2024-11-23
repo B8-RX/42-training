@@ -25,13 +25,7 @@ t_params	*handle_args(int argc, char **argv)
 	}
 	if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
 		meals_arg = ft_atoi(argv[5]);
-	params = malloc(sizeof(t_params));
-	if (!params)
-	{
-		fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
-		exit (1);
-	}
-	set_params(params, argv, meals_arg);
+	params = set_params(argv, meals_arg);
 	if (params->total_philo <= 0 || params->total_philo > 200)
 	{
 		free(params);
@@ -70,5 +64,4 @@ void	clean_mutex(t_params *params, t_shared *shared)
 	while (++i < params->total_philo)
 		pthread_mutex_destroy(&shared->fork[i]);
 	pthread_mutex_destroy(&shared->write_lock);
-	pthread_mutex_destroy(&shared->meals_mutex);
 }

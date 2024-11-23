@@ -12,8 +12,16 @@
 
 #include "./philo.h"
 
-void	set_params(t_params *params, char **argv, int meals)
+t_params	*set_params(char **argv, int meals)
 {
+	t_params	*params;
+
+	params = malloc(sizeof(t_params));
+	if (!params)
+	{
+		fprintf(stderr, "ERROR MEMORY ALLOCATION\n");
+		exit (1);
+	}
 	params->total_philo = ft_atoi(argv[1]);
 	params->total_philo_finished_meals = 0;
 	params->time_to_die = ft_atoll(argv[2]);
@@ -23,6 +31,7 @@ void	set_params(t_params *params, char **argv, int meals)
 	params->all_finished = false;
 	params->a_philo_died = false;
 	params->timestamp_start = get_timestamp();
+	return (params);
 }
 
 t_shared	*init_shared(t_params *params)
