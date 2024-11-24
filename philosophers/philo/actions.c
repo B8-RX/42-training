@@ -11,18 +11,16 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <pthread.h>
 
 void	go_eat(t_philo *philo)
 {
-	long long	time_to_eat;
-
 	pthread_mutex_lock(&philo->shared->write_lock);
-	time_to_eat = philo->params->time_to_eat;
 	philo->meals_eaten += 1;
 	philo->last_meal_timestamp = get_timestamp();
 	pthread_mutex_unlock(&philo->shared->write_lock);
 	log_action("is eating", philo);
-	usleep(time_to_eat * 1000);
+	usleep(philo->params->time_to_eat * 1000);
 }
 
 void	go_sleep(t_philo *philo)
@@ -38,7 +36,14 @@ void	go_sleep(t_philo *philo)
 
 void	go_die(t_philo *philo)
 {
-	log_action("died", philo);
+	pthread_mutex_lock(&philo->shared->write_lock);
+	if (!philo->params->all_finished && philo->params->a_philo_died)
+	{
+		pthread_mutex_unlock(&philo->shared->write_lock);
+		log_action("died", philo);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->shared->write_lock);
 }
 
 void	handle_single_philo(t_philo_list *list)
@@ -53,21 +58,17 @@ void	handle_single_philo(t_philo_list *list)
 
 int	routine(void *arg)
 {
-	t_philo	*philo;
-	int		total_philo;
+	t_philo		*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->shared->write_lock);
-	total_philo = philo->params->total_philo;
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	if (total_philo == 1)
+	if (philo->params->total_philo == 1)
 		return (1);
 	while (1)
 	{
 		if (found_stop_cases(philo))
 			break ;
 		log_action("is thinking", philo);
-		if (!handle_forks(philo, total_philo))
+		if (!handle_forks(philo))
 			break ;
 		go_eat(philo);
 		release_forks(philo);

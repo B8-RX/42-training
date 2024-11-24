@@ -21,10 +21,17 @@ void	log_action(const char *action, t_philo *philo)
 }
 
 bool	monitor_check_stop_cases(t_philo *philo)
-{
+{	
+	int			meals_eaten;
+	long long	last_meal_timestamp;
+
+	pthread_mutex_lock(&philo->shared->write_lock);
+	last_meal_timestamp = philo->last_meal_timestamp;
+	meals_eaten = philo->meals_eaten;
+	pthread_mutex_unlock(&philo->shared->write_lock);
 	if (found_philo_died(philo)
-		|| is_philo_starve(philo)
-		|| all_philo_satiate(philo))
+		|| is_philo_starve(philo, last_meal_timestamp)
+		|| all_philo_satiate(philo, meals_eaten))
 		return (true);
 	return (false);
 }

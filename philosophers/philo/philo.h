@@ -88,8 +88,8 @@ void		*monitor(void *arg);
 bool		monitor_check_stop_cases(t_philo *philo);
 bool		found_stop_cases(t_philo *philo);
 bool		found_philo_died(t_philo *philo);
-bool		is_philo_starve(t_philo *philo);
-bool		all_philo_satiate(t_philo *philo);
+bool		is_philo_starve(t_philo *philo, long long last_meal_timestamp);
+bool		all_philo_satiate(t_philo *philo, int meals_eaten);
 
 void		log_action(const char *action, t_philo *philo);
 void		go_eat(t_philo *philo);
@@ -97,7 +97,7 @@ void		go_sleep(t_philo *philo);
 void		go_die(t_philo *philo);
 
 void		handle_single_philo(t_philo_list *list);
-bool		handle_forks(t_philo *philo, int total_philo);
+bool		handle_forks(t_philo *philo);
 int			routine(void *arg);
 
 void		clean_mutex(t_params *params, t_shared *shared);

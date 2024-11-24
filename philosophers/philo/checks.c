@@ -24,18 +24,15 @@ bool	found_philo_died(t_philo *philo)
 	return (false);
 }
 
-bool	all_philo_satiate(t_philo *philo)
+bool	all_philo_satiate(t_philo *philo, int meals_eaten)
 {
 	int	max_meals;
-	int	meals_eaten;
 	int	total_philo;
 
-	pthread_mutex_lock(&philo->shared->write_lock);
-	max_meals = philo->params->max_meals;
-	meals_eaten = philo->meals_eaten;
 	total_philo = philo->params->total_philo;
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	if (max_meals != -1 && meals_eaten == max_meals && !philo->finished_meals)
+	max_meals = philo->params->max_meals;
+	if (max_meals != -1 && meals_eaten == philo->params->max_meals
+		&& !philo->finished_meals)
 	{
 		pthread_mutex_lock(&philo->shared->write_lock);
 		philo->params->total_philo_finished_meals += 1;
@@ -51,17 +48,13 @@ bool	all_philo_satiate(t_philo *philo)
 	return (false);
 }
 
-bool	is_philo_starve(t_philo *philo)
+bool	is_philo_starve(t_philo *philo, long long last_meal_timestamp)
 {
-	long long	time_to_die;
-	long long	last_meal_timestamp;
+	long long	delta;
 
-	pthread_mutex_lock(&philo->shared->write_lock);
-	time_to_die = philo->params->time_to_die;
-	last_meal_timestamp = philo->last_meal_timestamp;
-	pthread_mutex_unlock(&philo->shared->write_lock);
+	delta = get_timestamp() - last_meal_timestamp;
 	if (last_meal_timestamp > 0
-		&& (get_timestamp() - last_meal_timestamp) >= time_to_die)
+		&& delta >= philo->params->time_to_die)
 	{
 		pthread_mutex_lock(&philo->shared->write_lock);
 		philo->params->a_philo_died = true;
