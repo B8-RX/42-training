@@ -14,7 +14,7 @@
 
 void	go_eat(t_philo *philo)
 {
-	long long time_to_eat;
+	long long	time_to_eat;
 
 	pthread_mutex_lock(&philo->shared->write_lock);
 	time_to_eat = philo->params->time_to_eat;
@@ -27,8 +27,8 @@ void	go_eat(t_philo *philo)
 
 void	go_sleep(t_philo *philo)
 {
-	long long time_to_sleep;
-	
+	long long	time_to_sleep;
+
 	pthread_mutex_lock(&philo->shared->write_lock);
 	time_to_sleep = philo->params->time_to_sleep;
 	pthread_mutex_unlock(&philo->shared->write_lock);
@@ -55,7 +55,7 @@ int	routine(void *arg)
 {
 	t_philo	*philo;
 	int		total_philo;
-	
+
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(&philo->shared->write_lock);
 	total_philo = philo->params->total_philo;

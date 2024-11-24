@@ -15,7 +15,8 @@
 void	log_action(const char *action, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->shared->write_lock);
-	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start, philo->id + 1, action);
+	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
+		philo->id + 1, action);
 	pthread_mutex_unlock(&philo->shared->write_lock);
 }
 
