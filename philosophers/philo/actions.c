@@ -12,6 +12,7 @@
 
 #include "./philo.h"
 #include <pthread.h>
+#include <unistd.h>
 
 void	go_eat(t_philo *philo)
 {
@@ -72,6 +73,7 @@ int	routine(void *arg)
 			break ;
 		go_eat(philo);
 		release_forks(philo);
+		usleep(1000);
 		if (found_stop_cases(philo))
 			break ;
 		go_sleep(philo);
