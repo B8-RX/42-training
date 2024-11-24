@@ -67,14 +67,14 @@ void	init_forks(t_params *params, t_shared *shared)
 		pthread_mutex_init(&shared->fork[i], NULL);
 }
 
-bool	handle_forks(t_philo *philo)
+bool	handle_forks(t_philo *philo, int total_philo)
 {
 	int	left_fork;
 	int	right_fork;
 	int	swap;
 
 	left_fork = philo->id;
-	right_fork = (philo->id + 1) % philo->params->total_philo;
+	right_fork = (philo->id + 1) % total_philo;
 	if (philo->id % 2 == 0)
 	{
 		swap = left_fork;

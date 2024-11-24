@@ -14,12 +14,9 @@
 
 void	log_action(const char *action, t_philo *philo)
 {
-	long long	begin_at;
-	int			id_philo;
-
-	begin_at = philo->params->timestamp_start;
-	id_philo = philo->id;
-	printf("%lld %d %s\n", get_timestamp() - begin_at, id_philo + 1, action);
+	pthread_mutex_lock(&philo->shared->write_lock);
+	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start, philo->id + 1, action);
+	pthread_mutex_unlock(&philo->shared->write_lock);
 }
 
 bool	monitor_check_stop_cases(t_philo *philo)
@@ -47,7 +44,7 @@ void	*monitor(void *arg)
 			if (monitor_check_stop_cases(philo))
 				return (NULL);
 			current = current->next;
-			usleep(100);
+			usleep(1500);
 		}
 	}
 	return (NULL);

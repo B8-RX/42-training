@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -pthread -O3 -g3
+CFLAGS = -Wall -Werror -Wextra -pthread
 
 # CFLAGS += -fsanitize=thread
 
@@ -34,11 +34,11 @@ ${OBJS_PATH}%.o : %.c
 
 clean:
 	rm -rf $(OBJS_PATH)
-	echo "c'est clean"
+	echo "clean done"
 
 fclean: clean
 	rm -rf $(NAME)
-	echo "c'est fclean"
+	echo "fclean done"
 
 re: fclean all
 

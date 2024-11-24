@@ -97,7 +97,7 @@ void		go_sleep(t_philo *philo);
 void		go_die(t_philo *philo);
 
 void		handle_single_philo(t_philo_list *list);
-bool		handle_forks(t_philo *philo);
+bool		handle_forks(t_philo *philo, int total_philo);
 int			routine(void *arg);
 
 void		clean_mutex(t_params *params, t_shared *shared);
