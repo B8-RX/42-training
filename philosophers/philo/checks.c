@@ -76,3 +76,14 @@ bool	found_stop_cases(t_philo *philo)
 	pthread_mutex_unlock(&philo->shared->write_lock);
 	return (false);
 }
+
+void	handle_single_philo(t_philo_list *list)
+{
+	log_action("is thinking", list->curr_philo);
+	log_action("has taken a fork", list->curr_philo);
+	pthread_mutex_lock(&list->curr_philo->shared->write_lock);
+	list->curr_philo->params->a_philo_died = true;
+	pthread_mutex_unlock(&list->curr_philo->shared->write_lock);
+	usleep(list->curr_philo->params->time_to_die * 1000);
+	go_die(list->curr_philo);
+}

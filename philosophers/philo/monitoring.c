@@ -52,7 +52,7 @@ void	*monitor(void *arg)
 			if (monitor_check_stop_cases(philo))
 				return (NULL);
 			current = current->next;
-			usleep(1500);
+			usleep(10);
 		}
 	}
 	return (NULL);

@@ -67,34 +67,6 @@ void	init_forks(t_params *params, t_shared *shared)
 		pthread_mutex_init(&shared->fork[i], NULL);
 }
 
-bool	handle_forks(t_philo *philo)
-{
-	int	left_fork;
-	int	right_fork;
-	int	swap;
-
-	left_fork = philo->id;
-	right_fork = (philo->id + 1) % philo->params->total_philo;
-	if (philo->id % 2 == 0)
-	{
-		swap = left_fork;
-		left_fork = right_fork;
-		right_fork = swap;
-	}
-	if (found_stop_cases(philo))
-		return (false);
-	pthread_mutex_lock(&philo->shared->fork[left_fork]);
-	if (found_stop_cases(philo))
-	{
-		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-		return (false);
-	}
-	log_action("has taken a fork", philo);
-	pthread_mutex_lock(&philo->shared->fork[right_fork]);
-	log_action("has taken a fork", philo);
-	return (true);
-}
-
 void	release_forks(t_philo *philo)
 {
 	int	left_fork;

@@ -14,47 +14,38 @@
 #include <pthread.h>
 #include <unistd.h>
 
-void	go_eat(t_philo *philo)
+bool	handle_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->write_lock);
-	philo->meals_eaten += 1;
-	philo->last_meal_timestamp = get_timestamp();
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	log_action("is eating", philo);
-	usleep(philo->params->time_to_eat * 1000);
-}
+	int	left_fork;
+	int	right_fork;
+	int	swap;
 
-void	go_sleep(t_philo *philo)
-{
-	long long	time_to_sleep;
-
-	pthread_mutex_lock(&philo->shared->write_lock);
-	time_to_sleep = philo->params->time_to_sleep;
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	log_action("is sleeping", philo);
-	usleep(time_to_sleep * 1000);
-}
-
-void	go_die(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->shared->write_lock);
-	if (!philo->params->all_finished && philo->params->a_philo_died)
+	left_fork = philo->id;
+	right_fork = (philo->id + 1) % philo->params->total_philo;
+	if (philo->id % 2 == 0)
 	{
-		pthread_mutex_unlock(&philo->shared->write_lock);
-		log_action("died", philo);
-		return ;
+		swap = left_fork;
+		left_fork = right_fork;
+		right_fork = swap;
 	}
-	pthread_mutex_unlock(&philo->shared->write_lock);
-}
-
-void	handle_single_philo(t_philo_list *list)
-{
-	log_action("is thinking", list->curr_philo);
-	log_action("has taken a fork", list->curr_philo);
-	pthread_mutex_lock(&list->curr_philo->shared->write_lock);
-	list->curr_philo->params->a_philo_died = true;
-	pthread_mutex_unlock(&list->curr_philo->shared->write_lock);
-	go_die(list->curr_philo);
+	if (found_stop_cases(philo))
+		return (false);
+	pthread_mutex_lock(&philo->shared->fork[left_fork]);
+	if (found_stop_cases(philo))
+	{
+		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
+		return (false);
+	}
+	pthread_mutex_lock(&philo->shared->fork[right_fork]);
+	if (found_stop_cases(philo))
+	{
+		pthread_mutex_unlock(&philo->shared->fork[right_fork]);
+		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
+		return (false);
+	}
+	log_action("has taken a fork", philo);
+	log_action("has taken a fork", philo);
+	return (true);
 }
 
 int	routine(void *arg)
@@ -73,10 +64,38 @@ int	routine(void *arg)
 			break ;
 		go_eat(philo);
 		release_forks(philo);
-		usleep(1000);
+		usleep(100);
 		if (found_stop_cases(philo))
 			break ;
 		go_sleep(philo);
 	}
 	return (1);
+}
+
+void	go_eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->shared->write_lock);
+	philo->meals_eaten += 1;
+	philo->last_meal_timestamp = get_timestamp();
+	pthread_mutex_unlock(&philo->shared->write_lock);
+	log_action("is eating", philo);
+	usleep(philo->params->time_to_eat * 1000);
+}
+
+void	go_sleep(t_philo *philo)
+{
+	log_action("is sleeping", philo);
+	usleep(philo->params->time_to_sleep * 1000);
+}
+
+void	go_die(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->shared->write_lock);
+	if (!philo->params->all_finished && philo->params->a_philo_died)
+	{
+		pthread_mutex_unlock(&philo->shared->write_lock);
+		log_action("died", philo);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->shared->write_lock);
 }
