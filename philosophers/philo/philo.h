@@ -29,6 +29,7 @@ typedef struct s_params
 	long long	time_to_eat;
 	long long	time_to_sleep;
 	int			max_meals;
+	bool		meals_arg;
 	long long	timestamp_start;
 	bool		a_philo_died;
 	bool		all_finished;
@@ -65,14 +66,13 @@ typedef enum e_state
 	SLEEP
 }	t_state;
 
-long long	ft_atoll(char *num);
-int			ft_atoi(char *num);
+int			ft_atoi(const char *num);
 size_t		ft_strlen(char *str);
 bool		is_digits(char *arg);
 long long	get_timestamp(void);
 
 t_params	*handle_args(int argc, char **argv);
-t_params	*set_params(char **argv, int meals);
+t_params	*set_params(char **argv, bool meals_arg, int max_meals);
 t_shared	*init_shared(t_params *params);
 
 void		init_philo_list(t_params *params,
@@ -89,7 +89,7 @@ bool		monitor_check_stop_cases(t_philo *philo);
 bool		found_stop_cases(t_philo *philo);
 bool		found_philo_died(t_philo *philo);
 bool		is_philo_starve(t_philo *philo, long long last_meal_timestamp);
-bool		all_philo_satiate(t_philo *philo, int meals_eaten);
+bool		all_philo_satiate(t_philo *philo);
 
 void		log_action(const char *action, t_philo *philo);
 void		go_eat(t_philo *philo);

@@ -24,17 +24,17 @@ bool	found_philo_died(t_philo *philo)
 	return (false);
 }
 
-bool	all_philo_satiate(t_philo *philo, int meals_eaten)
+bool	all_philo_satiate(t_philo *philo)
 {
-	int	max_meals;
-	int	total_philo;
+	int		total_philo;
+	bool	meals_arg;
 
 	total_philo = philo->params->total_philo;
-	max_meals = philo->params->max_meals;
-	if (max_meals != -1 && meals_eaten == philo->params->max_meals
+	meals_arg = philo->params->meals_arg;
+	pthread_mutex_lock(&philo->shared->write_lock);
+	if (meals_arg && philo->meals_eaten == philo->params->max_meals
 		&& !philo->finished_meals)
 	{
-		pthread_mutex_lock(&philo->shared->write_lock);
 		philo->params->total_philo_finished_meals += 1;
 		philo->finished_meals = true;
 		if (philo->params->total_philo_finished_meals == total_philo)
@@ -43,8 +43,8 @@ bool	all_philo_satiate(t_philo *philo, int meals_eaten)
 			pthread_mutex_unlock(&philo->shared->write_lock);
 			return (true);
 		}
-		pthread_mutex_unlock(&philo->shared->write_lock);
 	}
+	pthread_mutex_unlock(&philo->shared->write_lock);
 	return (false);
 }
 

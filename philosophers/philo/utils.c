@@ -12,21 +12,12 @@
 
 #include "./philo.h"
 
-long long	ft_atoll(char *num)
-{
-	long long	sum;
-
-	sum = 0;
-	while (*num && (*num >= 48 && *num <= 57))
-	{
-		sum = sum * 10 + (*num - '0');
-		num++;
-	}
-	return (sum);
-}
-
 bool	is_digits(char *arg)
 {
+	while ((*arg >= 8 && *arg <= 13) || *arg == 32)
+		arg++;
+	if (*arg == '-' || *arg == '+')
+		arg++;
 	while (arg && *arg)
 	{
 		if (*arg < 48 || *arg > 57)
@@ -36,25 +27,32 @@ bool	is_digits(char *arg)
 	return (true);
 }
 
-int	ft_atoi(char *num)
+int	ft_atoi(const char *str)
 {
-	int	sum;
-	int	sign;
+	int		i;
+	int		sign;
+	long	result;
 
+	i = 0;
 	sign = 1;
-	sum = 0;
-	if (*num == '-' || *num == '+')
+	result = 0;
+	while ((str[i] >= 8 && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (*num == '-')
+		if (str[i] == '-')
 			sign = -1;
-		num++;
+		i++;
 	}
-	while (*num && (*num >= 48 && *num <= 57))
+	while (str[i] >= 48 && str[i] <= 57)
 	{
-		sum = sum * 10 + (*num - '0');
-		num++;
+		if (result == 0)
+			result = str[i] - '0';
+		else
+			result = (result * 10 + str[i]) - '0';
+		i++;
 	}
-	return (sum * sign);
+	return (result * sign);
 }
 
 size_t	ft_strlen(char *str)

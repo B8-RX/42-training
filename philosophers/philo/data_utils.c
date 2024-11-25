@@ -12,24 +12,43 @@
 
 #include "./philo.h"
 
+bool	is_valid_args(t_params *params)
+{
+	bool	is_valid_args;
+
+	is_valid_args = true;
+	if (params->total_philo <= 0 || params->total_philo > 200)
+		is_valid_args = false;
+	if (params->time_to_die < 0)
+		is_valid_args = false;
+	if (params->time_to_eat < 0)
+		is_valid_args = false;
+	if (params->time_to_sleep < 0)
+		is_valid_args = false;
+	if (params->meals_arg && params->max_meals < 0)
+		is_valid_args = false;
+	return (is_valid_args);
+}
+
 t_params	*handle_args(int argc, char **argv)
 {
-	int			meals_arg;
+	bool		meals_arg;
+	int			max_meals;
 	t_params	*params;
-
-	meals_arg = -1;
+	
+	meals_arg = false;
+	max_meals = -1;
 	if (argc != 5 && argc != 6)
-	{
-		fprintf(stderr, "ERROR ARGUMENTS\n");
 		exit (1);
+	if (argc == 6 && argv[5] && is_digits(argv[5]))
+	{
+		meals_arg = true;
+		max_meals = ft_atoi(argv[5]);
 	}
-	if (argc == 6 && argv[5] && is_digits(argv[5]) && ft_atoi(argv[5]) > 0)
-		meals_arg = ft_atoi(argv[5]);
-	params = set_params(argv, meals_arg);
-	if (params->total_philo <= 0 || params->total_philo > 200)
+	params = set_params(argv, meals_arg, max_meals);
+	if (!is_valid_args(params))
 	{
 		free(params);
-		fprintf(stderr, "PHILOS SHOULD BE BETWEEN 1 AND 200\n");
 		exit (1);
 	}
 	return (params);

@@ -31,11 +31,6 @@ bool	handle_forks(t_philo *philo)
 	if (found_stop_cases(philo))
 		return (false);
 	pthread_mutex_lock(&philo->shared->fork[left_fork]);
-	if (found_stop_cases(philo))
-	{
-		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-		return (false);
-	}
 	pthread_mutex_lock(&philo->shared->fork[right_fork]);
 	if (found_stop_cases(philo))
 	{

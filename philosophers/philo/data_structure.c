@@ -12,7 +12,7 @@
 
 #include "./philo.h"
 
-t_params	*set_params(char **argv, int meals)
+t_params	*set_params(char **argv, bool meals_arg, int max_meals)
 {
 	t_params	*params;
 
@@ -24,10 +24,11 @@ t_params	*set_params(char **argv, int meals)
 	}
 	params->total_philo = ft_atoi(argv[1]);
 	params->total_philo_finished_meals = 0;
-	params->time_to_die = ft_atoll(argv[2]);
-	params->time_to_eat = ft_atoll(argv[3]);
-	params->time_to_sleep = ft_atoll(argv[4]);
-	params->max_meals = meals;
+	params->time_to_die = (long long)ft_atoi(argv[2]);
+	params->time_to_eat = (long long)ft_atoi(argv[3]);
+	params->time_to_sleep = (long long)ft_atoi(argv[4]);
+	params->meals_arg = meals_arg;
+	params->max_meals = max_meals;
 	params->all_finished = false;
 	params->a_philo_died = false;
 	params->timestamp_start = get_timestamp();
