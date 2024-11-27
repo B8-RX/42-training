@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <unistd.h>
 
 void	init_philo_thr(t_philo_list *list, int *list_length)
 {
@@ -62,9 +63,13 @@ void	init_forks(t_params *params, t_shared *shared)
 {
 	int	i;
 
-	i = -1;
-	while (++i < params->total_philo)
-		pthread_mutex_init(&shared->fork[i], NULL);
+	i = 0;
+	while (i < params->total_philo)
+	{
+		if (pthread_mutex_init(&shared->fork[i], NULL) != 0)
+			return (clean_mutex(i, shared));
+		i++;
+	}
 }
 
 void	release_forks(t_philo *philo)

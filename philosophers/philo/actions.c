@@ -28,11 +28,11 @@ bool	handle_forks(t_philo *philo)
 		left_fork = right_fork;
 		right_fork = swap;
 	}
-	if (found_stop_cases(philo))
+	if (found_stop_case(philo))
 		return (false);
 	pthread_mutex_lock(&philo->shared->fork[left_fork]);
 	pthread_mutex_lock(&philo->shared->fork[right_fork]);
-	if (found_stop_cases(philo))
+	if (found_stop_case(philo))
 	{
 		pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
@@ -52,27 +52,27 @@ int	routine(void *arg)
 		return (1);
 	while (1)
 	{
-		if (found_stop_cases(philo))
+		if (found_stop_case(philo))
 			break ;
 		log_action("is thinking", philo);
 		if (!handle_forks(philo))
 			break ;
 		go_eat(philo);
 		release_forks(philo);
-		usleep(100);
-		if (found_stop_cases(philo))
+		if (found_stop_case(philo))
 			break ;
 		go_sleep(philo);
+		usleep(100);
 	}
 	return (1);
 }
 
 void	go_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->write_lock);
+	pthread_mutex_lock(&philo->shared->meals_lock);
 	philo->meals_eaten += 1;
 	philo->last_meal_timestamp = get_timestamp();
-	pthread_mutex_unlock(&philo->shared->write_lock);
+	pthread_mutex_unlock(&philo->shared->meals_lock);
 	log_action("is eating", philo);
 	usleep(philo->params->time_to_eat * 1000);
 }

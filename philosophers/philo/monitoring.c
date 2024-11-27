@@ -22,16 +22,14 @@ void	log_action(const char *action, t_philo *philo)
 
 bool	monitor_check_stop_cases(t_philo *philo)
 {	
-	long long	last_meal_timestamp;
+	bool		found_stop_case;
 
-	pthread_mutex_lock(&philo->shared->write_lock);
-	last_meal_timestamp = philo->last_meal_timestamp;
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	if (found_philo_died(philo)
-		|| is_philo_starve(philo, last_meal_timestamp)
-		|| all_philo_satiate(philo))
-		return (true);
-	return (false);
+	found_stop_case = false;
+	if (someone_starve(philo))
+		found_stop_case = true;
+	else if (all_philo_satiate(philo))
+		found_stop_case = true;
+	return (found_stop_case);
 }
 
 void	*monitor(void *arg)
@@ -39,8 +37,15 @@ void	*monitor(void *arg)
 	t_philo_list	*philo_list;
 	t_philo_list	*current;
 	t_philo			*philo;
+	int				pause;
 
 	philo_list = (t_philo_list *)arg;
+	if (philo_list->curr_philo->params->total_philo == 1)
+		return (NULL);
+	if (philo_list->curr_philo->params->total_philo > 100)
+		pause = 10;
+	else
+		pause = 100;
 	while (1)
 	{
 		current = philo_list;
@@ -50,7 +55,7 @@ void	*monitor(void *arg)
 			if (monitor_check_stop_cases(philo))
 				return (NULL);
 			current = current->next;
-			usleep(10);
+			usleep(pause);
 		}
 	}
 	return (NULL);

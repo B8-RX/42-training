@@ -59,6 +59,14 @@ t_shared	*init_shared(t_params *params)
 		free(params);
 		exit (1);
 	}
+	if (pthread_mutex_init(&shared->meals_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&shared->write_lock);
+		free(shared->fork);
+		free(shared);
+		free(params);
+		exit (1);
+	}
 	return (shared);
 }
 

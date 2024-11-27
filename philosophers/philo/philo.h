@@ -38,7 +38,7 @@ typedef struct s_params
 typedef struct s_shared
 {
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	meals_mutex;
+	pthread_mutex_t	meals_lock;
 	pthread_mutex_t	write_lock;
 }	t_shared;
 
@@ -86,9 +86,8 @@ void		init_forks(t_params *params, t_shared *shared);
 
 void		*monitor(void *arg);
 bool		monitor_check_stop_cases(t_philo *philo);
-bool		found_stop_cases(t_philo *philo);
-bool		found_philo_died(t_philo *philo);
-bool		is_philo_starve(t_philo *philo, long long last_meal_timestamp);
+bool		found_stop_case(t_philo *philo);
+bool		someone_starve(t_philo *philo);
 bool		all_philo_satiate(t_philo *philo);
 
 void		log_action(const char *action, t_philo *philo);
@@ -100,7 +99,7 @@ void		handle_single_philo(t_philo_list *list);
 bool		handle_forks(t_philo *philo);
 int			routine(void *arg);
 
-void		clean_mutex(t_params *params, t_shared *shared);
+void		clean_mutex(int forks, t_shared *shared);
 void		clean_data(t_shared *shared, t_philo_list *list, t_params *params);
 void		release_forks(t_philo *philo);
 

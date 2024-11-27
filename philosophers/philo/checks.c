@@ -11,18 +11,7 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
-
-bool	found_philo_died(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->shared->write_lock);
-	if (philo->params->a_philo_died)
-	{
-		pthread_mutex_unlock(&philo->shared->write_lock);
-		return (true);
-	}
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	return (false);
-}
+#include <pthread.h>
 
 bool	all_philo_satiate(t_philo *philo)
 {
@@ -48,13 +37,16 @@ bool	all_philo_satiate(t_philo *philo)
 	return (false);
 }
 
-bool	is_philo_starve(t_philo *philo, long long last_meal_timestamp)
+bool	someone_starve(t_philo *philo)
 {
 	long long	delta;
 
-	delta = get_timestamp() - last_meal_timestamp;
-	if (last_meal_timestamp > 0
-		&& delta >= philo->params->time_to_die)
+	delta = 0;
+	pthread_mutex_lock(&philo->shared->meals_lock);
+	if (philo->last_meal_timestamp > 0)
+		delta = get_timestamp() - philo->last_meal_timestamp;
+	pthread_mutex_unlock(&philo->shared->meals_lock);
+	if (delta >= philo->params->time_to_die)
 	{
 		pthread_mutex_lock(&philo->shared->write_lock);
 		philo->params->a_philo_died = true;
@@ -65,7 +57,7 @@ bool	is_philo_starve(t_philo *philo, long long last_meal_timestamp)
 	return (false);
 }
 
-bool	found_stop_cases(t_philo *philo)
+bool	found_stop_case(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->shared->write_lock);
 	if (philo->params->a_philo_died || philo->params->all_finished)

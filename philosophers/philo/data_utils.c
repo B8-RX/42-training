@@ -35,7 +35,7 @@ t_params	*handle_args(int argc, char **argv)
 	bool		meals_arg;
 	int			max_meals;
 	t_params	*params;
-	
+
 	meals_arg = false;
 	max_meals = -1;
 	if (argc != 5 && argc != 6)
@@ -75,12 +75,13 @@ void	clean_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
 	free(params);
 }
 
-void	clean_mutex(t_params *params, t_shared *shared)
+void	clean_mutex(int forks, t_shared *shared)
 {
 	int	i;
 
 	i = -1;
-	while (++i < params->total_philo)
+	while (++i < forks)
 		pthread_mutex_destroy(&shared->fork[i]);
 	pthread_mutex_destroy(&shared->write_lock);
+	pthread_mutex_destroy(&shared->meals_lock);
 }
