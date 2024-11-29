@@ -43,18 +43,53 @@ bool	handle_forks(t_philo *philo)
 	return (true);
 }
 
+void	release_forks(t_philo *philo)
+{
+	int	left_fork;
+	int	right_fork;
+	int	swap;
+
+	left_fork = philo->id;
+	right_fork = (philo->id + 1) % philo->params->total_philo;
+	if (philo->id % 2 == 0)
+	{
+		swap = left_fork;
+		left_fork = right_fork;
+		right_fork = swap;
+	}
+	// else
+	// 	usleep(100);
+	pthread_mutex_unlock(&philo->shared->fork[left_fork]);
+	pthread_mutex_unlock(&philo->shared->fork[right_fork]);
+}
+
+bool	check_philos_ready(t_philo *philo)
+{
+	bool	philos_ready;
+
+	pthread_mutex_lock(&philo->shared->launcher_lock);
+	philos_ready = philo->params->philos_ready;
+	pthread_mutex_unlock(&philo->shared->launcher_lock);
+	return (philos_ready);
+}
+
 int	routine(void *arg)
 {
 	t_philo		*philo;
+	int			nb_philo;
 
 	philo = (t_philo *)arg;
-	if (philo->params->total_philo == 1)
+	pthread_mutex_lock(&philo->shared->rw_lock);
+	nb_philo = philo->params->total_philo;	
+	pthread_mutex_unlock(&philo->shared->rw_lock);
+	while (check_philos_ready(philo) == false)
+		usleep(5);
+	if (nb_philo == 1)
 		return (1);
 	while (1)
 	{
 		if (found_stop_case(philo))
 			break ;
-		log_action("is thinking", philo);
 		if (!handle_forks(philo))
 			break ;
 		go_eat(philo);
@@ -62,7 +97,9 @@ int	routine(void *arg)
 		if (found_stop_case(philo))
 			break ;
 		go_sleep(philo);
-		usleep(100);
+		if (found_stop_case(philo))
+			break ;
+		log_action("is thinking", philo);
 	}
 	return (1);
 }
@@ -85,12 +122,12 @@ void	go_sleep(t_philo *philo)
 
 void	go_die(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->write_lock);
-	if (!philo->params->all_finished && philo->params->a_philo_died)
+	pthread_mutex_lock(&philo->shared->rw_lock);
+	if (!philo->params->all_finished)
 	{
-		pthread_mutex_unlock(&philo->shared->write_lock);
+		pthread_mutex_unlock(&philo->shared->rw_lock);
 		log_action("died", philo);
 		return ;
 	}
-	pthread_mutex_unlock(&philo->shared->write_lock);
+	pthread_mutex_unlock(&philo->shared->rw_lock);
 }

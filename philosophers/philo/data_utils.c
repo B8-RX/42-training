@@ -82,6 +82,10 @@ void	clean_mutex(int forks, t_shared *shared)
 	i = -1;
 	while (++i < forks)
 		pthread_mutex_destroy(&shared->fork[i]);
-	pthread_mutex_destroy(&shared->write_lock);
+	pthread_mutex_destroy(&shared->rw_lock);
 	pthread_mutex_destroy(&shared->meals_lock);
+	pthread_mutex_destroy(&shared->launcher_lock);
+	pthread_mutex_destroy(&shared->print_lock);
+	pthread_mutex_destroy(&shared->satiate_lock);
+	pthread_mutex_destroy(&shared->end_lock);
 }

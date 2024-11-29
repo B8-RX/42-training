@@ -32,6 +32,7 @@ t_params	*set_params(char **argv, bool meals_arg, int max_meals)
 	params->all_finished = false;
 	params->a_philo_died = false;
 	params->timestamp_start = get_timestamp();
+	params->philos_ready = false;
 	return (params);
 }
 
@@ -52,7 +53,7 @@ t_shared	*init_shared(t_params *params)
 		free(params);
 		exit (1);
 	}
-	if (pthread_mutex_init(&shared->write_lock, NULL) != 0)
+	if (pthread_mutex_init(&shared->rw_lock, NULL) != 0)
 	{
 		free(shared->fork);
 		free(shared);
@@ -61,7 +62,49 @@ t_shared	*init_shared(t_params *params)
 	}
 	if (pthread_mutex_init(&shared->meals_lock, NULL) != 0)
 	{
-		pthread_mutex_destroy(&shared->write_lock);
+		pthread_mutex_destroy(&shared->rw_lock);
+		free(shared->fork);
+		free(shared);
+		free(params);
+		exit (1);
+	}
+	if (pthread_mutex_init(&shared->launcher_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&shared->rw_lock);
+		pthread_mutex_destroy(&shared->meals_lock);
+		free(shared->fork);
+		free(shared);
+		free(params);
+		exit (1);
+	}
+	if (pthread_mutex_init(&shared->print_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&shared->rw_lock);
+		pthread_mutex_destroy(&shared->meals_lock);
+		pthread_mutex_destroy(&shared->launcher_lock);
+		free(shared->fork);
+		free(shared);
+		free(params);
+		exit (1);
+	}
+	if (pthread_mutex_init(&shared->satiate_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&shared->rw_lock);
+		pthread_mutex_destroy(&shared->meals_lock);
+		pthread_mutex_destroy(&shared->launcher_lock);
+		pthread_mutex_destroy(&shared->print_lock);
+		free(shared->fork);
+		free(shared);
+		free(params);
+		exit (1);
+	}
+	if (pthread_mutex_init(&shared->end_lock, NULL) != 0)
+	{
+		pthread_mutex_destroy(&shared->rw_lock);
+		pthread_mutex_destroy(&shared->meals_lock);
+		pthread_mutex_destroy(&shared->launcher_lock);
+		pthread_mutex_destroy(&shared->print_lock);
+		pthread_mutex_destroy(&shared->satiate_lock);
 		free(shared->fork);
 		free(shared);
 		free(params);

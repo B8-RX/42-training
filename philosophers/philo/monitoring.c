@@ -14,10 +14,12 @@
 
 void	log_action(const char *action, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->write_lock);
+	pthread_mutex_lock(&philo->shared->rw_lock);
+	pthread_mutex_lock(&philo->shared->print_lock);
 	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
 		philo->id + 1, action);
-	pthread_mutex_unlock(&philo->shared->write_lock);
+	pthread_mutex_unlock(&philo->shared->print_lock);
+	pthread_mutex_unlock(&philo->shared->rw_lock);
 }
 
 bool	monitor_check_stop_cases(t_philo *philo)
@@ -37,15 +39,16 @@ void	*monitor(void *arg)
 	t_philo_list	*philo_list;
 	t_philo_list	*current;
 	t_philo			*philo;
-	int				pause;
+	int			nb_philo;
 
 	philo_list = (t_philo_list *)arg;
-	if (philo_list->curr_philo->params->total_philo == 1)
+	while (check_philos_ready(philo_list->curr_philo) == false)
+		usleep(5);
+	pthread_mutex_lock(&philo_list->curr_philo->shared->rw_lock);
+	nb_philo = philo_list->curr_philo->params->total_philo;	
+	pthread_mutex_unlock(&philo_list->curr_philo->shared->rw_lock);
+	if (nb_philo == 1)
 		return (NULL);
-	if (philo_list->curr_philo->params->total_philo > 100)
-		pause = 10;
-	else
-		pause = 100;
 	while (1)
 	{
 		current = philo_list;
@@ -55,7 +58,7 @@ void	*monitor(void *arg)
 			if (monitor_check_stop_cases(philo))
 				return (NULL);
 			current = current->next;
-			usleep(pause);
+			usleep(10);
 		}
 	}
 	return (NULL);

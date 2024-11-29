@@ -11,9 +11,18 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <pthread.h>
+#include <stdio.h>
 #include <unistd.h>
 
-void	init_philo_thr(t_philo_list *list, int *list_length)
+void	set_philos_ready(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->shared->launcher_lock);
+	philo->params->philos_ready = true;
+	pthread_mutex_unlock(&philo->shared->launcher_lock);
+}
+
+int	init_philo_thr(t_philo_list *list, int total_philo)
 {
 	t_philo_list	*philosophers;
 	int				len;
@@ -32,10 +41,12 @@ void	init_philo_thr(t_philo_list *list, int *list_length)
 		}
 		philosophers = philosophers->next;
 	}
-	*list_length = len;
+	if (len == total_philo)
+		set_philos_ready(list->curr_philo);
+	return (len);
 }
 
-void	create_threads(t_philo_list *list)
+void	create_threads(t_philo_list *list, int total_philo)
 {
 	t_philo_list	*philosophers;
 	pthread_t		monitor_thread;
@@ -47,7 +58,7 @@ void	create_threads(t_philo_list *list)
 		fprintf(stderr, "Error on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}
-	init_philo_thr(list, &list_length);
+	list_length = init_philo_thr(list, total_philo);
 	if (list_length == 1)
 		handle_single_philo(list);
 	philosophers = list;
@@ -70,22 +81,4 @@ void	init_forks(t_params *params, t_shared *shared)
 			return (clean_mutex(i, shared));
 		i++;
 	}
-}
-
-void	release_forks(t_philo *philo)
-{
-	int	left_fork;
-	int	right_fork;
-	int	swap;
-
-	left_fork = philo->id;
-	right_fork = (philo->id + 1) % philo->params->total_philo;
-	if (philo->id % 2 == 0)
-	{
-		swap = left_fork;
-		left_fork = right_fork;
-		right_fork = swap;
-	}
-	pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-	pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }

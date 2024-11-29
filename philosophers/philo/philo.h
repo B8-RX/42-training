@@ -33,13 +33,18 @@ typedef struct s_params
 	long long	timestamp_start;
 	bool		a_philo_died;
 	bool		all_finished;
+	bool		philos_ready;
 }	t_params;
 
 typedef struct s_shared
 {
 	pthread_mutex_t	*fork;
+	pthread_mutex_t	print_lock;
 	pthread_mutex_t	meals_lock;
-	pthread_mutex_t	write_lock;
+	pthread_mutex_t	rw_lock;
+	pthread_mutex_t	satiate_lock;
+	pthread_mutex_t	end_lock;
+	pthread_mutex_t launcher_lock;
 }	t_shared;
 
 typedef struct s_philo
@@ -80,8 +85,8 @@ void		init_philo_list(t_params *params,
 t_philo		*create_philo(int id, t_params *params);
 void		push_philo(t_philo_list **list, t_philo *philo);
 
-void		create_threads(t_philo_list *list);
-void		init_philo_thr(t_philo_list *list, int *list_length);
+void		create_threads(t_philo_list *list, int total_philo);
+int			init_philo_thr(t_philo_list *list, int total_philo);
 void		init_forks(t_params *params, t_shared *shared);
 
 void		*monitor(void *arg);
@@ -102,5 +107,8 @@ int			routine(void *arg);
 void		clean_mutex(int forks, t_shared *shared);
 void		clean_data(t_shared *shared, t_philo_list *list, t_params *params);
 void		release_forks(t_philo *philo);
+
+void		set_philos_ready(t_philo *philo);
+bool		check_philos_ready(t_philo *philo);
 
 #endif // !PHILO_H
