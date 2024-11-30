@@ -16,8 +16,9 @@ void	log_action(const char *action, t_philo *philo)
 {
 	pthread_mutex_lock(&philo->shared->rw_lock);
 	pthread_mutex_lock(&philo->shared->print_lock);
-	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
-		philo->id + 1, action);
+	if (philo->params->a_philo_died == false)
+		printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
+			philo->id + 1, action);
 	pthread_mutex_unlock(&philo->shared->print_lock);
 	pthread_mutex_unlock(&philo->shared->rw_lock);
 }
@@ -58,7 +59,6 @@ void	*monitor(void *arg)
 			if (monitor_check_stop_cases(philo))
 				return (NULL);
 			current = current->next;
-			usleep(10);
 		}
 	}
 	return (NULL);

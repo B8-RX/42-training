@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
-#include <pthread.h>
 #include <unistd.h>
 
 bool	handle_forks(t_philo *philo)
@@ -28,16 +27,8 @@ bool	handle_forks(t_philo *philo)
 		left_fork = right_fork;
 		right_fork = swap;
 	}
-	if (found_stop_case(philo))
-		return (false);
 	pthread_mutex_lock(&philo->shared->fork[left_fork]);
 	pthread_mutex_lock(&philo->shared->fork[right_fork]);
-	if (found_stop_case(philo))
-	{
-		pthread_mutex_unlock(&philo->shared->fork[right_fork]);
-		pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-		return (false);
-	}
 	log_action("has taken a fork", philo);
 	log_action("has taken a fork", philo);
 	return (true);
@@ -57,8 +48,6 @@ void	release_forks(t_philo *philo)
 		left_fork = right_fork;
 		right_fork = swap;
 	}
-	// else
-	// 	usleep(100);
 	pthread_mutex_unlock(&philo->shared->fork[left_fork]);
 	pthread_mutex_unlock(&philo->shared->fork[right_fork]);
 }
@@ -90,8 +79,7 @@ int	routine(void *arg)
 	{
 		if (found_stop_case(philo))
 			break ;
-		if (!handle_forks(philo))
-			break ;
+		handle_forks(philo);
 		go_eat(philo);
 		release_forks(philo);
 		if (found_stop_case(philo))
@@ -104,6 +92,16 @@ int	routine(void *arg)
 	return (1);
 }
 
+int	ft_usleep(size_t milliseconds)
+{
+	size_t	start;
+
+	start = get_timestamp();
+	while ((get_timestamp() - start) < milliseconds)
+		usleep(500);
+	return (0);
+}
+
 void	go_eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->shared->meals_lock);
@@ -111,13 +109,13 @@ void	go_eat(t_philo *philo)
 	philo->last_meal_timestamp = get_timestamp();
 	pthread_mutex_unlock(&philo->shared->meals_lock);
 	log_action("is eating", philo);
-	usleep(philo->params->time_to_eat * 1000);
+	ft_usleep(philo->params->time_to_eat);
 }
 
 void	go_sleep(t_philo *philo)
 {
 	log_action("is sleeping", philo);
-	usleep(philo->params->time_to_sleep * 1000);
+	ft_usleep(philo->params->time_to_sleep);
 }
 
 void	go_die(t_philo *philo)
