@@ -12,75 +12,43 @@
 
 #include "./philo.h"
 
-void	init_philo_thr(t_philo_list *list, int *list_length)
+void	create_monitor_threads(t_philo_list *list)
 {
-	t_philo_list	*philosophers;
-	int				len;
-
-	philosophers = list;
-	len = 0;
-	while (philosophers)
-	{
-		len++;
-		if (pthread_create(&philosophers->curr_philo->thread,
-				NULL, (void *)&routine, philosophers->curr_philo) != 0)
-		{
-			fprintf(stderr, "Error on thread creation for philosopher %d\n",
-				philosophers->curr_philo->id);
-			exit(EXIT_FAILURE);
-		}
-		philosophers = philosophers->next;
-	}
-	*list_length = len;
-}
-
-void	create_threads(t_philo_list *list)
-{
-	t_philo_list	*philosophers;
 	pthread_t		monitor_thread;
-	int				list_length;
 
-	philosophers = list;
 	if (pthread_create(&monitor_thread, NULL, &monitor, list) != 0)
 	{
 		fprintf(stderr, "Error on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}
-	init_philo_thr(list, &list_length);
-	if (list_length == 1)
-		handle_single_philo(list);
-	philosophers = list;
-	while (philosophers)
-	{
-		pthread_join(philosophers->curr_philo->thread, NULL);
-		philosophers = philosophers->next;
-	}
 	pthread_join(monitor_thread, NULL);
 }
 
-void	init_forks(t_params *params, t_shared *shared)
+int	create_philo_thread(t_philo *philo, t_params *params)
 {
-	int	i;
-
-	i = -1;
-	while (++i < params->total_philo)
-		pthread_mutex_init(&shared->fork[i], NULL);
+	if (pthread_create(&philo->thread,
+			NULL, (void *)&routine, philo) != 0)
+	{
+		clean_mutex(params);
+		clean_data(params);
+		fprintf(stderr, "Error on thread creation for philosopher %d\n",
+			philo->id);
+		return (1);
+	}
+	return (0);
 }
 
-void	release_forks(t_philo *philo)
+bool	all_are_ready(t_params *params)
 {
-	int	left_fork;
-	int	right_fork;
-	int	swap;
+	int				total;
+	t_philo_list	*current;
 
-	left_fork = philo->id;
-	right_fork = (philo->id + 1) % philo->params->total_philo;
-	if (philo->id % 2 == 0)
+	total = 0;
+	current = params->philo_list;
+	while (current)
 	{
-		swap = left_fork;
-		left_fork = right_fork;
-		right_fork = swap;
+		total++;
+		current = current->next;
 	}
-	pthread_mutex_unlock(&philo->shared->fork[left_fork]);
-	pthread_mutex_unlock(&philo->shared->fork[right_fork]);
+	return (total == params->total_philo);
 }

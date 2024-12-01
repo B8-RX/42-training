@@ -14,24 +14,28 @@
 
 void	log_action(const char *action, t_philo *philo)
 {
-	pthread_mutex_lock(&philo->shared->write_lock);
+	pthread_mutex_lock(&philo->params->write_lock);
 	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
 		philo->id + 1, action);
-	pthread_mutex_unlock(&philo->shared->write_lock);
+	pthread_mutex_unlock(&philo->params->write_lock);
 }
 
 bool	monitor_check_stop_cases(t_philo *philo)
 {	
 	long long	last_meal_timestamp;
+	bool		stop;
+	int			meals_arg;
 
-	pthread_mutex_lock(&philo->shared->write_lock);
+	pthread_mutex_lock(&philo->params->write_lock);
 	last_meal_timestamp = philo->last_meal_timestamp;
-	pthread_mutex_unlock(&philo->shared->write_lock);
-	if (found_philo_died(philo)
-		|| is_philo_starve(philo, last_meal_timestamp)
-		|| all_philo_satiate(philo))
-		return (true);
-	return (false);
+	meals_arg = philo->params->max_meals;
+	pthread_mutex_unlock(&philo->params->write_lock);
+	stop = false;
+	if (is_philo_starve(philo, last_meal_timestamp))
+		stop = true;
+	else if (meals_arg != -1 && all_philo_satiate(philo))
+		stop = true;
+	return (stop);
 }
 
 void	*monitor(void *arg)
@@ -41,6 +45,10 @@ void	*monitor(void *arg)
 	t_philo			*philo;
 
 	philo_list = (t_philo_list *)arg;
+	if (philo_list->curr_philo->params->total_philo == 1)
+		return (handle_single_philo(philo_list), NULL);
+	while (!all_are_ready(philo_list->curr_philo->params))
+		usleep(50);
 	while (1)
 	{
 		current = philo_list;

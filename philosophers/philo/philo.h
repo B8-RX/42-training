@@ -21,6 +21,9 @@
 # include <sys/time.h>
 # include <errno.h>
 
+
+typedef struct s_philo_list t_philo_list;
+
 typedef struct s_params
 {
 	int			total_philo;
@@ -29,28 +32,25 @@ typedef struct s_params
 	long long	time_to_eat;
 	long long	time_to_sleep;
 	int			max_meals;
-	bool		meals_arg;
 	long long	timestamp_start;
 	bool		a_philo_died;
 	bool		all_finished;
-}	t_params;
-
-typedef struct s_shared
-{
+	t_philo_list	*philo_list;	
 	pthread_mutex_t	*fork;
-	pthread_mutex_t	meals_mutex;
+	pthread_mutex_t	meals_lock;
 	pthread_mutex_t	write_lock;
-}	t_shared;
+
+}	t_params;
 
 typedef struct s_philo
 {
 	int			id;
 	pthread_t	thread;
 	t_params	*params;
-	t_shared	*shared;
 	long long	last_meal_timestamp;
 	int			meals_eaten;
 	bool		finished_meals;
+	bool		is_ready;
 }	t_philo;
 
 typedef struct s_philo_list
@@ -72,17 +72,16 @@ bool		is_digits(char *arg);
 long long	get_timestamp(void);
 
 t_params	*handle_args(int argc, char **argv);
-t_params	*set_params(char **argv, bool meals_arg, int max_meals);
-t_shared	*init_shared(t_params *params);
+t_params	*set_params(char **argv, int max_meals);
+void		init_mutex(t_params *params);
 
-void		init_philo_list(t_params *params,
-				t_philo_list **list, t_shared *shared);
+void		init_philo(t_params *params);
 t_philo		*create_philo(int id, t_params *params);
-void		push_philo(t_philo_list **list, t_philo *philo);
+int			create_philo_thread(t_philo *philo, t_params *params);
+void		push_philo(t_philo *philo, t_params *params);
 
-void		create_threads(t_philo_list *list);
-void		init_philo_thr(t_philo_list *list, int *list_length);
-void		init_forks(t_params *params, t_shared *shared);
+void		create_monitor_threads(t_philo_list *list);
+void		init_forks(t_params *params);
 
 void		*monitor(void *arg);
 bool		monitor_check_stop_cases(t_philo *philo);
@@ -100,8 +99,9 @@ void		handle_single_philo(t_philo_list *list);
 bool		handle_forks(t_philo *philo);
 int			routine(void *arg);
 
-void		clean_mutex(t_params *params, t_shared *shared);
-void		clean_data(t_shared *shared, t_philo_list *list, t_params *params);
+void		clean_mutex(t_params *params);
+void		clean_data(t_params *params);
 void		release_forks(t_philo *philo);
+bool		all_are_ready(t_params *params);
 
 #endif // !PHILO_H
