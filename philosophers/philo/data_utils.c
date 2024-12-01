@@ -75,17 +75,12 @@ void	clean_data(t_shared *shared, t_philo_list *philo_list, t_params *params)
 	free(params);
 }
 
-void	clean_mutex(int forks, t_shared *shared)
+void	clean_mutex(t_params *params, t_shared *shared)
 {
 	int	i;
 
 	i = -1;
-	while (++i < forks)
+	while (++i < params->total_philo)
 		pthread_mutex_destroy(&shared->fork[i]);
-	pthread_mutex_destroy(&shared->rw_lock);
-	pthread_mutex_destroy(&shared->meals_lock);
-	pthread_mutex_destroy(&shared->launcher_lock);
-	pthread_mutex_destroy(&shared->print_lock);
-	pthread_mutex_destroy(&shared->satiate_lock);
-	pthread_mutex_destroy(&shared->end_lock);
+	pthread_mutex_destroy(&shared->write_lock);
 }

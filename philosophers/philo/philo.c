@@ -22,8 +22,8 @@ int	main(int argc, char **argv)
 	shared = init_shared(params);
 	init_forks(params, shared);
 	init_philo_list(params, &philo_list, shared);
-	create_threads(philo_list, params->total_philo);
-	clean_mutex(params->total_philo, shared);
+	create_threads(philo_list);
+	clean_mutex(params, shared);
 	clean_data(shared, philo_list, params);
 	return (0);
 }
