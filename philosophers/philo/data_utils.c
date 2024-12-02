@@ -38,7 +38,7 @@ t_params	*handle_args(int argc, char **argv)
 	max_meals = -1;
 	if (argc != 5 && argc != 6)
 		exit (1);
-	if (argc == 6 && argv[5] && is_digits(argv[5]))
+	if (argc == 6 && argv[5] && is_digits(argv[5]))	
 		max_meals = ft_atoi(argv[5]);
 	params = set_params(argv, max_meals);
 	if (!is_valid_args(params, argc, argv))
@@ -65,16 +65,28 @@ void	free_philo_list(t_philo_list *list)
 void	clean_data(t_params *params)
 {
 	free_philo_list(params->philo_list);
+	free(params->fork);
 	free(params);
 }
 
-void	clean_mutex(t_params *params)
+void	clean_mutex(t_params *params, int mutex_forks, int mutex_meals)
 {
-	int	i;
+	int				i;
+	t_philo_list	*philos;
 
 	i = -1;
-	while (++i < params->total_philo)
+	while (++i < mutex_forks)
 		pthread_mutex_destroy(&params->fork[i]);
+	i = -1;
+	philos = params->philo_list;
+	while (++i < mutex_meals && philos)
+	{
+		pthread_mutex_destroy(&philos->curr_philo->last_meal_lock);
+		philos = philos->next;
+	}
+	pthread_mutex_destroy(&params->ready_lock);
 	pthread_mutex_destroy(&params->write_lock);
-	pthread_mutex_destroy(&params->write_lock);
+	pthread_mutex_destroy(&params->meals_lock);
+	pthread_mutex_destroy(&params->dead_lock);
+	pthread_mutex_destroy(&params->satiate_lock);
 }
