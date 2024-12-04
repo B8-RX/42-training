@@ -26,20 +26,26 @@ void	create_monitor_thread(t_params *params)
 	}
 }
 
-void	create_philo_thread(t_philo *philo, t_params *params)
+void	create_philos_thread(t_params *params)
 {
-	int	total_philo;
+	t_philo_list	*list;
 
-	total_philo = params->total_philo;
-	if (pthread_create(&philo->thread,
-			NULL, (void *)&routine, philo) != 0)
+	list = params->philo_list;
+	while (list)
 	{
-		clean_mutex(params, total_philo, total_philo);
-		clean_data(params);
-		fprintf(stderr, "Error on thread creation for philosopher %d\n",
-			philo->id);
-		exit(EXIT_FAILURE);
+		if (pthread_create(&list->curr_philo->thread, NULL, (void *)&routine, list->curr_philo) != 0)
+		{
+			clean_mutex(params, params->total_philo, -1);
+			clean_data(params);
+			fprintf(stderr, "Error on thread creation for philosopher %d\n",
+				list->curr_philo->id + 1);
+			exit(EXIT_FAILURE);
+		}
+		list = list->next;
 	}
+	if (params->total_philo == 1)
+		handle_single_philo(params->philo_list);
+	set_ready(params);
 }
 
 void	init_wait_threads(t_params *params)
@@ -67,15 +73,9 @@ void	init_wait_threads(t_params *params)
 		printf("Error: on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}
-	if (all_are_ready(params))
-	{
-		pthread_mutex_lock(&params->ready_lock);
-		params->ready = true;
-		pthread_mutex_unlock(&params->ready_lock);
-	}
 }
 
-bool	all_are_ready(t_params *params)
+void	set_ready(t_params *params)
 {
 	int				total;
 	t_philo_list	*current;
@@ -87,5 +87,10 @@ bool	all_are_ready(t_params *params)
 		total++;
 		current = current->next;
 	}
-	return (total == params->total_philo);
+	if (total == params->total_philo)
+	{
+		pthread_mutex_lock(&params->ready_lock);
+		params->ready = true;
+		pthread_mutex_unlock(&params->ready_lock);
+	}
 }

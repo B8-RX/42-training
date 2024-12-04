@@ -11,38 +11,61 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <stdio.h>
 
-bool	all_philo_satiate(t_philo *philo)
+bool	all_philo_satiate(t_params *params)
 {
-	pthread_mutex_lock(&philo->params->meals_lock);
-	if (!philo->finished_meals && philo->meals_eaten == philo->params->max_meals)
+	t_philo_list	*list;
+
+	pthread_mutex_lock(&params->satiate_lock);
+	list = params->philo_list;
+	if (params->max_meals == -1)
 	{
-		philo->params->total_philo_finished_meals += 1;
-		philo->finished_meals = true;
-		if (philo->params->total_philo_finished_meals == philo->params->total_philo)
-		{
-			pthread_mutex_lock(&philo->params->satiate_lock);
-			philo->params->all_finished = true;
-			pthread_mutex_unlock(&philo->params->satiate_lock);
-			pthread_mutex_unlock(&philo->params->meals_lock);
-			return (true);
-		}
+		pthread_mutex_unlock(&params->satiate_lock);
+		return (false);
 	}
-	pthread_mutex_unlock(&philo->params->meals_lock);
-	return (false);
+	pthread_mutex_lock(&params->meals_lock);
+	while(list)
+	{
+		if (list->curr_philo->meals_eaten < params->max_meals)
+		{
+			pthread_mutex_unlock(&params->meals_lock);
+			pthread_mutex_unlock(&params->satiate_lock);
+			return (false);
+		}
+		list = list->next;
+	}
+	params->all_finished = true;
+	pthread_mutex_unlock(&params->meals_lock);
+	pthread_mutex_unlock(&params->satiate_lock);
+	return (true);
 }
 
-bool	is_philo_starve(t_philo *philo)
+bool	is_philo_starve(t_params *params)
 {
-	long long	delta;
-
-	delta = 0;
-	pthread_mutex_lock(&philo->last_meal_lock);
-	if (philo->last_meal_timestamp)
-		delta = get_timestamp() - philo->last_meal_timestamp;
-	pthread_mutex_unlock(&philo->last_meal_lock);
-	if (delta >= philo->params->time_to_die)
-		return (go_die(philo), true);
+	t_philo_list	*list;
+	long long		delta;
+	
+	list = params->philo_list;
+	while(list)
+	{
+		pthread_mutex_lock(&params->philo_list->curr_philo->last_meal_lock);
+		delta = get_timestamp() - list->curr_philo->last_meal_timestamp;
+		if (delta > params->time_to_die)
+		{
+			pthread_mutex_unlock(&params->philo_list->curr_philo->last_meal_lock);
+			pthread_mutex_lock(&params->dead_lock);
+			list->curr_philo->params->a_philo_died = true;
+			pthread_mutex_lock(&params->write_lock);
+			printf("%lld %d %s\n", get_timestamp() - params->timestamp_start,
+				list->curr_philo->id + 1, "died");
+			pthread_mutex_unlock(&params->write_lock);
+			pthread_mutex_unlock(&params->dead_lock);
+			return (true);
+		}
+		pthread_mutex_unlock(&params->philo_list->curr_philo->last_meal_lock);
+		list = list->next;
+	}
 	return (false);
 }
 
@@ -63,9 +86,8 @@ void	handle_single_philo(t_philo_list *list)
 {
 	log_action("is thinking", list->curr_philo);
 	log_action("has taken a fork", list->curr_philo);
-	pthread_mutex_lock(&list->curr_philo->params->write_lock);
 	list->curr_philo->params->a_philo_died = true;
-	pthread_mutex_unlock(&list->curr_philo->params->write_lock);
 	usleep(list->curr_philo->params->time_to_die * 1000);
-	go_die(list->curr_philo);
+	printf("%lld %d %s\n", get_timestamp() - list->curr_philo->params->timestamp_start,
+		list->curr_philo->id + 1, "died");
 }

@@ -18,8 +18,10 @@ int	main(int argc, char **argv)
 
 	params = handle_args(argc, argv);
 	init_philo(params);
-	init_mutex(params);
+	init_params_mutex(params);
+	init_forks(params);
 	create_monitor_thread(params);
+	create_philos_thread(params);
 	init_wait_threads(params);	
 	clean_mutex(params, params->total_philo, params->total_philo);
 	clean_data(params);

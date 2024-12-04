@@ -27,7 +27,6 @@ typedef struct s_philo_list t_philo_list;
 typedef struct s_params
 {
 	int			total_philo;
-	int			total_philo_finished_meals;
 	long long	time_to_die;
 	long long	time_to_eat;
 	long long	time_to_sleep;
@@ -55,7 +54,6 @@ typedef struct s_philo
 	long long		last_meal_timestamp;
 	pthread_mutex_t last_meal_lock;
 	int				meals_eaten;
-	bool			finished_meals;
 	bool			is_ready;
 }	t_philo;
 
@@ -79,11 +77,11 @@ long long	get_timestamp(void);
 
 t_params	*handle_args(int argc, char **argv);
 t_params	*set_params(char **argv, int max_meals);
-void		init_mutex(t_params *params);
+void		init_params_mutex(t_params *params);
 
 void		init_philo(t_params *params);
 t_philo		*create_philo(int id, t_params *params);
-void		create_philo_thread(t_philo *philo, t_params *params);
+void		create_philos_thread(t_params *params);
 void		create_monitor_thread(t_params *params);
 void		init_wait_threads(t_params *params);
 void		push_philo(t_philo *philo, t_params *params);
@@ -94,22 +92,19 @@ void		*monitor(void *arg);
 bool		monitor_check_stop_cases(t_philo *philo);
 bool		found_stop_cases(t_philo *philo);
 bool		found_philo_died(t_philo *philo);
-bool		is_philo_starve(t_philo *philo);
-bool		all_philo_satiate(t_philo *philo);
+bool		is_philo_starve(t_params *params);
+bool		all_philo_satiate(t_params *params);
 
 void		log_action(const char *action, t_philo *philo);
-void		go_eat(t_philo *philo);
 void		go_sleep(t_philo *philo);
-void		go_die(t_philo *philo);
 
 void		handle_single_philo(t_philo_list *list);
-bool		handle_forks(t_philo *philo);
+void		handle_forks(t_philo *philo);
 int			routine(void *arg);
 
 void		clean_mutex(t_params *params, int mutex_forks, int mutex_meals);
 void		clean_data(t_params *params);
-void		release_forks(t_philo *philo);
-bool		all_are_ready(t_params *params);
+void		set_ready(t_params *params);
 void	ft_usleep(t_philo *philo, long long milli);
 void	free_philo_list(t_philo_list *list);
 

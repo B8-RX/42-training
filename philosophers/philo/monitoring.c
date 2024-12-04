@@ -11,51 +11,47 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <unistd.h>
 
 void	log_action(const char *action, t_philo *philo)
 {
+	if (found_stop_cases(philo))
+		return ;
 	pthread_mutex_lock(&philo->params->write_lock);
 	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
 		philo->id + 1, action);
 	pthread_mutex_unlock(&philo->params->write_lock);
 }
 
-bool	monitor_check_stop_cases(t_philo *philo)
-{	
-	bool		stop;
-	int			meals_arg;
-
-	meals_arg = philo->params->max_meals;
-	stop = false;
-	if (is_philo_starve(philo))
-		stop = true;
-	if (meals_arg != -1 && all_philo_satiate(philo))
-		stop = true;
-	return (stop);
-}
-
 void	*monitor(void *arg)
 {
 	t_philo_list	*philo_list;
-	t_philo_list	*current;
-	t_philo			*philo;
+	int				pause;
 
 	philo_list = (t_philo_list *)arg;
 	if (philo_list->curr_philo->params->total_philo == 1)
-		return (handle_single_philo(philo_list), NULL);
-	while (!get_ready(philo_list->curr_philo->params))
-		usleep(100);
+		return (NULL);
+	if (philo_list->curr_philo->params->total_philo > 100)
+		pause = 10;
+	else
+		pause = 100;
+	pthread_mutex_lock(&philo_list->curr_philo->params->ready_lock);
+	while (!philo_list->curr_philo->params->ready)
+	{
+		pthread_mutex_unlock(&philo_list->curr_philo->params->ready_lock);
+		usleep(200);
+		pthread_mutex_lock(&philo_list->curr_philo->params->ready_lock);
+	}
+	pthread_mutex_unlock(&philo_list->curr_philo->params->ready_lock);
 	while (1)
 	{
-		current = philo_list;
-		while (current)
-		{
-			philo = current->curr_philo;
-			if (monitor_check_stop_cases(philo))
-				return (NULL);
-			current = current->next;
-			usleep(10);
-		}
+		if (found_stop_cases(philo_list->curr_philo))
+			return (NULL);
+		if (is_philo_starve(philo_list->curr_philo->params))
+			return (NULL);
+		if (all_philo_satiate(philo_list->curr_philo->params))
+			return (NULL);
+		usleep(pause);
 	}
 	return (NULL);
 }
