@@ -15,6 +15,8 @@
 
 void	log_action(const char *action, t_philo *philo)
 {
+	if (found_philo_died(philo))
+		return ;
 	pthread_mutex_lock(&philo->params->write_lock);
 	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,
 		philo->id + 1, action);
@@ -23,20 +25,11 @@ void	log_action(const char *action, t_philo *philo)
 
 bool	monitor_check_stop_cases(t_philo *philo)
 {	
-	long long	last_meal_timestamp;
-	bool		stop;
-	int			meals_arg;
-
-	pthread_mutex_lock(&philo->params->write_lock);
-	last_meal_timestamp = philo->last_meal_timestamp;
-	meals_arg = philo->params->max_meals;
-	pthread_mutex_unlock(&philo->params->write_lock);
-	stop = false;
-	if (is_philo_starve(philo, last_meal_timestamp))
-		stop = true;
-	else if (meals_arg != -1 && all_philo_satiate(philo))
-		stop = true;
-	return (stop);
+	if (is_philo_starve(philo))
+		return (true);
+	else if (philo->params->max_meals != -1 && all_philo_satiate(philo))
+		return (true);
+	return (false);
 }
 
 void	*monitor(void *arg)

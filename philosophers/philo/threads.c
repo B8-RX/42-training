@@ -33,7 +33,7 @@ int	create_threads(t_params *params)
 	while (current)
 	{
 		if (pthread_create(&current->curr_philo->thread,
-				NULL, (void *)&routine, current->curr_philo) != 0)
+				NULL, &routine, current->curr_philo) != 0)
 		{
 			clean_mutex(params);
 			clean_data(params);
