@@ -65,6 +65,7 @@ void	free_philo_list(t_philo_list *list)
 void	clean_data(t_params *params)
 {
 	free_philo_list(params->philo_list);
+	free(params->fork);
 	free(params);
 }
 
@@ -76,5 +77,5 @@ void	clean_mutex(t_params *params)
 	while (++i < params->total_philo)
 		pthread_mutex_destroy(&params->fork[i]);
 	pthread_mutex_destroy(&params->write_lock);
-	pthread_mutex_destroy(&params->write_lock);
+	pthread_mutex_destroy(&params->meals_lock);
 }

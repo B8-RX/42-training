@@ -72,7 +72,6 @@ void	init_philo(t_params *params)
 {
 	int				i;
 	t_philo			*philo;
-	t_philo_list	*current;
 	
 	i = -1;
 	params->philo_list = NULL;
@@ -80,12 +79,6 @@ void	init_philo(t_params *params)
 	{
 		philo = create_philo(i, params);
 		push_philo(philo, params);
-	}
-	current = params->philo_list;
-	while (current)
-	{
-		pthread_join(current->curr_philo->thread, NULL);
-		current = current->next;
 	}
 }
 
@@ -100,10 +93,8 @@ t_philo	*create_philo(int id, t_params *params)
 	philo->params = params;
 	philo->meals_eaten = 0;
 	philo->finished_meals = false;
-	philo->last_meal_timestamp = 0;
-	philo->is_ready = true;
-	if (create_philo_thread(philo, params) == 1)
-		exit(EXIT_FAILURE);
+	philo->last_meal_timestamp = get_timestamp();
+	philo->is_ready = false;
 	return (philo);
 }
 

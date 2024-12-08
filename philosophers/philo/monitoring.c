@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <stdio.h>
 
 void	log_action(const char *action, t_philo *philo)
 {

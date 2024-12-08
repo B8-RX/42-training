@@ -20,7 +20,7 @@ int	main(int argc, char **argv)
 	init_mutex(params);
 	init_forks(params);
 	init_philo(params);
-	create_monitor_threads(params->philo_list);
+	create_threads(params);
 	clean_mutex(params);
 	clean_data(params);
 	return (0);

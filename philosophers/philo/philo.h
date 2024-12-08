@@ -77,7 +77,7 @@ void		init_mutex(t_params *params);
 
 void		init_philo(t_params *params);
 t_philo		*create_philo(int id, t_params *params);
-int			create_philo_thread(t_philo *philo, t_params *params);
+int			create_threads(t_params *params);
 void		push_philo(t_philo *philo, t_params *params);
 
 void		create_monitor_threads(t_philo_list *list);

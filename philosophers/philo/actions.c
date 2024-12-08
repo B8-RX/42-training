@@ -89,10 +89,10 @@ int	routine(void *arg)
 
 void	go_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->params->write_lock);
+	pthread_mutex_lock(&philo->params->meals_lock);
 	philo->meals_eaten += 1;
 	philo->last_meal_timestamp = get_timestamp();
-	pthread_mutex_unlock(&philo->params->write_lock);
+	pthread_mutex_unlock(&philo->params->meals_lock);
 	log_action("is eating", philo);
 	usleep(philo->params->time_to_eat * 1000);
 }

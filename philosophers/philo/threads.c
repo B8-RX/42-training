@@ -12,29 +12,46 @@
 
 #include "./philo.h"
 
-void	create_monitor_threads(t_philo_list *list)
+void	wait_threads(t_philo_list *philos)
 {
-	pthread_t		monitor_thread;
+	t_philo_list	*current;
 
-	if (pthread_create(&monitor_thread, NULL, &monitor, list) != 0)
+	current = philos;
+	while (current)
 	{
+		pthread_join(current->curr_philo->thread, NULL);
+		current = current->next;
+	}
+}
+
+int	create_threads(t_params *params)
+{
+	t_philo_list	*current;
+	pthread_t		monitor_thread;
+	
+	current = params->philo_list;
+	while (current)
+	{
+		if (pthread_create(&current->curr_philo->thread,
+				NULL, (void *)&routine, current->curr_philo) != 0)
+		{
+			clean_mutex(params);
+			clean_data(params);
+			fprintf(stderr, "Error on thread creation for philosopher %d\n",
+				current->curr_philo->id);
+			exit(EXIT_FAILURE);
+		}
+		current = current->next;
+	}
+	if (pthread_create(&monitor_thread, NULL, &monitor, params->philo_list) != 0)
+	{
+		clean_data(params);
+		clean_mutex(params);
 		fprintf(stderr, "Error on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}
+	wait_threads(params->philo_list);	
 	pthread_join(monitor_thread, NULL);
-}
-
-int	create_philo_thread(t_philo *philo, t_params *params)
-{
-	if (pthread_create(&philo->thread,
-			NULL, (void *)&routine, philo) != 0)
-	{
-		clean_mutex(params);
-		clean_data(params);
-		fprintf(stderr, "Error on thread creation for philosopher %d\n",
-			philo->id);
-		return (1);
-	}
 	return (0);
 }
 
