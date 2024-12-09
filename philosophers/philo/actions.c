@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
+#include <unistd.h>
 
 void	take_forks(int *left_fork, int *right_fork, t_philo *philo)
 {
@@ -21,7 +22,7 @@ void	take_forks(int *left_fork, int *right_fork, t_philo *philo)
 	*right_fork = (philo->id + 1) % philo->params->total_philo;
 	if (philo->id % 2 != 0)
 	{
-		usleep(200);
+		usleep(100);
 		swap = *left_fork;
 		*left_fork = *right_fork;
 		*right_fork = swap;

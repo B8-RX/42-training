@@ -46,7 +46,7 @@ void	*monitor(void *arg)
 		return (handle_single_philo(philo_list), NULL);
 	pause = 0;
 	if (philo_list->curr_philo->params->total_philo < 100)
-		pause = 10; 
+		pause = 5; 
 	while (!all_are_ready(philo_list->curr_philo->params))
 		usleep(5);
 	while (1)
