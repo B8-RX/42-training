@@ -11,18 +11,17 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
-#include <pthread.h>
-#include <unistd.h>
 
-void	take_philo_fork(int *left_fork, int *right_fork, t_philo *philo)
+void	take_forks(int *left_fork, int *right_fork, t_philo *philo)
 {
 	int	swap;
 
 	swap = 0;
 	*left_fork = philo->id;
 	*right_fork = (philo->id + 1) % philo->params->total_philo;
-	if (philo->id % 2 == 0)
+	if (philo->id % 2 != 0)
 	{
+		usleep(200);
 		swap = *left_fork;
 		*left_fork = *right_fork;
 		*right_fork = swap;
@@ -39,7 +38,7 @@ void	*routine(void *arg)
 		return (NULL);
 	while (!all_are_ready(philo->params))
 		usleep(50);
-	take_philo_fork(&left_fork, &right_fork, philo);
+	take_forks(&left_fork, &right_fork, philo);
 	while (1)
 	{
 		if (found_stop_cases(philo))
@@ -65,11 +64,20 @@ void	go_eat(t_philo *philo, int left_fork, int right_fork)
 	philo->last_meal_timestamp = get_timestamp();
 	pthread_mutex_unlock(&philo->params->meals_lock);
 
-	usleep(philo->params->time_to_eat * 1000);
+	ft_usleep(philo, philo->params->time_to_eat);
 
 	pthread_mutex_unlock(&philo->params->fork[left_fork]);
 	pthread_mutex_unlock(&philo->params->fork[right_fork]);
 	return ;
+}
+
+void	ft_usleep(t_philo *philo, long long pause)
+{
+	long long	start;
+
+	start = get_timestamp();
+	while ((get_timestamp() - start) < pause && !found_philo_died(philo))
+		usleep(1000);
 }
 
 void	go_sleep_think(t_philo *philo)
@@ -77,18 +85,6 @@ void	go_sleep_think(t_philo *philo)
 	if (found_philo_died(philo))
 		return ;
 	log_action("is sleeping", philo);
-	usleep(philo->params->time_to_sleep * 1000);
-}
-
-void	go_die(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->params->write_lock);
-	if (!philo->params->all_finished && philo->params->a_philo_died)
-	{
-		printf("%lld %d died\n", get_timestamp() - philo->params->timestamp_start,
-			philo->id + 1);
-		pthread_mutex_unlock(&philo->params->write_lock);
-		return ;
-	}
-	pthread_mutex_unlock(&philo->params->write_lock);
+	ft_usleep(philo, philo->params->time_to_sleep);
+	log_action("is thinking", philo);
 }

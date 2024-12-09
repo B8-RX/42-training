@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   threads.c                                          :+:      :+:    :+:   */
+/*   threads_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ssghioua <ssghioua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -35,7 +35,7 @@ int	create_threads(t_params *params)
 		if (pthread_create(&current->curr_philo->thread,
 				NULL, &routine, current->curr_philo) != 0)
 		{
-			clean_mutex(params);
+			clean_mutex(params, 1);
 			clean_data(params);
 			fprintf(stderr, "Error on thread creation for philosopher %d\n",
 				current->curr_philo->id);
@@ -46,7 +46,7 @@ int	create_threads(t_params *params)
 	if (pthread_create(&monitor_thread, NULL, &monitor, params->philo_list) != 0)
 	{
 		clean_data(params);
-		clean_mutex(params);
+		clean_mutex(params, 1);
 		fprintf(stderr, "Error on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}

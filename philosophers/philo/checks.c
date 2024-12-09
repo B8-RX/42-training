@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
-#include <pthread.h>
 
 bool	found_philo_died(t_philo *philo)
 {
@@ -55,8 +54,11 @@ bool	is_philo_starve(t_philo *philo)
 		pthread_mutex_unlock(&philo->params->meals_lock);
 		pthread_mutex_lock(&philo->params->write_lock);
 		philo->params->a_philo_died = true;
+		pthread_mutex_lock(&philo->params->display_lock);
+		printf("%lld %d died\n", get_timestamp() - philo->params->timestamp_start,
+			philo->id + 1);
+		pthread_mutex_unlock(&philo->params->display_lock);
 		pthread_mutex_unlock(&philo->params->write_lock);
-		go_die(philo);
 		return (true);
 	}
 	pthread_mutex_unlock(&philo->params->meals_lock);
@@ -73,15 +75,4 @@ bool	found_stop_cases(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->params->write_lock);
 	return (false);
-}
-
-void	handle_single_philo(t_philo_list *list)
-{
-	log_action("is thinking", list->curr_philo);
-	log_action("has taken a fork", list->curr_philo);
-	pthread_mutex_lock(&list->curr_philo->params->write_lock);
-	list->curr_philo->params->a_philo_died = true;
-	pthread_mutex_unlock(&list->curr_philo->params->write_lock);
-	usleep(list->curr_philo->params->time_to_die * 1000);
-	go_die(list->curr_philo);
 }
