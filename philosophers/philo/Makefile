@@ -6,14 +6,15 @@ CFLAGS = -Wall -Werror -Wextra -pthread
 
 PHILO_LIB = ./philo.h
 
-SRC = philo.c \
-    utils.c \
-		threads.c \
+SRC = 	philo.c \
+		philo_utils.c \
+		data_utils.c \
+		mutex_utils.c \
+		threads_utils.c \
+		actions.c \
 		monitoring.c \
 		checks.c \
-		actions.c \
-		data_structure.c \
-		data_utils.c \
+    	utils.c \
 
 OBJS_PATH = ./objs/
 

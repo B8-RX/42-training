@@ -17,11 +17,11 @@ int	main(int argc, char **argv)
 	t_params		*params;
 
 	params = handle_args(argc, argv);
-	init_mutex(params);
-	init_forks(params);
+	init_shared_mutex(params);
+	init_forks_mutex(params);
 	init_philo(params);
 	create_threads(params);
-	clean_mutex(params);
+	clean_mutex(params, params->total_philo);
 	clean_data(params);
 	return (0);
 }
