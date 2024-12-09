@@ -34,14 +34,6 @@ void	init_shared_mutex(t_params *params)
 		free(params);
 		error = 1;
 	}
-	if (!error && pthread_mutex_init(&params->exit_lock, NULL) != 0)
-	{
-		pthread_mutex_destroy(&params->write_lock);
-		pthread_mutex_destroy(&params->meals_lock);
-		pthread_mutex_destroy(&params->display_lock);
-		free(params);
-		error = 1;
-	}
 	if (error == 1)
 	{
 		printf("Error: shared mutex init\n");
@@ -83,5 +75,4 @@ void	clean_mutex(t_params *params, int forks_mutex)
 	pthread_mutex_destroy(&params->write_lock);
 	pthread_mutex_destroy(&params->meals_lock);
 	pthread_mutex_destroy(&params->display_lock);
-	pthread_mutex_destroy(&params->exit_lock);
 }

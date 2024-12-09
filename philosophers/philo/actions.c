@@ -51,7 +51,7 @@ void	*routine(void *arg)
 
 void	go_eat(t_philo *philo, int left_fork, int right_fork)
 {
-	if (found_philo_died(philo))
+	if (found_stop_cases(philo))
 		return ;
 	pthread_mutex_lock(&philo->params->fork[left_fork]);
 	log_action("has taken a fork", philo);
@@ -76,13 +76,13 @@ void	ft_usleep(t_philo *philo, long long pause)
 	long long	start;
 
 	start = get_timestamp();
-	while ((get_timestamp() - start) < pause && !found_philo_died(philo))
+	while ((get_timestamp() - start) < pause && !found_stop_cases(philo))
 		usleep(1000);
 }
 
 void	go_sleep_think(t_philo *philo)
 {
-	if (found_philo_died(philo))
+	if (found_stop_cases(philo))
 		return ;
 	log_action("is sleeping", philo);
 	ft_usleep(philo, philo->params->time_to_sleep);

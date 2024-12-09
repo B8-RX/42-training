@@ -40,7 +40,6 @@ typedef struct s_params
 	pthread_mutex_t	meals_lock;
 	pthread_mutex_t	write_lock;
 	pthread_mutex_t	display_lock;
-	pthread_mutex_t	exit_lock;
 }	t_params;
 
 typedef struct s_philo
@@ -81,7 +80,6 @@ void		init_forks_mutex(t_params *params);
 void		*monitor(void *arg);
 bool		monitor_check_stop_cases(t_philo *philo);
 bool		found_stop_cases(t_philo *philo);
-bool		found_philo_died(t_philo *philo);
 bool		is_philo_starve(t_philo *philo);
 bool		all_philo_satiate(t_philo *philo);
 

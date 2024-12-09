@@ -14,7 +14,7 @@
 
 void	log_action(const char *action, t_philo *philo)
 {
-	if (found_philo_died(philo))
+	if (found_stop_cases(philo))
 		return ;
 	pthread_mutex_lock(&philo->params->display_lock);
 	printf("%lld %d %s\n", get_timestamp() - philo->params->timestamp_start,

@@ -12,18 +12,6 @@
 
 #include "./philo.h"
 
-bool	found_philo_died(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->params->write_lock);
-	if (philo->params->a_philo_died)
-	{
-		pthread_mutex_unlock(&philo->params->write_lock);
-		return (true);
-	}
-	pthread_mutex_unlock(&philo->params->write_lock);
-	return (false);
-}
-
 bool	all_philo_satiate(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->params->meals_lock);
