@@ -16,7 +16,7 @@ void	init_philo(t_params *params)
 {
 	int				i;
 	t_philo			*philo;
-	
+
 	i = -1;
 	params->philo_list = NULL;
 	while (++i < params->total_philo)
@@ -78,7 +78,8 @@ void	handle_single_philo(t_philo_list *list)
 	pthread_mutex_unlock(&list->curr_philo->params->write_lock);
 	usleep(list->curr_philo->params->time_to_die * 1000);
 	pthread_mutex_lock(&list->curr_philo->params->display_lock);
-	printf("%lld %d died\n", get_timestamp() - list->curr_philo->params->timestamp_start,
+	printf("%lld %d died\n", get_timestamp()
+		- list->curr_philo->params->timestamp_start,
 		list->curr_philo->id + 1);
 	pthread_mutex_unlock(&list->curr_philo->params->display_lock);
 }

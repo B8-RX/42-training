@@ -21,20 +21,19 @@
 # include <sys/time.h>
 # include <errno.h>
 
-
-typedef struct s_philo_list t_philo_list;
+typedef struct s_philo_list	t_philo_list;
 
 typedef struct s_params
 {
-	int			total_philo;
-	int			total_philo_finished_meals;
-	long long	time_to_die;
-	long long	time_to_eat;
-	long long	time_to_sleep;
-	int			max_meals;
-	long long	timestamp_start;
-	bool		a_philo_died;
-	bool		all_finished;
+	int				total_philo;
+	int				total_philo_finished_meals;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	int				max_meals;
+	long long		timestamp_start;
+	bool			a_philo_died;
+	bool			all_finished;
 	t_philo_list	*philo_list;	
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	meals_lock;
@@ -64,7 +63,7 @@ bool		is_digits(char *arg);
 long long	get_timestamp(void);
 
 t_params	*handle_args(int argc, char **argv);
-bool	is_valid_args(t_params *params, int argc, char **argv);
+bool		is_valid_args(t_params *params, int argc, char **argv);
 t_params	*set_data(char **argv, int max_meals);
 void		init_shared_mutex(t_params *params);
 
@@ -72,7 +71,7 @@ void		init_philo(t_params *params);
 t_philo		*create_philo(int id, t_params *params);
 int			create_threads(t_params *params);
 void		add_philo_list(t_philo *philo, t_params *params);
-void	free_philo_list(t_philo_list *list);
+void		free_philo_list(t_philo_list *list);
 
 void		create_monitor_threads(t_philo_list *list);
 void		init_forks_mutex(t_params *params);

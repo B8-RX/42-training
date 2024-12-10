@@ -24,11 +24,10 @@ void	wait_threads(t_philo_list *philos)
 	}
 }
 
-int	create_threads(t_params *params)
+void	create_philos_threads(t_params *params)
 {
 	t_philo_list	*current;
-	pthread_t		monitor_thread;
-	
+
 	current = params->philo_list;
 	while (current)
 	{
@@ -43,14 +42,23 @@ int	create_threads(t_params *params)
 		}
 		current = current->next;
 	}
-	if (pthread_create(&monitor_thread, NULL, &monitor, params->philo_list) != 0)
+}
+
+int	create_threads(t_params *params)
+{
+	pthread_t		monitor_thread;
+	t_philo_list	*philos;
+
+	philos = params->philo_list;
+	create_philos_threads(params);
+	if (pthread_create(&monitor_thread, NULL, &monitor, philos) != 0)
 	{
 		clean_data(params);
 		clean_mutex(params, 1);
 		fprintf(stderr, "Error on thread creation for monitor\n");
 		exit(EXIT_FAILURE);
 	}
-	wait_threads(params->philo_list);	
+	wait_threads(params->philo_list);
 	pthread_join(monitor_thread, NULL);
 	return (0);
 }

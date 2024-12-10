@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "./philo.h"
-#include <unistd.h>
 
 void	take_forks(int *left_fork, int *right_fork, t_philo *philo)
 {
@@ -28,11 +27,12 @@ void	take_forks(int *left_fork, int *right_fork, t_philo *philo)
 		*right_fork = swap;
 	}
 }
+
 void	*routine(void *arg)
 {
-	t_philo		*philo;
-	int	left_fork;
-	int	right_fork;
+	t_philo	*philo;
+	int		left_fork;
+	int		right_fork;
 
 	philo = (t_philo *)arg;
 	if (philo->params->total_philo == 1)
@@ -59,14 +59,11 @@ void	go_eat(t_philo *philo, int left_fork, int right_fork)
 	pthread_mutex_lock(&philo->params->fork[right_fork]);
 	log_action("has taken a fork", philo);
 	log_action("is eating", philo);
-	
 	pthread_mutex_lock(&philo->params->meals_lock);
 	philo->meals_eaten += 1;
 	philo->last_meal_timestamp = get_timestamp();
 	pthread_mutex_unlock(&philo->params->meals_lock);
-
 	ft_usleep(philo, philo->params->time_to_eat);
-
 	pthread_mutex_unlock(&philo->params->fork[left_fork]);
 	pthread_mutex_unlock(&philo->params->fork[right_fork]);
 	return ;
@@ -81,11 +78,30 @@ void	ft_usleep(t_philo *philo, long long pause)
 		usleep(1000);
 }
 
+void	go_think(t_philo *philo)
+{
+	log_action("is thinking", philo);
+	pthread_mutex_lock(&philo->params->meals_lock);
+	pthread_mutex_lock(&philo->params->write_lock);
+	while ((philo->params->time_to_die - (get_timestamp()
+				- philo->last_meal_timestamp) > philo->params->time_to_eat)
+		&& philo->params->a_philo_died == 0)
+	{
+		pthread_mutex_unlock(&philo->params->write_lock);
+		pthread_mutex_unlock(&philo->params->meals_lock);
+		ft_usleep(philo, 1);
+		pthread_mutex_lock(&philo->params->meals_lock);
+		pthread_mutex_lock(&philo->params->write_lock);
+	}
+	pthread_mutex_unlock(&philo->params->write_lock);
+	pthread_mutex_unlock(&philo->params->meals_lock);
+}
+
 void	go_sleep_think(t_philo *philo)
 {
 	if (found_stop_cases(philo))
 		return ;
 	log_action("is sleeping", philo);
 	ft_usleep(philo, philo->params->time_to_sleep);
-	log_action("is thinking", philo);
+	go_think(philo);
 }
