@@ -40,12 +40,11 @@ void	*routine(void *arg)
 	while (!all_are_ready(philo->params))
 		usleep(50);
 	take_forks(&left_fork, &right_fork, philo);
-	while (1)
+	while (1 && !found_stop_cases(philo))
 	{
-		if (found_stop_cases(philo))
-			return (NULL);
 		go_eat(philo, left_fork, right_fork);
-		go_sleep_think(philo);
+		go_sleep(philo);
+		go_think(philo);
 	}
 	return (NULL);
 }
@@ -69,39 +68,29 @@ void	go_eat(t_philo *philo, int left_fork, int right_fork)
 	return ;
 }
 
-void	ft_usleep(t_philo *philo, long long pause)
+void	go_sleep(t_philo *philo)
 {
-	long long	start;
-
-	start = get_timestamp();
-	while ((get_timestamp() - start) < pause && !found_stop_cases(philo))
-		usleep(1000);
+	if (found_stop_cases(philo))
+		return ;
+	log_action("is sleeping", philo);
+	ft_usleep(philo, philo->params->time_to_sleep);
 }
 
 void	go_think(t_philo *philo)
 {
 	log_action("is thinking", philo);
 	pthread_mutex_lock(&philo->params->meals_lock);
-	pthread_mutex_lock(&philo->params->write_lock);
+	pthread_mutex_lock(&philo->params->global_lock);
 	while ((philo->params->time_to_die - (get_timestamp()
 				- philo->last_meal_timestamp) > philo->params->time_to_eat)
 		&& philo->params->a_philo_died == 0)
 	{
-		pthread_mutex_unlock(&philo->params->write_lock);
+		pthread_mutex_unlock(&philo->params->global_lock);
 		pthread_mutex_unlock(&philo->params->meals_lock);
 		ft_usleep(philo, 1);
 		pthread_mutex_lock(&philo->params->meals_lock);
-		pthread_mutex_lock(&philo->params->write_lock);
+		pthread_mutex_lock(&philo->params->global_lock);
 	}
-	pthread_mutex_unlock(&philo->params->write_lock);
+	pthread_mutex_unlock(&philo->params->global_lock);
 	pthread_mutex_unlock(&philo->params->meals_lock);
-}
-
-void	go_sleep_think(t_philo *philo)
-{
-	if (found_stop_cases(philo))
-		return ;
-	log_action("is sleeping", philo);
-	ft_usleep(philo, philo->params->time_to_sleep);
-	go_think(philo);
 }

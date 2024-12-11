@@ -17,19 +17,19 @@ void	init_shared_mutex(t_params *params)
 	int	error;
 
 	error = 0;
-	if (pthread_mutex_init(&params->write_lock, NULL) != 0)
+	if (pthread_mutex_init(&params->global_lock, NULL) != 0)
 	{
 		free(params);
 		error = 1;
 	}
 	if (!error && pthread_mutex_init(&params->meals_lock, NULL) != 0)
 	{
-		pthread_mutex_destroy(&params->write_lock);
+		pthread_mutex_destroy(&params->global_lock);
 		free(params);
 	}
 	if (!error && pthread_mutex_init(&params->display_lock, NULL) != 0)
 	{
-		pthread_mutex_destroy(&params->write_lock);
+		pthread_mutex_destroy(&params->global_lock);
 		pthread_mutex_destroy(&params->meals_lock);
 		free(params);
 		error = 1;
@@ -72,7 +72,7 @@ void	clean_mutex(t_params *params, int forks_mutex)
 	i = -1;
 	while (++i < forks_mutex)
 		pthread_mutex_destroy(&params->fork[i]);
-	pthread_mutex_destroy(&params->write_lock);
+	pthread_mutex_destroy(&params->global_lock);
 	pthread_mutex_destroy(&params->meals_lock);
 	pthread_mutex_destroy(&params->display_lock);
 }

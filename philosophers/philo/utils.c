@@ -72,3 +72,12 @@ long long	get_timestamp(void)
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
+
+void	ft_usleep(t_philo *philo, long long pause)
+{
+	long long	start;
+
+	start = get_timestamp();
+	while ((get_timestamp() - start) < pause && !found_stop_cases(philo))
+		usleep(1000);
+}
